@@ -125,7 +125,7 @@ div.faq_container .colorChallenger.ui-state-active,
 div.faq_container .colorExperience.ui-state-active,
 div.faq_container .ui-state-active a.colorExperience,
 .museumSectionBreak.colorExperience,
-.colorYankee {
+.colorExperience {
   background: rgb(var(--global-color-experience));
   color: black;
 }
