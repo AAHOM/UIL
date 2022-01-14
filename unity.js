@@ -96,7 +96,9 @@ function get_spreadsheet(theurl) {
   var result = "";
   $.ajax({
       url: theurl,
-      cache: false,
+      headers: {
+                'Cache-Control':'no-cache'
+            },
       dataType: 'text',
       async: false,
       success: function(data) {
