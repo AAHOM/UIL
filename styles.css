@@ -853,6 +853,11 @@ article:first-of-type section:first-of-type div.content-wrapper div.content {
   font-style: italic;
 }
 
+#hoursContainer a {
+    color: #00f;
+    text-decoration: underline;
+}
+
 @media screen and (max-width:  767px ) {
     #hoursContainer {
     flex-direction: column;
