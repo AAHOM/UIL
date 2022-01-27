@@ -603,12 +603,16 @@ function do_team_members2(file_id = null, sheet = null) {
               //var imgsrc = 'https://drive.google.com/uc?export=view&id=1VxokDflhs9p1sIYDYBX7HertCAcP4887'; 
               out = out + '<img class="item_img" src="' + item.c[imageCol].v + '" alt="Example image">';
             }
+            var teamName = '';
+            var teamTitle = '';
             if (item.c[lastCol] != null && item.c[firstCol] != null) {
-              out = out + '<div class="item_name">' + 
-                item.c[firstCol].v + ' ' + item.c[lastCol].v;
+                teamName = '<span class="memberName">' + item.c[firstCol].v + ' ' + item.c[lastCol].v + '</span>';
+              out = out + '<div class="item_name">';
               if (item.c[titleCol] != null) {
-                out = out + '<div class="item_title">' + item.c[titleCol].v + '</div>';
+                teamTitle = '<br>' + item.c[titleCol].v;
+                
               }
+              out = out + '<div class="item_title">' + teamName + teamTitle + '</div>';
               out = out + '</div>';
             }
             out = out + '</div>'; // end front
@@ -630,39 +634,6 @@ function do_team_members2(file_id = null, sheet = null) {
     $('#teamDetail').hide(); 
     $('.team_container').show();
     teamCardResize();
-/*
-    $('.readMoreDetails').on('click',function() {
-        var content = $(this).parent().find('.item_bio').html(); 
-        var front = $(this).parent().parent();
-        var img = front.find('img').attr('src'); 
-        var name = front.find('.item_name').clone().children().remove().end().text();
-        var title = front.find('.item_title').text();
-        $('#teamDetail').html('<div id="teamName">' + name + '</div>' +
-          '<div id="teamTitle">' + title + '</div>');
-        $('#teamDetail').append('<img class="item_img" src="' + img + '">');
-        $('#teamDetail').append(content); 
-        $('#teamDetail').append('<div class="teamDetailClose topClose"><a href="#">X</a></div>');
-        $('#teamDetail').append('<div class="teamDetailClose bottomClose"><a href="#">Close</a></div>');
-        
-        position = $(window).scrollTop(); 
-        $(".teamDetailClose").on('click',function(event) {
-            event.preventDefault();
-            $('#teamDetail').hide(); 
-            $('.team_container').show();
-            //var headerHeight = $('#header').height();
-            //var t = 797 + headerHeight;
-            //$('.team_container').scrollTop(t);
-            $(window).scrollTop(position); 
-            teamCardResize();
-        });
-        $('#teamDetail').show(); 
-        $('.team_container').hide();
-        var headerHeight = $('#header').height();
-        var t = $('#teamDetail').closest('section').offset().top;
-        t = t - headerHeight + 20;
-        $(window).scrollTop(t); 
-    });
-*/
 
     $('div.item_back').on('click',function() {
         var content = $(this).find('.item_bio').html(); 
