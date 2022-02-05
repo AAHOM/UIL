@@ -545,9 +545,9 @@ function teamCardResize() {
     temp.css('-webkit-line-clamp','unset');
     temp.css('overflow','unset');
     var afterh = parseInt(temp.height());
-    console.log('beforeh=' + beforeh + ' afterh=' + afterh);
+    //console.log('beforeh=' + beforeh + ' afterh=' + afterh);
     if (afterh > beforeh) {
-        console.log('client=' + client + ' datalines=' + dataLines + ' before=' + beforeh + ' after=' + afterh + ' lines=' + lines);
+        //console.log('client=' + client + ' datalines=' + dataLines + ' before=' + beforeh + ' after=' + afterh + ' lines=' + lines);
         lines = lines - 2; 
         $(this).find('.readMoreDetails').show(); 
     }
