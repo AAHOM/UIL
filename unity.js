@@ -97,7 +97,7 @@ async function fetchGoogleDataAll(urls) {
   return [data3,status];
 }
 
-*/------------------------------------------------------------ */
+/*------------------------------------------------------------ */
 /* GetCookie                                                   */
 /*    Split cookie string and get all individual               */
 /*    name=value pairs in an array                             */
