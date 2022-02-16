@@ -52,6 +52,57 @@ $(document).ready(function() {
   if (checkFlexGap()) {$('body').addClass('flex-gap');}
 })
 
+/* ----------------------------------------------------------- */
+/* Search URL Parameters                                       */
+/*    02/16/2022 - initial                                     */
+/* ----------------------------------------------------------- */  
+
+/* https://stackoverflow.com/questions/19491336/how-to-get-url-parameter-using-jquery-or-plain-javascript */
+function getSearchParams(k){
+ var p={};
+ location.search.replace(/[?&]+([^=&]+)=([^&]*)/gi,function(s,k,v){p[k]=v})
+ return k?p[k]:p;
+}
+
+/* ----------------------------------------------------------- */
+/* Fetch one or more URL's from Google                         */
+/*    02/16/2022 - initial                                     */
+/* ----------------------------------------------------------- */  
+
+async function fetchGoogleDataAll(urls) {
+  let promises = [];
+  //urls[1] = 'xx'; // to test errors
+  var status = ''; 
+  urls.map(x => promises.push(
+    fetch(x)
+      .then((response) => {
+        if (response.status >= 200 && response.status <= 299) {
+          return response;
+        } else {
+          status = response.statusText;
+        }
+      })
+      .catch((error) => {
+        status = error;
+      })
+  ));
+  const promisResponse = await Promise.all(promises);
+  var data3 = []; 
+  if (!status) {
+    for (let i = 0; i < promisResponse.length; i++){
+      var temp = await promisResponse[i].text();
+      data3.push(JSON.parse(temp.substr(47).slice(0, -2)));
+    }
+  }
+  return [data3,status];
+}
+
+*/------------------------------------------------------------ */
+/* GetCookie                                                   */
+/*    Split cookie string and get all individual               */
+/*    name=value pairs in an array                             */
+/* ----------------------------------------------------------- */  
+
 function getCookie(name) {
     
   // Split cookie string and get all individual name=value pairs in an array
@@ -944,70 +995,120 @@ function createCarousel (id, container = 0) {
 
 }
 
-
-
 /* ----------------------------------------------------------- */
 /* Build a tabbed list of calendars from spreadsheet           */
 /*    05/18/2021 - initial                                     */
+/*    Updated to use fetch promise 02/16/22                    */
 /* ----------------------------------------------------------- */
 
 function build_calendars(
-  active = 0, 
+    theSelector = "#calendarDiv",
+    active = 0, 
+    colapsed = true) {
+
   file_id = '1i5EjZCpxI4UnvXyMYXCLyLP9tSCNt0PZYemaU6f6XtU', 
-  sheet = 'Calendars') {
+  sheet = 'Calendars';
+
+  // check url paramaters to see if we need to 
+  // default to a particular calendar
+  var tabparam = getSearchParams("tab");
+    if (tabparam) {
+      active = tabparam;
+    }
 
   var where = "SELECT B, C, E, F, G WHERE D != 'Yes' AND B IS NOT NULL ORDER BY A, B";
   var url = 'https://docs.google.com/spreadsheets/u/0/d/'
     + file_id + '/gviz/tq?tqx=&sheet=' + sheet + 
     '&headers=1&tq=' + escape(where);
-  var callist = get_spreadsheet(url);
-  var cals = callist.table.rows;
-  var tab = 1; 
-  var tabs = ''; 
-  var tabsdata = '';
-  var iframes = []; 
-  cals.forEach(function(item, key) {
-    var museum = (item.c[0] != null) ? item.c[0].v : '';
-    var name = (item.c[1] != null) ? item.c[1].v : '';
-    var title = (item.c[2] != null) ? item.c[2].v : '';
-    var large = (item.c[3] != null) ? item.c[3].v : '';
-    var small = large.replace(/mode=MONTH/gi,'mode=AGENDA');
-    var after = (item.c[4] != null && item.c[4].v != null) ? item.c[4].v : ''; 
-    var colorClass = "color" + museum.charAt(0).toUpperCase() + museum.slice(1);
-    var ar = [large,small];
-    iframes.push(ar);
-    if ((tab - 1) != active) {
-      large = '';
-      small = '';
+
+  fetchGoogleDataAll([url]).then(dataArrayx => {
+    if (dataArrayx[1]) {  // if there was a status error of some kind
+      jQuery('#classList .gallery-items')
+        .html('<div class="errorMessage">Error fetching spreadsheet, status= ' + dataArrayx[1] + ' try refreshing page</div>');
+      return; 
     }
-    tabs = tabs + 
-      '<li><a href="#tabs-' + tab + '" data-tab="' + tab + '" class="' + colorClass + '">' + 
-      name + '</a></li>\n';
-      tabsdata = tabsdata + 
-      '<div id="tabs-' + tab + '">\n' +
-      '<p><strong>' + title + '</strong>\n' + 
-      '<div class="calendarLarge">' + large + '</div>\n' +
-      '<div class="calendarSmall">' + small + '</div>\n' +
-      '</p>' + 
-      after +
-      '</div>\n'; 
-    tab = tab + 1; 
-  })   
-  tabs = '<div id="tabs"><ul>' + tabs + '</ul></div>\n'; 
-  $(tabs).appendTo('#calendarsContainer');
-  $(tabsdata).appendTo('#tabs');
-  $( "#tabs" ).tabs({ active: active});
-  $('#calendarsContainer iframe').width('100%');
-  $('#tabs a').click(function() {
-    var id = $(this).attr("href");
-    var tab = id.substr(6) - 1;
-    var x = $(id).find('.calendarLarge iframe').length;
-    if (!x) {  // if no iframe found, then fill it in
-      $(id).find('.calendarLarge').html(iframes[tab][0]);
-      $(id).find('.calendarSmall').html(iframes[tab][1]);
-      $('#calendarsContainer iframe').width('100%');
+    dataArray = dataArrayx[0][0].table.rows;
+
+    dataRows = [];
+    dataArray.forEach(function(item,key) {
+      if (item.c[0] != null) {
+        var ar = [];
+        for (let i = 0; i < 5; i++) {
+          var val =  (item.c[i] != null) ? item.c[i].v : '';
+          ar.push(val);
+        } 
+        dataRows.push(ar);
+      }
+    });
+
+    var temp = `
+    <div class="singleAccordion">
+      <div class="toggle">
+        <a href=""></i>View Our Calendar of Events</a>
+      </div>
+      <div class="theCalendarContainer"></div>
+    </div>`;
+    $(theSelector).html(temp);
+    
+    if (colapsed != true) {
+      $(theSelector + ' .singleAccordion .theCalendarContainer')
+        .slideToggle('slow');
     }
-  })
+    $(theSelector + ' .singleAccordion .toggle a')
+      .click(function(e) {
+      e.preventDefault(); 
+      $(this).toggleClass("open");
+      $(theSelector + ' .singleAccordion .theCalendarContainer')
+      .slideToggle('slow');
+    });
+
+    var tab = 1; 
+    var tabs = ''; 
+    var tabsdata = '';
+    var iframes = []; 
+    dataRows.forEach(function(item, key) {
+      var museum = item[0];
+      var name = item[1];
+      var title = item[2];
+      var large = item[3];
+      var small = large.replace(/mode=MONTH/gi,'mode=AGENDA');
+      var after = item[4]; 
+      var colorClass = "color" + museum.charAt(0).toUpperCase() + museum.slice(1);
+      var ar = [large,small];
+      iframes.push(ar);
+      if ((tab - 1) != active) {
+        large = '';
+        small = '';
+      }
+      tabs = tabs + 
+        '<li><a href="#tabs-' + tab + '" data-tab="' + tab + '" class="' + colorClass + '">' + 
+        name + '</a></li>\n';
+        tabsdata = tabsdata + 
+        '<div id="tabs-' + tab + '">\n' +
+        '<p><strong>' + title + '</strong>\n' + 
+        '<div class="calendarLarge">' + large + '</div>\n' +
+        '<div class="calendarSmall">' + small + '</div>\n' +
+        '</p>' + 
+        after +
+        '</div>\n'; 
+      tab = tab + 1; 
+    })   
+    tabs = '<div id="tabs"><ul>' + tabs + '</ul></div>\n'; 
+    $(tabs).appendTo(theSelector + ' .theCalendarContainer');
+    $(tabsdata).appendTo('#tabs');
+    $( "#tabs" ).tabs({ active: active});
+    $(theSelector + ' .theCalendarContainer iframe').width('100%');
+    $('#tabs a').click(function() {
+      var id = $(this).attr("href");
+      var tab = id.substr(6) - 1;
+      var x = $(id).find('.calendarLarge iframe').length;
+      if (!x) {  // if no iframe found, then fill it in
+        $(id).find('.calendarLarge').html(iframes[tab][0]);
+        $(id).find('.calendarSmall').html(iframes[tab][1]);
+        $(theSelector + ' .theCalendarContainer iframe').width('100%');
+      }
+    })
+  }) // End of promis
 }
 
 /* ----------------------------------------------------------- */
