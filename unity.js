@@ -1,4 +1,4 @@
-/* files included 
+/* files included  
 
 common.css
 gallery.css
