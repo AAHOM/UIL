@@ -471,6 +471,7 @@ function showAddressInfo(
 /*-------------------------------------------------------------*/
 /* Frequently Asked Questions, FAQS2                           */
 /*    04/11/2021 - initial                                     */
+/*    Updated 02/22/2022                                       */
 /*-------------------------------------------------------------*/
 
 function do_faqs2(theSelector, active = 1, 
@@ -484,14 +485,16 @@ function do_faqs2(theSelector, active = 1,
     var out = '';
     var activeli = 0;
     var tabs = []; 
-
+    active = (active == null) ? 1 : active;
+    single = (single == null) ? 1 : single;
+    collapsable = (collapsable == null) ? 1 : collapsable;
+    collapsed = (collapsed == null) ? 1 : collapsed;
     // Check to see if a parameter was passed to 
     // specify which tab becomes active
     var tabparam = getSearchParams("tab");
     if (tabparam) {
       active = tabparam;
     }
-
     // point to the FAQ's spreadsheet 
     file_id = '1f3G-ECzjt8p-czZNPyUQGXG8NND016Nue5QypQTf6PQ';
     var sheet = 'FAQS';
