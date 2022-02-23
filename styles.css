@@ -1443,12 +1443,49 @@ div.theCarousel div.item div.title {
 /*-------------------------------------------------------------*/
 /* Tabbed calendar and faq container                           */
 /*    05/18/2021 - initial                                     */
+/*    02/23/2022 - Added openCloseList                         */
 /*-------------------------------------------------------------*/
 
 .theCalendarContainer  li:not(.ui-state-active) a,
 .faq_container  li:not(.ui-state-active) a {
   background-color: white;
   color: black;
+}
+
+div.faq_container .toggle div.openCloseList,
+div.tabListContainer .toggle div.openCloseList {
+  text-align: center;
+  font-weight: 500;
+  font-size: 1.2em;
+}
+
+.openCloseList .arrow {
+  border: solid black;
+  border-width: 0 3px 3px 0;
+  display: inline-block;
+  padding: 3px;
+  transform: rotate(-45deg);
+  -webkit-transform: rotate(-45deg);
+}
+
+.openCloseList .right {
+  transform: rotate(-45deg);
+  -webkit-transform: rotate(-45deg);
+}
+
+.openCloseList .left {
+  transform: rotate(135deg);
+  -webkit-transform: rotate(135deg);
+}
+
+.openCloseList .up {
+  transform: rotate(-135deg);
+  -webkit-transform: rotate(-135deg);
+}
+
+.openCloseList .down {
+  transform: rotate(45deg);
+  -webkit-transform: rotate(45deg);
 }
 
 @media (max-width: 640px) {
