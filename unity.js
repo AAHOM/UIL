@@ -605,6 +605,7 @@ function do_faqs2(theSelector, active = 1,
           $(this).toggleClass("open");
           $(theSelector + ' div#tabs')
           .slideToggle('slow');
+          $(theSelector + ' .openCloseList i').toggleClass("down");
         });
 
         // Initialize the accordian styles
