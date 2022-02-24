@@ -485,7 +485,9 @@ function showAddressInfo(
 /*-------------------------------------------------------------*/
 
 function do_faqs2(theSelector, active = 1, 
-  single = false, openfirst = true, collapsable = false, collapsed = true) {
+  single = false, openfirst = true, 
+  collapsable = false, collapsed = true,
+  title = "View Frequently Asked Questions") {
 
     var listCol = 0;
     var catCol = 1;
@@ -580,7 +582,7 @@ function do_faqs2(theSelector, active = 1,
         });
         
         var toggle = "<div class=\"toggle\">" + 
-          "<div class=\"openClose\"><a href=\"\"></i>View Frequently Asked Questions</a></div>\n";
+          "<div class=\"openCloseList\"><i class=\"arrow down\"></i><a href=\"\">" + title + "</a></div>\n";
         out = '<div id="tabs"><ul>' + tabLinks + '</ul>' + out + '</div></div>\n';
 
         $(theSelector + ' div#tabs').show();
@@ -597,7 +599,7 @@ function do_faqs2(theSelector, active = 1,
         
         $(theSelector).find('li.hide').hide(); 
         
-        $(theSelector + ' .toggle div.openClose a')
+        $(theSelector + ' .toggle div.openCloseList a')
           .click(function(e) {
           e.preventDefault(); 
           $(this).toggleClass("open");
