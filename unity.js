@@ -32,7 +32,17 @@ var theMuseumList = [
   ['aahom','Ann Arbor Hands-On Museum'],
   ['leslie','Leslie Science & Nature Center'],
   ['yankee','Yankee Air Museum'],
-  ['challenger','Challenger Learning Center at SC4']
+  ['challenger','Challenger Learning Center at SC4'],
+  ['experience','Experience Center']
+];
+
+var theMuseumKeys = [
+  'unity',
+  'aahom',
+  'leslie',
+  'yankee',
+  'challenger',
+  'experience'
 ];
 
 /* ----------------------------------------------------------- */
@@ -1493,3 +1503,147 @@ function filter_showvals (selector = '#filterContainer') {
   return; 
 
 } 
+
+/* ----------------------------------------------------------- */
+/* Build a tabbed list of maps from spreadsheet                */
+/*    02/24/2022 - initial                                     */
+/* ----------------------------------------------------------- */
+
+function do_maps(
+    theSelector = "#directionDiv",
+    active = 0, 
+    single = false,
+    collapsable = true,
+    collapsed = false,
+    title = "View Location Maps") {
+
+  // Point to calendars spreadsheet
+  file_id = '1Xrz1gJ0to5c01jiDyMvl38486s_J94lHhERtTHEBw5E', 
+  sheet = 'Maps';
+
+  // Make sure null parameters are handled
+  active = (active == null) ? 1 : active;
+  single = (single == null) ? true : single;
+  collapsable = (collapsable == null) ? true : collapsable;
+  collapsed = (collapsed == null) ? false : collapsed;
+
+  // check url paramaters to see if we need to 
+  // default to a particular calendar
+  var tabparam = getSearchParams("tab");
+    if (tabparam) {
+      active = tabparam;
+    }
+
+  if (active < 1 || active > 4) {active = 1;}
+
+  var where = "SELECT A, B, C, D, E, F WHERE C != 'Yes' AND B IS NOT NULL ORDER BY A, B";
+  var url = 'https://docs.google.com/spreadsheets/u/0/d/'
+    + file_id + '/gviz/tq?tqx=&sheet=' + sheet + 
+    '&headers=1&tq=' + escape(where);
+
+  // Fetch the spreadsheet data 
+  fetchGoogleDataAll([url]).then(dataArrayx => {
+    if (dataArrayx[1]) {  // if there was a status error of some kind
+      jQuery('#classList .gallery-items')
+        .html('<div class="errorMessage">Error fetching spreadsheet, status= ' + dataArrayx[1] + ' try refreshing page</div>');
+      return; 
+    }
+    dataArray = dataArrayx[0][0].table.rows;
+
+    // Clean up the Google array data
+    dataRows = [];
+    dataArray.forEach(function(item,key) {
+      if (item.c[0] != null) {
+        var ar = [];
+        for (let i = 0; i < 6; i++) {
+          var val =  (item.c[i] != null) ? item.c[i].v : '';
+          ar.push(val);
+        } 
+        dataRows.push(ar);
+      }
+    });
+
+    var temp = '';
+    if (collapsable == true) {
+    temp = `
+      <div class="toggle">
+        <div class="openCloseList">
+        <i class="arrow down"></i>
+          <a href="">${title}</a>
+        </div>
+      </div>`;
+    }
+    temp = temp + `<div class="theMapsContainer"></div>`;
+    $(theSelector).html(temp);
+
+    var tab = 1; 
+    var tabs = ''; 
+    var tabsdata = '';
+    var iframes = []; 
+
+    var activeTab = 0;
+
+    dataRows.forEach(function(item, key) {
+      var museum = item[1];
+      var iframe = item[4];
+      var before = item[3];
+      var after = item[5];
+    
+      var listkey = theMuseumKeys.indexOf(item[1]);
+      var name = (listkey > -1) ? theMuseumList[listkey][1] : 'Unknown';
+      if (museum == theMuseumKeys[active]) {activeTab = key;}
+      var colorClass = "color" + museum.charAt(0).toUpperCase() + museum.slice(1);
+
+      var hideme = '';
+      if (single == true && key != active) {
+        hideme = 'hide';
+      }
+
+      tabs = tabs + 
+        '<li class="' + hideme + '"><a href="#tabs-' + tab + '" data-tab="' + tab + '" class="' + colorClass + '">' + 
+        name + '</a></li>\n';
+        tabsdata = tabsdata + 
+        '<div id="tabs-' + tab + '">\n' +
+        '<p><strong>' + name + '</strong>\n' + before +
+        '<div class="calendarLarge">' + iframe + '</div>\n' + after +
+        '</div>'; 
+      tab = tab + 1; 
+
+    })  
+
+    tabs = '<div id="tabs"><ul>' + tabs + '</ul></div>\n'; 
+    $(tabs).appendTo(theSelector + ' .theMapsContainer');
+    $(tabsdata).appendTo('#tabs');
+
+    $(theSelector + ' .toggle div.openCloseList a')
+          .click(function(e) {
+          e.preventDefault(); 
+          //$(this).toggleClass("open");
+          $(theSelector + ' .theMapsContainer')
+          .slideToggle('slow');
+          $(theSelector + ' .openCloseList i').toggleClass("down");
+        });
+
+    $(theSelector).addClass('faq_container tabListContainer');
+    $( "#tabs" ).tabs({ active: activeTab});
+    if (single == true) {
+      $(theSelector).find('li.hide').hide(); 
+      $(theSelector + ' .theMapsContainer').find('.ui-tabs-nav').hide(); 
+    }
+    if (collapsable == true && collapsed == true) {
+      $(theSelector + ' .theMapsContainer').hide(); 
+      $(theSelector + ' .openCloseList i').removeClass("down");
+    }
+    $(theSelector + ' .theMapsContainer iframe').width('100%');
+    $('#tabs a').click(function() {
+      var id = $(this).attr("href");
+      var tab = id.substr(6) - 1;
+      var x = $(id).find('.calendarLarge iframe').length;
+      if (!x) {  // if no iframe found, then fill it in
+        $(id).find('.calendarLarge').html(iframes[tab][0]);
+        $(theSelector + ' .theMapsContainer iframe').width('100%');
+      }
+    })
+  }) // End of promis
+}
+
