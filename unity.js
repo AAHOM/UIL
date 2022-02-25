@@ -666,115 +666,136 @@ function teamCardResize() {
   })
 }
 
-function do_team_members2(file_id = null, sheet = null) {
+/* ----------------------------------------------------------- */
+/* Show Team Members from Spreadsheet                          */
+/*    02/25/2022 - Updated                                     */
+/* ----------------------------------------------------------- */ 
+
+function do_team_members(selectorID) {
 
     var firstCol = 0;
     var lastCol = 1;
     var orgCol = 2;
-    var groupCol = 3;
+    var unusedCol = 3; // Extra unused column
     var titleCol = 4;
     var hideCol = 5;
     var imageCol = 6;
     var bioCol = 7;
     var linkCol = 8;
-    var position = $(window).scrollTop(); 
 
-    var topmost = $('section.page-section').eq(1).offset().top;
-     
-    if (!file_id) {
-      file_id = '1hiPd3cJMf_JOr3Z4RnR3XA6-Z927OSJhxJJgYXix448';
-    }
-    if (!sheet) {
-      var sheet = 'Members';
-    }
+    var file_id = '1hiPd3cJMf_JOr3Z4RnR3XA6-Z927OSJhxJJgYXix448';
+    var sheet = 'Members';
 
     var url = 'https://docs.google.com/spreadsheets/u/0/d/'
     + file_id + '/gviz/tq?sheet=' + sheet + '&tqx=out:json&headers=1&tq=' + escape("SELECT A, B, C, D, E, F, G, H, I WHERE F = 'No' ORDER BY B, A");
 
-    var teamlist = get_spreadsheet(url);
-    if(teamlist.length == 0) {
-        $('.team_container').append('<br>Ooops.. unable to read spreadsheet</br>');
-        return;
-    }
-    var out = ''; 
-    var teams = teamlist.table.rows;
-    var prevgroup = '';
-    $('<div id="teamDetail"></div>').insertBefore('.team_container')
-    teams.forEach(function(item, key) {
-        if (item.c[groupCol] != null) { // ignore blank lines
-            if (prevgroup != item.c[groupCol] || prevgroup == '') {
-              prevgroup = item.c[groupCol].v;
-            }
-            out = out + '<div class="item_box">';
-            out = out + '<div class="item_front">';
-            if (item.c[imageCol] != null) {
-              //var imgsrc = 'https://drive.google.com/uc?export=view&id=1VxokDflhs9p1sIYDYBX7HertCAcP4887'; 
-              out = out + '<img class="item_img" src="' + item.c[imageCol].v + '" alt="Example image">';
-            }
+    fetchGoogleDataAll([url]).then(dataArray => {
+        if (dataArray[1]) {
+            // if there was a status error of some kind    
+            jQuery('div#loading').hide();
+            jQuery('#classList .gallery-items')
+            var errorMsg = `<div class="errorMessage">
+                Error fetching spreadsheet, status=${dataArray[1]} 
+                try refreshing page</div>`
+            .html(errorMsg);
+            return;
+        }
+
+        var teamlist = dataArray[0][0];
+        if (teamlist.length == 0) {
+            $(selectorID).append('<br>Ooops.. unable to read spreadsheet</br>');
+            return;
+        }
+        var out = '';
+        var teams = teamlist.table.rows;
+        var itemSrc = '';
+        $('<div id="teamDetail"></div>').insertBefore(selectorID)
+        teams.forEach(function(item, key) {
+            if (item.c[imageCol] != null) {itemSrc = item.c[imageCol].v;}
             var teamName = '';
             var teamTitle = '';
+            var itemName = '';
+            var itemTitle = '';
             if (item.c[lastCol] != null && item.c[firstCol] != null) {
-                teamName = '<span class="memberName">' + item.c[firstCol].v + ' ' + item.c[lastCol].v + '</span>';
-              out = out + '<div class="item_name">';
-              if (item.c[titleCol] != null) {
-                teamTitle = '<br>' + item.c[titleCol].v;
-                
-              }
-              out = out + '<div class="item_title">' + teamName + teamTitle + '</div>';
-              out = out + '</div>';
+                teamName = '<div class="memberName">' + 
+                    item.c[firstCol].v + ' ' + item.c[lastCol].v + '</div>';
+                itemName = teamName;
+                if (item.c[titleCol] != null) {
+                    teamTitle = '<div class="memberTitle">' + 
+                    item.c[titleCol].v + '</div>';
+                    itemTitle = item.c[titleCol].v;
+                }   
             }
-            out = out + '</div>'; // end front
-            out = out + '<div class="item_back">';
-            var biotext = 'No bio';
-            if (item.c[bioCol] != null) {
-              biotext = item.c[bioCol].v; }
-            out = out + '<div class="item_bio">' + biotext + '</div>';
-            out = out + '<button class="readMoreDetails"><i class="arrow"></i></button>';
-            out = out + '</div>'; // end back
-          out = out + '</div>';     
-        }
-    })
-    $('.team_container').append(out); 
-    teamCardResize();
-    $( window ).resize(function() {
-      teamCardResize();
-    });
-    $('#teamDetail').hide(); 
-    $('.team_container').show();
-    teamCardResize();
-
-    $('div.item_back').on('click',function() {
-        var content = $(this).find('.item_bio').html(); 
-        var front = $(this).parent();
-        var img = front.find('img').attr('src'); 
-        var name = front.find('.item_name').clone().children().remove().end().text();
-        var title = front.find('.item_title').text();
-        $('#teamDetail').html('<div id="teamName">' + name + '</div>' +
-          '<div id="teamTitle">' + title + '</div>');
-        if (img) {
-            $('#teamDetail').append('<img class="item_img" src="' + img + '">');
-        }
-        $('#teamDetail').append(content); 
-        $('#teamDetail').append('<div class="teamDetailClose topClose"><a href="#">X</a></div>');
-        $('#teamDetail').append('<div class="teamDetailClose bottomClose"><a href="#">Close</a></div>');
-        
-        position = $(window).scrollTop(); 
-        $(".teamDetailClose").on('click',function(event) {
-            event.preventDefault();
-            $('#teamDetail').hide(); 
-            $('.team_container').show();
-            //var headerHeight = $('#header').height();
-            //var t = 797 + headerHeight;
-            //$('.team_container').scrollTop(t);
-            $(window).scrollTop(position); 
+            var biotext = '<p>No bio</p>';
+            if (item.c[bioCol] != null) {biotext = item.c[bioCol].v;}
+            out = out + 
+            `<div class="item_box">
+            <div class="item_front">
+                <img class="item_img" src="${itemSrc}">
+                <div class="item_name">
+                    <div class="item_title">
+                        <div class="memberName">${itemName}</div>
+                        <div class="memberTitle">${itemTitle}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="item_back">
+                <div class="item_bio">${biotext}
+                </div><button class="readMoreDetails">
+                    <i class="arrow"></i></button>
+            </div>
+        </div>`;
+        })
+        $(selectorID).append(out);
+        $(selectorID).addClass('team_container'); // for style statements
+        teamCardResize();
+        $(window).resize(function() {
             teamCardResize();
         });
-        $('#teamDetail').show(); 
-        $('.team_container').hide();
-        var headerHeight = $('#header').height();
-        var t = $('#teamDetail').closest('section').offset().top;
-        t = t - headerHeight + 20;
-        $(window).scrollTop(t); 
+        $('#teamDetail').hide();
+        $(selectorID).show();
+        teamCardResize();
+
+        $('div.item_back').on('click', function() {
+            var content = $(this).find('.item_bio').html();
+            content = (content) ? content : '<p>No bio</p>'
+            var front = $(this).parent();
+            var img = front.find('img').attr('src');
+            //var name = front.find('.item_name').clone().children().remove().end().text();
+            var name = front.find('.item_title .memberName .memberName').text();
+            var title = front.find('.item_title .memberTitle').text();
+            var modalContent = `<!-- Modal content -->
+            <div id="teamDetail" class="modal-content" style="display: block;">
+            <div class="teamName">${name}</div>
+            <div class="teamTitle">${title}</div>
+            <div class="teamContent">
+                <img class="item_img" src="${img}">${content}
+            </div>
+            <div style="clear:both;"></div>
+            <div class="topClose close"><a href="#">X</a></div>
+            <div class="bottomClose close"><a href="#">Close</div></a>
+            </div>`;
+
+            $('#myModal').html(modalContent);
+
+            // When the user clicks on close buttons
+            $('#myModal div.topClose, #myModal div.bottomClose')
+                .on('click', function(e) {
+                e.preventDefault();
+                $('#myModal').css('display', 'none');
+            })
+            // When the user clicks anywhere outside of the modal, close it
+            window.onclick = function(event) {
+                if (event.target.id == 'myModal') {
+                    $('#myModal').css('display', 'none');
+                }
+            }
+            $('#myModal').show();
+            $('#myModal').scrollTop(0);
+        });
+  
+        addMyModal();
+
     });
 
 }
