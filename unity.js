@@ -622,6 +622,23 @@ function do_faqs2(theSelector, active = 1,
 }
 
 /* ----------------------------------------------------------- */
+/* Open modal window for calassmate details                    */
+/* ----------------------------------------------------------- */
+
+function addMyModal() {
+    var myModalID = jQuery('#myModal');
+    var myModal = `<!-- The Modal -->
+<div id="myModal" class="sqs-block-content modal">
+</div>`
+
+    ;
+    if (myModalID.length == 0) {
+        jQuery('html').append(myModal);
+        
+    }
+}
+
+/* ----------------------------------------------------------- */
 /* Team Boxes                                                  */
 /*    04/11/2021 - initial                                     */
 /* ----------------------------------------------------------- */ 
