@@ -942,6 +942,7 @@ div.faq_container .toggle div.openClose a:before {
 /* ----------------------------------------------------------- */
 /* Team Boxes                                                  */
 /*    04/11/2021 - initial                                     */
+/*    02/25/2022 - Updated                                     */
 /* ----------------------------------------------------------- */ 
 
 div.team_container {
@@ -1116,6 +1117,161 @@ div.team_container div.item_title {
     border-radius: 20px;
     background: rgba(210,210,210,.7);
     font-weight: bold;
+}
+
+#teamDetail {
+    font-size: 1em;
+    line-height: 1.5em;
+    margin-top: 50px;
+    font-family: "proxima-nova", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: 400;
+    font-family: Poppins;
+    font-weight: 300;
+    font-style: normal;
+    letter-spacing: 0em;
+    text-transform: none;
+    line-height: 1.8em;
+    font-size: 1rem;
+    line-height: 1.8;
+    -webkit-font-smoothing: antialiased;
+    border-radius: 20px;
+    border: 5px solid #6d6d6d;
+}
+
+#teamDetail #teamName, #teamDetail .teamName {
+    font-size: 25px;
+}
+
+#teamDetail #teamTitle, #teamDetail .teamTitle {
+    font-style: italic;
+}
+
+#teamDetail img {
+    margin-top: 0;
+    width:  350px;
+}
+
+#teamDetail .topClose {
+    font-size: 28px;
+    font-weight: 500;
+    position: absolute;
+    top: 10px;
+    right: 30px;
+}
+
+#teamDetail .teamContent {
+    font-size: 1em;
+    min-height: 250px;
+}
+
+#myModal {
+    display: none;
+    /* Hidden by default */
+    position: fixed;
+    /* Stay in place */
+    z-index: 999;
+    /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%;
+    /* Full width */
+    height: 100%;
+    /* Full height */
+    overflow: auto;
+    /* Enable scroll if needed */
+    background-color: rgb(0, 0, 0);
+    /* Fallback color */
+    background-color: rgba(0, 0, 0, 0.4);
+    /* Black w/ opacity */
+}
+
+#myModal .modal-content {
+    background-color: #fefefe;
+    xmargin: 190px auto;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    /* Could be more or less, depending on screen size */
+}
+
+#myModal .modal-content .theModalContent {
+    margin: 0 20px;
+}
+
+#myModal img.campImage {
+    width: 100%;
+    min-height: 200px;
+    object-fit: cover;
+}
+
+#myModal div.imageDiv {
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+#myModal .campTitle {
+    font-weight: bold;
+    text-align: center;
+}
+
+#myModal .signUpButton {
+    display: block;
+    clear: both;
+    margin-top: 20px;
+}
+
+#myModal .signUpButton a {
+    padding: .6rem 1.002rem;
+    border: 1px solid black;
+    margin-top: 20px;
+    border-radius: 10px;
+}
+
+@media (max-width: 800px) {
+    div.team_container div.item_box {
+        width: 70%;
+        max-width: 70%;
+        padding-top: clamp(200px, 70%, 300px);
+    }
+
+    #teamDetail {
+        width: 90%;
+        min-width: unset;
+        margin: 50px auto;
+    }
+
+    #teamDetail img {
+        float: none;
+        width: 100%;
+    }
+}
+
+#myModal .topClose {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: 500;
+    text-decoration:  none;
+}
+
+#myModal .close a,
+#myModal .close a:hover, 
+#myModal .close a:focus,
+#myModal .close a:visited {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+#myModal .bottomClose {
+    text-align: center;
+    display: block;
+    font-weight: 500;
+    font-size: 1.5em;
+    text-decoration: none;
+    cursor: pointer;
+    margin-bottom:  40px;
 }
 
 @media (max-width: 800px) {
