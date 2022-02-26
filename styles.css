@@ -1378,10 +1378,10 @@ body.flex-gap
 
 /* ------------------------------------------------ */
 /* Donor wall                                       */
+/*   Updated 02/26/22                               */
 /* ------------------------------------------------ */
 
-
-#donorWall div.heading {
+div.donorWall div.heading {
   white-space: pre-wrap;
   background: #f39732;
   padding: 10px;
@@ -1390,29 +1390,24 @@ body.flex-gap
   margin: 10px 0;
 }
 
-#donorWall div.donor {
+div.donorWall div.donor {
 }
 
-#donorWall div.note {
+div.donorWall div.note {
   font-style: italic;
 }
 
-#container {
-    width: 80%;
-    margin: 0 auto;
-    margin-top: 30px;
-}
-#donorWall .note,
-#donorWall .footnote,
-#donorWall sup {
+div.donorWall .note,
+div.donorWall .footnote,
+div.donorWall sup {
   font-style: italic;
 }
 
-#donorWall .donorCount,
-#donorWall .donor sup {
+div.donorWall .donorCount,
+div.donorWall .donor sup {
   margin-left: 5px;
 }
-#donorWall p {
+div.donorWall p {
   display: block;
 }
 

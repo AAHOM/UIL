@@ -819,6 +819,7 @@ function do_team_members(selectorID) {
 
 /* ------------------------------------------------------------------- */
 /* Donor Wall                                                          */
+/*   Updated 02/26/22                                                  */
 /* ------------------------------------------------------------------- */
 
 //https://stackoverflow.com/questions/149055/how-to-format-numbers-as-currency-string
@@ -829,7 +830,7 @@ var formatter = new Intl.NumberFormat('en-US', {
   currency: 'USD',
 });
 
-function do_donor_wall_new(file_id = null, sheet = null) {
+function do_donor_wall(selectorID) {
 
     var colMin = 0;
     var colDonor = 1;
@@ -840,78 +841,88 @@ function do_donor_wall_new(file_id = null, sheet = null) {
     var foottwo = ''; 
     var notes = ''; 
 
-    if (!file_id) {
-      file_id = '1Euo2kWx3lMC60XIAE7oUgXjEjoXkktFU3cW3YpZKLKw';
-    }
-    if (!sheet) {
-      var sheet = 'DonorWall';
-    }
+    file_id = '1Euo2kWx3lMC60XIAE7oUgXjEjoXkktFU3cW3YpZKLKw';
+    var sheet = 'DonorWall';
 
     var spreadSheetLink = 'https://docs.google.com/spreadsheets/d/' + file_id + '/edit';
 
     var url = 'https://docs.google.com/spreadsheets/u/0/d/'
     + file_id + '/gviz/tq?sheet=' + sheet + '&tqx=out:json&headers=1&tq=' 
     + escape('SELECT A, B, C, D, E ORDER BY A DESC');
-    var donorlist = get_spreadsheet(url);
-    
-    console.log(donorlist);
-    if(donorlist.length == 0) {
-        $('#donorWall').append('<br>Ooops.. unable to read spreadsheet</br>');
-        return;
-    }
-    var donors = donorlist.table.rows;
-    //donors.shift(); // remove header row
 
-    var data = ''; 
-    var foot = '';
-    var donorcount = '';
-    var donor = '';
-    var heading = '';
-    var prevMin = ''; 
-    var maxval = ' & Above'; 
-    donors.forEach(function(item, key) {
-        if (item.c[colMin] != null && item.c[colDonor] != null) {
-            var donorname = item.c[colDonor].v; 
-            var minval = item.c[colMin].v;
-            if (prevMin != minval && minval) {
-              // new group
-              if (prevMin) {
-                maxval = ' - ' + formatter.format(prevMin - 1); 
-              }
-              var heading = formatter.format(minval);
-              data = data + '<div class="heading">' + heading + maxval + '</div>\n';
-              prevMin = minval;
-            }   
-            if (donorname == 'Anonymous') {
-              if (item.c[colDonors] != null) {
-                donorcount = '<span class="donorCount">(' + item.c[colDonors].v + ')</span>';
-              }
-              else {
-                donorcount = '<span class="donorCount">(1)</span>';
-              }
-            }
-            else {
-              donorcount = ''; 
-            }
-            if (item.c[colEndowment] != null && item.c[colEndowment].v == 'Yes') {
-              foot = '<sup>E</sup>';
-              footone = '<div class="footnote"><sup>E</sup>&nbsp;Endowment contributor</div>\n';
-            }
-            else {
-              foot = '';
-            }
-            if (item.c[colMin].v) {
-              data  = data + '<div class="donor">' + donorname + donorcount + foot + '</div>';
-            }
-            else {
-              notes  = notes + '<div class="note">' + donorname + '</div>';
-            }
-            
+    fetchGoogleDataAll([url]).then(dataArrayx => {
+        if (dataArrayx[1]) {  // if there was a status error of some kind
+        jQuery('#classList .gallery-items')
+          .html('<div class="errorMessage">Error fetching spreadsheet, status= ' + dataArrayx[1] + ' try refreshing page</div>');
+        return; 
         }
-    })
-    var link = '<p><a href="' + spreadSheetLink + '" target="_blank">(Edit/View spreadsheet data)</a></p>';
-    $('#donorWall').append(footone).append(notes).append(data).append(link);
+        dataArray = dataArrayx[0][0].table.rows;
 
+        dataRows = [];
+        dataArray.forEach(function(item,key) {
+            if (item.c[0] != null) {
+              var ar = [];
+              for (let i = 0; i < 5; i++) {
+                var val =  (item.c[i] != null) ? item.c[i].v : '';
+                ar.push(val);
+              } 
+              dataRows.push(ar);
+            }
+        });
+
+        var donors = dataRows; 
+
+        var data = ''; 
+        var foot = '';
+        var donorcount = '';
+        var donor = '';
+        var heading = '';
+        var prevMin = ''; 
+        var maxval = ' & Above'; 
+        donors.forEach(function(item, key) {
+            if (item[colMin] && item[colDonor]) {
+                var donorname = item[colDonor]; 
+                var minval = item[colMin];
+                if (prevMin != minval && minval) {
+                  // new group
+                  if (prevMin) {
+                    maxval = ' - ' + formatter.format(prevMin - 1); 
+                  }
+                  var heading = formatter.format(minval);
+                  data = data + '<div class="heading">' + heading + maxval + '</div>\n';
+                  prevMin = minval;
+                }   
+                if (donorname == 'Anonymous') {
+                  if (item[colDonors]) {
+                    donorcount = '<span class="donorCount">(' + item[colDonors] + ')</span>';
+                  }
+                  else {
+                    donorcount = '<span class="donorCount">(1)</span>';
+                  }
+                }
+                else {
+                  donorcount = ''; 
+                }
+                if (item[colEndowment] == 'Yes') {
+                  foot = '<sup>E</sup>';
+                  footone = '<div class="footnote"><sup>E</sup>&nbsp;Endowment contributor</div>\n';
+                }
+                else {
+                  foot = '';
+                }
+                if (item[colMin]) {
+                  data  = data + '<div class="donor">' + donorname + donorcount + foot + '</div>';
+                }
+                else {
+                  notes  = notes + '<div class="note">' + donorname + '</div>';
+                }
+                
+            }
+        })
+        var link = '<p><a href="' + spreadSheetLink + '" target="_blank">(Edit/View spreadsheet data)</a></p>';
+        $(selectorID).addClass('donorWall');
+        $(selectorID).append(footone).append(notes).append(data).append(link);
+    })
 }
 
 /* ------------------------------------------------------------------- */
