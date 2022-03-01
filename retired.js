@@ -47,3 +47,32 @@ function getCachedSheet(name,url) {
     return retlist; 
   }
 }
+
+/* ----------------------------------------------------------- */
+/* Check to see if this browser supports flexbox gap propert   */
+/* See: https://ishadeed.com/article/flexbox-gap/              */
+/*    09/04/2021 - initial                                     */
+/* ----------------------------------------------------------- */
+
+function checkFlexGap() {
+  // create flex container with row-gap set
+  var flex = document.createElement("div");
+  flex.style.display = "flex";
+  flex.style.flexDirection = "column";
+  flex.style.rowGap = "1px";
+
+  // create two, elements inside it
+  flex.appendChild(document.createElement("div"));
+  flex.appendChild(document.createElement("div"));
+
+  // append to the DOM (needed to obtain scrollHeight)
+  document.body.appendChild(flex);
+  var isSupported = flex.scrollHeight === 1; // flex container should be 1px high from the row-gap
+  flex.parentNode.removeChild(flex);
+
+  return isSupported;
+}
+
+$(document).ready(function() {
+  if (checkFlexGap()) {$('body').addClass('flex-gap');}
+})
