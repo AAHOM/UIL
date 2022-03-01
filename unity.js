@@ -70,8 +70,13 @@ function checkFlexGap() {
   return isSupported;
 }
 
+/* ----------------------------------------------------------- */
+/* Do some basic setup on page load                            */
+/* ----------------------------------------------------------- */  
+
 $(document).ready(function() {
-  if (checkFlexGap()) {$('body').addClass('flex-gap');}
+  //not sure if this is needed 3/1/22
+  //if (checkFlexGap()) {$('body').addClass('flex-gap');}
 })
 
 /* ----------------------------------------------------------- */

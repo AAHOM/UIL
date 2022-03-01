@@ -149,6 +149,18 @@ div.faq_container .ui-state-active a.colorExperience,
 }
 
 /*-------------------------------------------------------------*/
+/* Back to previous page link                                  */
+/* Used for blog entries to return to blog summary list        */
+/*-------------------------------------------------------------*/
+
+div.returnPrev {
+  text-align: center;
+}
+div.returnPrev a {
+  text-decoration: underline;
+}
+
+/*-------------------------------------------------------------*/
 /* highlight text in header image with background              */
 /* $('section:first-of-type div.content-wrapper div.content')  */
 /*   .addClass('highlight');                                   */
