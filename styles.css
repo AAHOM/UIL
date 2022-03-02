@@ -478,18 +478,18 @@ article:first-of-type section:first-of-type div.content-wrapper div.content {
   }
 }
 
-
 /* ----------------------------------------------------------- */
-/* Flipbox3                                                    */
+/* Flipbox                                                     */
 /*    04/10/2021 - initial                                     */
+/*    Updated 03/02/2022                                       */
 /* ----------------------------------------------------------- */
 
-#flexbox.v3 {
+div.flipBoxContainer {
     width: 100%;
     margin: 0 auto;
 }
 
-#flexbox.v3 div.flex-container {
+div.flipBoxContainer div.flex-container {
     display: flex;
     flex-direction: row;
     font-size: 1em;
@@ -499,12 +499,12 @@ article:first-of-type section:first-of-type div.content-wrapper div.content {
     /*row-gap: 20px;*/
 }
 
-#flexbox.v3 div.flex-container div.newcolumn:only-child {
+div.flipBoxContainer div.flex-container div.newColumn:only-child {
   margin: 0 auto;
 }
 
 /* percentage */
-#flexbox.v3 div.flex-container div.newcolumn {
+div.flipBoxContainer div.flex-container div.newColumn {
     width: 30%;
     height: unset;
     /*padding-top clamp is (min, preferred, max) */
@@ -513,7 +513,7 @@ article:first-of-type section:first-of-type div.content-wrapper div.content {
     position: relative;
 }
 
-#flexbox.v3 div.flex-container div.newcolumn .flip-card {
+div.flipBoxContainer div.flex-container div.newColumn .flip-card {
     width: 100%;
     height: 100%;
     position: absolute;
@@ -524,14 +524,14 @@ article:first-of-type section:first-of-type div.content-wrapper div.content {
 }
 /* end percent */
 
-#flexbox.v3 div.flex-container .flip-card {
+div.flipBoxContainer div.flex-container .flip-card {
     background-color: transparent;
     border: 1px solid #f1f1f1;
     perspective: 1000px;
     overflow: hidden;
 }
 
-#flexbox.v3 div.flex-container .flip-card-inner {
+div.flipBoxContainer div.flex-container .flip-card-inner {
     position: relative;
     width: 100%;
     height: 100%;
@@ -540,8 +540,8 @@ article:first-of-type section:first-of-type div.content-wrapper div.content {
     transform-style: preserve-3d;
 }
 
-#flexbox.v3 .flip-card-front, 
-#flexbox.v3 .flip-card-back {
+div.flipBoxContainer .flip-card-front, 
+div.flipBoxContainer .flip-card-back {
     position: absolute;
     width: 100%;
     height: 100%;
@@ -550,12 +550,12 @@ article:first-of-type section:first-of-type div.content-wrapper div.content {
     z-index: 0;
 }
 
-#flexbox.v3 .flip-card-front {
+div.flipBoxContainer .flip-card-front {
     background-color: #bbb;
     color: black;
 }
 
-#flexbox.v3 div.front.face img {
+div.flipBoxContainer div.front.face img {
     width: auto;
     height: auto;
     min-width: 100%;
@@ -563,14 +563,14 @@ article:first-of-type section:first-of-type div.content-wrapper div.content {
     position: absolute;
 }
 
-#flexbox.v3 div.front.face img {
+div.flipBoxContainer div.front.face img {
     top: 0;
     left: 0;
     bottom: 0;
     right: 0;
 }
 
-#flexbox.v3 div.front.face img {
+div.flipBoxContainer div.front.face img {
     position: absolute;
     width: 100%;
     height: 100%;
@@ -587,14 +587,14 @@ article:first-of-type section:first-of-type div.content-wrapper div.content {
     filter: alpha(opacity=0);
 }
 
-#flexbox.v3 div.flip-card-front img.active {
+div.flipBoxContainer div.flip-card-front img.active {
     opacity: 1;
     -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
     filter: alpha(opacity=1);
 }
 
-#flexbox.v3 .flip-card-front, 
-#flexbox.v3 .flip-card-back {
+div.flipBoxContainer .flip-card-front, 
+div.flipBoxContainer .flip-card-back {
     position: absolute;
     width: 100%;
     height: 100%;
@@ -603,7 +603,7 @@ article:first-of-type section:first-of-type div.content-wrapper div.content {
     z-index: 0;
 }
 
-#flexbox.v3 .flip-card-back a {
+div.flipBoxContainer .flip-card-back a {
     position: absolute;
     top: 0;
     left: 0;
@@ -613,11 +613,11 @@ article:first-of-type section:first-of-type div.content-wrapper div.content {
     text-decoration: none;
 }
 
-#flexbox.v3 .flip-card:hover .flip-card-inner {
+div.flipBoxContainer .flip-card:hover .flip-card-inner {
     transform: rotateY(180deg);
 }
 /*
-#flexbox.v3 .centerBack {
+div.flipBoxContainer .centerBack {
     position: absolute;
     left: 50%;
     top: 50%;
@@ -627,20 +627,20 @@ article:first-of-type section:first-of-type div.content-wrapper div.content {
 }
 */
 
-#flexbox.v3 .flip-card-back {
+div.flipBoxContainer .flip-card-back {
     background-color: dodgerblue;
     color: white;
     transform: rotateY(180deg);
 }
 
-#flexbox.v3 .flip-card-back {
+div.flipBoxContainer .flip-card-back {
     background-color: #005578;
     /*background-color: rgb(102, 102, 102);*/
     color: white;
     /*background: linear-gradient(to right,#50bebe 0,#099 50%,#0099b0 83%,#0099cb 100%);*/
 }
 
-#flexbox.v3 .labelText {
+div.flipBoxContainer .labelText {
     position: absolute;
     left: 50%;
     top: 50%;
@@ -651,7 +651,7 @@ article:first-of-type section:first-of-type div.content-wrapper div.content {
     font-weight: bold;
 }
 
-#flexbox.v3 .flip-card-front .labelText {
+div.flipBoxContainer .flip-card-front .labelText {
     text-align: center;
     white-space: pre-wrap;
     background-color: rgb(238, 238, 238);
@@ -662,43 +662,43 @@ article:first-of-type section:first-of-type div.content-wrapper div.content {
     color: black;
 }
 
-#flexbox.v3 .flip-card-back div.centerBack  .labelText {
+div.flipBoxContainer .flip-card-back div.centerBack  .labelText {
     color: white;
 }
 
-#flexbox.v3 .centerBack {
+div.flipBoxContainer .centerBack {
   height: 100%;
   display: flex;
   flex-direction: column;
 }
 
-#flexbox.v3 .centerBack div.topBox {
+div.flipBoxContainer .centerBack div.topBox {
   flex-basis: 20%;
   position: relative;
 }
 
-#flexbox.v3 .centerBack div.backContent {
+div.flipBoxContainer .centerBack div.backContent {
   flex-basis: 60%;
   position: relative;
 }
 
-#flexbox.v3 .centerBack div.backLink {
+div.flipBoxContainer .centerBack div.backLink {
   flex-basis: 20%;
   position: relative;
 }
 
-#flexbox.v3 .centerBack .labelText {
+div.flipBoxContainer .centerBack .labelText {
     position: relative;
     color: inherit;
 }
 
-#flexbox.v3 div.centerBack .labelText {
+div.flipBoxContainer div.centerBack .labelText {
     left: unset;
     top: unset;
     transform: unset;
 }
 
-#flexbox.v3 div.centerBack .labelText {
+div.flipBoxContainer div.centerBack .labelText {
     display: inline-block;
     color: black;
     display: inline-block;
@@ -711,7 +711,7 @@ article:first-of-type section:first-of-type div.content-wrapper div.content {
     right: 0;
 }
 
-#flexbox.v3 .centerBack div.backContent div {
+div.flipBoxContainer .centerBack div.backContent div {
     padding: 0 20px;
     display: -webkit-box;
     -webkit-line-clamp: 5;
@@ -726,13 +726,13 @@ article:first-of-type section:first-of-type div.content-wrapper div.content {
     font-size: 1.2em;
 }
 
-#flexbox.v3 .centerBack div.backContent p {
+div.flipBoxContainer .centerBack div.backContent p {
   margin: 0
   padding: 10px 0;
 }
 
 
-#flexbox.v3 .centerBack div.backLink span{
+div.flipBoxContainer .centerBack div.backLink span{
     position: absolute;
     text-align: center;
     left: 0;
@@ -745,7 +745,7 @@ article:first-of-type section:first-of-type div.content-wrapper div.content {
 }
 /*
 @media (max-width: 1100px) {
-  #flexbox.v3 div.flex-container {
+  div.flipBoxContainer div.flex-container {
       justify-content: space-around;
   }
 
@@ -756,7 +756,7 @@ article:first-of-type section:first-of-type div.content-wrapper div.content {
         flex-direction: column;
     }
 
-    #flexbox.v3 div.flex-container div.newcolumn { 
+    div.flipBoxContainer div.flex-container div.newColumn { 
         width: 100%;
         margin-bottom: 20px;
     }  

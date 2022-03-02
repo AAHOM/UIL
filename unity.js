@@ -237,27 +237,28 @@ function showIconBar(sticky = true, iconID = 'iconBar') {
 }
 
 /* ----------------------------------------------------------- */
-/* Flipbox3 - Home page flip boxes                             */
+/* Flipbox - Home page flip boxes                              */
 /*    04/10/2021 - initial                                     */
+/*    Updated 03/02/2022                                       */
 /* ----------------------------------------------------------- */
 
 var columnIndex = 1; 
 
-function flipCardResize3() {
-  var fontsize = parseInt($('#flexbox.v3 .backContent div').css('font-size'));
-  var height = parseInt($('#flexbox.v3 .backContent').css('height'));
+function flipCardResize(selectorID) {
+  var fontsize = parseInt($(selectorID + ' .backContent div').css('font-size'));
+  var height = parseInt($(selectorID + ' .backContent').css('height'));
   var lineheight = fontsize * 1.2;
   var lines = parseInt(height / lineheight);
   //alert(fontsize + ' ' + height + ' ' + lineheight + ' ' + lines); 
-  $('#flexbox.v3 .backContent div').css("-webkit-line-clamp", lines.toString());
-  $('#flexbox.v3 .backContent div').css("line-height", lineheight + 'px');
+  $(selectorID + ' .backContent div').css("-webkit-line-clamp", lines.toString());
+  $(selectorID + ' .backContent div').css("line-height", lineheight + 'px');
 }
 
-function flip_carousel3() {
+function flip_carousel(selectorID) {
   var i;
-  var numColumns = $('.newcolumn').length;
+  var numColumns = $('.newColumn').length;
   if (columnIndex > numColumns) { columnIndex = 1;}
-  var background = $('.newcolumn:nth-child(' + +columnIndex + ') .flip-card-front');
+  var background = $('.newColumn:nth-child(' + +columnIndex + ') .flip-card-front');
   columnIndex++;
   var t = background.find('img.active').index();
   myIndex =  t + 1;
@@ -268,39 +269,35 @@ function flip_carousel3() {
   x.removeClass("active");
   background.find('img').eq(myIndex).addClass("active");
   myIndex++;
-  setTimeout(flip_carousel3, 5000);
+  setTimeout(function() {flip_carousel(selectorID)}, 5000);
 }
 
-function process_card_info3(link,images, caption, label, message) {
-    var str = 
-    '  <div class=newcolumn>\n' +
-    '   <div class="f1_container flip-card">\n' +
-    '    <div class="f1_card flip-card-inner" class="shadow">\n' +
-    '     <div class="front face flip-card-front">\n';
+function process_card_info(selectorID, link,images, caption, label, message) {
+    var str = `<div class=newColumn>
+       <div class="f1_container flip-card">
+        <div class="f1_card flip-card-inner" class="shadow">
+         <div class="front face flip-card-front">`;
     images.forEach(function(img, key) {
-      str = str + 
-    '      <img src="' + img + '"/>\n';
+      str = str + `<img src="${img}"/>`;
     })
-    str = str + 
-    '      <div class="labelText">' + caption + '</div>\n' +
-    '     </div>\n' +
-    '     <div class="back face center flip-card-back">\n' +
-    '      <a href="' + link + '">\n' +
-    
-    '        <div class=centerBack>\n' +
-    '          <div class="topBox">\n' +
-    '             <div class="labelText">' + caption + '</div>\n' +
-    '          </div>\n' +
-    '          <div class="backContent">\n<div>' + message + 
-    '          </div></div>\n' +
-    '          <div class="backLink"><span>Learn More</span></div>' +
-    '        </div>\n' +
+    str = str + `<div class="labelText">${caption}</div>
+         </div>
+         <div class="back face center flip-card-back">
+          <a href="${link}">
+            <div class=centerBack>
+              <div class="topBox">
+                 <div class="labelText">${caption}</div>
+              </div>
+              <div class="backContent">\n<div>${message}
+              </div></div>
+              <div class="backLink"><span>Learn More</span></div>
+            </div>
+         </a>
+         </div>
+       </div>
+      </div>`;
    
-    '      </a>\n' +
-    '     </div>\n' +
-    '   </div>\n' +
-    '  </div>\n';
-  $('.flex-container').append(str);
+  $(selectorID + ' .flex-container').append(str);
 }
 
 /* ----------------------------------------------------------- */
@@ -308,7 +305,7 @@ function process_card_info3(link,images, caption, label, message) {
 /*    Updated 03/02/2022                                       */
 /* ----------------------------------------------------------- */
 
-function build_flipcards3(boxNumber = '1') {
+function build_flipcards(selectorID, boxNumber = '1') {
 
   file_id = '1wEfSb4Dnjz-eNEayaNiiws3ta1ZEueiQyG5-BTWSXag';
   sheet = 'Cards2';
@@ -316,6 +313,10 @@ function build_flipcards3(boxNumber = '1') {
   var url = 'https://docs.google.com/spreadsheets/u/0/d/'
     + file_id + '/gviz/tq?tqx=out:json&sheet=' + sheet + 
     '&headers=1&tq=' + escape(where);
+
+  $(selectorID).addClass('flipBoxContainer');
+
+  $(selectorID).html('<div class="flex-container"></div>');
 
   fetchGoogleDataAll([url]).then(dataArrayx => {
     if (dataArrayx[1]) {  // if there was a status error of some kind
@@ -353,18 +354,19 @@ function build_flipcards3(boxNumber = '1') {
           images.push(src); 
         }
       };
-      process_card_info3(link,images, caption, label, message);
+      process_card_info(selectorID, link,images, caption, label, message);
     })   
 
     $('div.front.face img:first-child')
       .addClass("active");
       $('')
-    setTimeout(flip_carousel3, 5000);
+    //setTimeout(flip_carousel, 5000);
+    setTimeout(function() {flip_carousel(selectorID)}, 5000);
 
-    flipCardResize3();
+    flipCardResize(selectorID);
 
     $( window ).resize(function() {
-      flipCardResize3();
+      flipCardResize(selectorID);
     });
 
   })
