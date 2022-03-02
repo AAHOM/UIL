@@ -50,7 +50,12 @@ var theMuseumKeys = [
 /* ----------------------------------------------------------- */  
 
 $(document).ready(function() {
- // initial stuff
+  // Insert return to previous page on all blog item displays
+  var temp = `<div class="returnPrev">
+    <A HREF="javascript:javascript:history.go(-1)"> 
+    Back to previous page</A></div>`;
+  $(temp).insertBefore('div.blog-item-wrapper');
+  $(temp).insertAfter('div.blog-item-wrapper');
 })
 
 /* ----------------------------------------------------------- */
