@@ -305,67 +305,69 @@ function process_card_info3(link,images, caption, label, message) {
 
 /* ----------------------------------------------------------- */
 /* Get data from spreadsheet a build flipcards html            */
+/*    Updated 03/02/2022                                       */
 /* ----------------------------------------------------------- */
 
-function build_flipcards3(boxNumber = '1', file_id = null, sheet = null) {
+function build_flipcards3(boxNumber = '1') {
 
-
-  if (!file_id) {
-    file_id = '1wEfSb4Dnjz-eNEayaNiiws3ta1ZEueiQyG5-BTWSXag';
-  }
-  if (!sheet) {
-    sheet = 'Cards2';
-  }
+  file_id = '1wEfSb4Dnjz-eNEayaNiiws3ta1ZEueiQyG5-BTWSXag';
+  sheet = 'Cards2';
   var where = 'SELECT * WHERE A=' + boxNumber + ' ORDER BY A, B';
   var url = 'https://docs.google.com/spreadsheets/u/0/d/'
-    + file_id + '/gviz/tq?tqx=&sheet=' + sheet + 
+    + file_id + '/gviz/tq?tqx=out:json&sheet=' + sheet + 
     '&headers=1&tq=' + escape(where);
 
-  var cardlist = get_spreadsheet(url);
-  var cards = cardlist.table.rows;
-  console.log(cards);
+  fetchGoogleDataAll([url]).then(dataArrayx => {
+    if (dataArrayx[1]) {  // if there was a status error of some kind
+    jQuery('#classList .gallery-items')
+      .html('<div class="errorMessage">Error fetching spreadsheet, status= ' + dataArrayx[1] + ' try refreshing page</div>');
+    return; 
+    }
+    var cards = dataArrayx[0][0].table.rows;
 
-  var prevcard = ''; 
-  cards.forEach(function(item, key) {
-    var images = [];
-    var cardnumber = '';
-    var label = 'More Info';
-    var message = 'See more info';
-    var caption = 'VISIT'; 
-    var link = '#'; 
-    var background = 'rgb(102,102,102)';
-    var color = 'white'; 
-  
-    if (item.c[1] != null) {cardnumber = item.c[1].v;}
-    if (item.c[2] != null) {caption = item.c[2].v;}
-    if (item.c[3] != null) {label = item.c[3].v;}
-    if (item.c[4] != null) {link = item.c[4].v;}
-    if (item.c[5] != null) {background = item.c[5].v;}
-    if (item.c[6] != null) {color = item.c[6].v;}
-    if (item.c[7] != null) {message = item.c[7].v;}
-    for (var i = 8; i < 15; i++) {
-      if (item.c[i] != null) { 
-        var src = item.c[i].v;
-        if (src.indexOf('images.squarespace-cdn.com')) {
-          var temp = src.split('?');
-          var src = temp[0] + '?format=300w';
+    var prevcard = ''; 
+    cards.forEach(function(item, key) {
+      var images = [];
+      var cardnumber = '';
+      var label = 'More Info';
+      var message = 'See more info';
+      var caption = 'VISIT'; 
+      var link = '#'; 
+      var background = 'rgb(102,102,102)';
+      var color = 'white'; 
+    
+      if (item.c[1] != null) {cardnumber = item.c[1].v;}
+      if (item.c[2] != null) {caption = item.c[2].v;}
+      if (item.c[3] != null) {label = item.c[3].v;}
+      if (item.c[4] != null) {link = item.c[4].v;}
+      if (item.c[5] != null) {background = item.c[5].v;}
+      if (item.c[6] != null) {color = item.c[6].v;}
+      if (item.c[7] != null) {message = item.c[7].v;}
+      for (var i = 8; i < 15; i++) {
+        if (item.c[i] != null) { 
+          var src = item.c[i].v;
+          if (src.indexOf('images.squarespace-cdn.com')) {
+            var temp = src.split('?');
+            var src = temp[0] + '?format=300w';
+          }
+          images.push(src); 
         }
-        images.push(src); 
-      }
-    };
-    process_card_info3(link,images, caption, label, message);
-  })   
+      };
+      process_card_info3(link,images, caption, label, message);
+    })   
 
-  $('div.front.face img:first-child')
-    .addClass("active");
-    $('')
-  setTimeout(flip_carousel3, 5000);
+    $('div.front.face img:first-child')
+      .addClass("active");
+      $('')
+    setTimeout(flip_carousel3, 5000);
 
-  flipCardResize3();
-
-  $( window ).resize(function() {
     flipCardResize3();
-  });
+
+    $( window ).resize(function() {
+      flipCardResize3();
+    });
+
+  })
 }
 
 /*-------------------------------------------------------------*/
