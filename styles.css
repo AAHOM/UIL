@@ -67,10 +67,10 @@ div.faq_container .colorAahom.ui-state-active,
   background: rgb(var(--global-color-aahom));
   color: white;
 }
-#hoursContainer.museumAahom {
+.hoursContainer.museumAahom {
   border: 5px solid rgb(var(--global-color-aahom));
 }
-#hoursContainer.museumAahom > div {
+.hoursContainer.museumAahom > div {
   background-color: rgba(var(--global-color-aahom),.05);
   border: 2px solid rgba(var(--global-color-aahom),.5);
 }
@@ -82,10 +82,10 @@ div.faq_container .colorLeslie.ui-state-active,
   background: rgb(var(--global-color-leslie));
   color: white;
 }
-#hoursContainer.museumLeslie {
+.hoursContainer.museumLeslie {
   border: 5px solid rgb(var(--global-color-leslie));
 }
-#hoursContainer.museumLeslie > div {
+.hoursContainer.museumLeslie > div {
   background-color: rgba(var(--global-color-leslie),.05);
   border: 2px solid rgba(var(--global-color-leslie),.5);
 }
@@ -98,10 +98,10 @@ div.faq_container .ui-state-active a.colorYankee,
   background: rgb(var(--global-color-yankee));
   color: white;
 }
-#hoursContainer.museumYankee {
+.hoursContainer.museumYankee {
   border: 5px solid rgb(var(--global-color-yankee));
 }
-#hoursContainer.museumYankee > div {
+.hoursContainer.museumYankee > div {
   background-color: rgba(var(--global-color-yankee),.05);
   border: 2px solid rgba(var(--global-color-yankee),.5);
 }
@@ -113,10 +113,10 @@ div.faq_container .colorChallenger.ui-state-active,
   background: rgb(var(--global-color-challenger));
   color: white;
 }
-#hoursContainer.museumChallenger {
+.hoursContainer.museumChallenger {
   border: 5px solid rgb(var(--global-color-challenger));
 }
-#hoursContainer.museumChallenger > div {
+.hoursContainer.museumChallenger > div {
   background-color: rgba(var(--global-color-challenger),.05);
   border: 2px solid rgba(var(--global-color-challenger),.5);
 }
@@ -129,11 +129,11 @@ div.faq_container .ui-state-active a.colorExperience,
   background: rgb(var(--global-color-experience));
   color: black;
 }
-#hoursContainer.museumExperience {
+.hoursContainer.museumExperience {
   border: 5px solid rgb(var(--global-color-experience));
   color: black;
 }
-#hoursContainer.museumExperience > div {
+.hoursContainer.museumExperience > div {
   background-color: rgba(var(--global-color-experience),.05);
   border: 2px solid rgba(var(--global-color-experience),.5);
   color: black;
@@ -768,7 +768,7 @@ div.flipBoxContainer .centerBack div.backLink span{
 /*    04/10/2021 - initial                                     */
 /*-------------------------------------------------------------*/
 
-#hoursContainer {
+.hoursContainer {
   border: 5px solid rgb(233, 34, 49);
   border-radius: .5em;
   padding: 1%;
@@ -782,7 +782,7 @@ div.flipBoxContainer .centerBack div.backLink span{
   margin: 0 auto;
 }
 
-#hoursContainer > div {
+.hoursContainer > div {
   padding: 10px;
   background-color: rgba(233, 34, 49,.05);
   border: 2px solid rgba(233, 34, 49,.5);
@@ -791,90 +791,90 @@ div.flipBoxContainer .centerBack div.backLink span{
 }
 
 /*
-#hoursContainer.museumUnity {
+.hoursContainer.museumUnity {
   border: 5px solid rgb(64, 77, 92);
 }
 
-#hoursContainer.museumAahom {
+.hoursContainer.museumAahom {
   border: 5px solid rgb(23,123,192);
 }
-#hoursContainer.museumAahom > div {
+.hoursContainer.museumAahom > div {
   background-color: rgba(23,123,192,.05);
   border: 2px solid rgba(23,123,192,.5);
 }
 
-#hoursContainer.museumLeslie {
+.hoursContainer.museumLeslie {
   border: 5px solid rgb(26, 134, 84);
 }
-#hoursContainer.museumLeslie > div {
+.hoursContainer.museumLeslie > div {
   background-color: rgba(9,113,61,.05);
   border: 2px solid rgba(9,113,61,.5);
 }
 
-#hoursContainer.museumExperience {
+.hoursContainer.museumExperience {
   border: 5px solid rgb(248,197,21);
 }
-#hoursContainer.museumExperience > div {
+.hoursContainer.museumExperience > div {
   background-color: rgba(248,197,21,.05);
   border: 2px solid rgba(248,197,21,.5);
 }
 
-#hoursContainer.museumChallenger {
+.hoursContainer.museumChallenger {
   border: 5px solid rgb(38,169,225);
 }
-#hoursContainer.museumChallenger > div {
+.hoursContainer.museumChallenger > div {
   background-color: rgba(38,169,225,.05);
   border: 2px solid rgba(38,169,225,.5);
 }
 
-#hoursContainer.museumYankee {
+.hoursContainer.museumYankee {
   border: 5px solid rgb(227,25,55);
 }
-#hoursContainer.museumYankee > div {
+.hoursContainer.museumYankee > div {
   background-color: rgba(227,25,55,.05);
   border: 2px solid rgba(227,25,55,.5);
 }
 */
 
-#hoursContainer p {
+.hoursContainer p {
   white-space: normal;
 }
 
-#hoursContainer h3 {
+.hoursContainer h3 {
   margin-top: 0;
   
   font-size: 1.25em;
   margin-bottom: 10px;
 }
 
-#hoursContainer div.fixed {
+.hoursContainer div.fixed {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-#hoursContainer ul {
+.hoursContainer ul {
   margin: 0;
   font-size: 1rem;
   line-height: 1.5rem;
   margin-bottom: 5px;
 }
 
-#hoursContainer .head {
+.hoursContainer .head {
   font-weight: bold;
   font-style: italic;
 }
 
-#hoursContainer a {
+.hoursContainer a {
     color: #00f;
     text-decoration: underline;
 }
 
 @media screen and (max-width:  767px ) {
-    #hoursContainer {
+    .hoursContainer {
     flex-direction: column;
   }
-  #hoursContainer > div {
+  .hoursContainer > div {
     overflow: unset;
   }
 }
