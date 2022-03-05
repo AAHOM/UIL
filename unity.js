@@ -1143,32 +1143,16 @@ function subMenuBar(act = '', sel = '#subMenu') {
 return menu; 
 }
 
+
 /*-------------------------------------------------------------*/
 /* Add filter radio/checkboxes                                 */
 /*    07/03/2021 - initial                                     */
 /*-------------------------------------------------------------*/
 
-/* Usage
-
-parameter 1 (groups): group<:[radio|checkbox]><:[default]>
-parameter 2 (selector): ie. '#filtercontainer'
-parameter 3 (file_id): Google docs file id 
-parameter 4 (sheet name): Google docs spreadsheet sheet name
-
-Example:
-
-$( document ).ready(function() {
-    showFilterSelections('locations:radio:leslie, groups:checkbox:4th');
-});
-<div id="container">
-  <div id="filterContainer"></div>
-</div>
-
+/*  This is the selector that we will use to find all of 
+    the category items
+    within the current SquareSpace page section. 
 */
-
-/* This is the selector that we will use to find all of the category items
-   within the current SquareSpace page section. */
-
 var catloc =  'div.summary-content ' + 
     'div.summary-metadata-container ' + 
     'div.summary-metadata ' + 
@@ -1234,8 +1218,7 @@ function filter_showvals (selector = '#filterContainer') {
               else {
                   var newids = mygroupids[x].concat(mycatsids[i]);
                   mygroupids[x] = newids;
-              }
-              console.log('found ' + cat + ' in ' + group + ' found in ' + mycatsids[i]); 
+              } 
             }
             else {
               var x = mygroups.indexOf(group);
@@ -1247,22 +1230,13 @@ function filter_showvals (selector = '#filterContainer') {
                   var newids = mygroupids[x].concat([999]);
                   mygroupids[x] = newids;
               }
-              console.log('oops. all done1');
             }
           }
-          //else {
-          //  console.log('oops. all done2');
-          //}
         
     });
-    console.log('mygroups ' + mygroups.length);
-    console.log(mygroups);
-    console.log('mygroupids ' + mygroupids.length);
-    console.log(mygroupids);
 
     var catsel = $(selector).parent().parent().next();
     var allcats = $(catsel).find('div.summary-item').css('display','block');
-    console.log('allcats.length=' + allcats.length); 
 
     var common = [];
     if (mygroups.length > 0) {
@@ -1271,9 +1245,7 @@ function filter_showvals (selector = '#filterContainer') {
       for (n = 1; n < mygroups.length; n++) {
         common = intersection(common, mygroupids[n]);
       }
-      console.log("Common elements are: " + common);
     }
-    console.log('type=' + typeof common + ' length=' + common.length);
     for (n = 0; n < common.length; n++) {
         $(allcats).eq(common[n]).css('display','block');
     }
@@ -1293,126 +1265,165 @@ function filter_showvals (selector = '#filterContainer') {
     });
 
 }  
-/* Get the category groups and items from the spreadsheet
-   then build radio and/or checkboxes based on requested groups
+/* 
 */
+
+/* ---------------------------------------------------------- */
+/* filterSelections - Main entery                             */
+/*    03/04/2022                                              */
+/* ---------------------------------------------------------- */
+
+/*
+parameter 1 (selector): ie. '#filtercontainer'
+parameter 2 (groups): group<:[radio|checkbox]><:[label]>
+parameter 3 Flag indicating if we are using Lazy Summaries
+*/
+
+function filterSelections(
+    selectorID, 
+    groups = 'locations, groups', 
+    lazy = false) {
+
+    if (!lazy) {
+        showFilterSelections(groups, selectorID);
+    }
+    else {
+        window.customLazySummaries = {
+            general: { //runs for all summary blocks 
+                allItemsAddedFunction: function(sum_block, jsonData) {
+                    showFilterSelections(groups,selectorID);    
+                }
+            }
+        };
+    }
+}
+
+/* ---------------------------------------------------------- */
+/* Get the category groups and items from the spreadsheet     */
+/* then build radio and/or checkboxes based on requested      */
+/* groups                                                     */
+/* ---------------------------------------------------------- */
 
  function showFilterSelections(
 
-  groups = 'locations, groups', selector = "#filterContainer",
-  file_id = '1qrUPQu2qs8eOOi-yZwvzOuGseDFjkvj5_mSnoz0tJVc', 
-  sheet = 'Categories') {
+    groups = 'locations, groups', selector = "#filterContainer",
+    file_id = '1qrUPQu2qs8eOOi-yZwvzOuGseDFjkvj5_mSnoz0tJVc', 
+    sheet = 'Categories') {
 
-  var where = "SELECT A,B,C,D,E WHERE E != 'Yes' AND A IS NOT NULL ORDER BY A,B";
-  var url = 'https://docs.google.com/spreadsheets/u/0/d/'
+    var where = "SELECT A,B,C,D,E WHERE E != 'Yes' AND A IS NOT NULL ORDER BY A,B";
+    var url = 'https://docs.google.com/spreadsheets/u/0/d/'
     + file_id + '/gviz/tq?tqx=out:json&sheet=' + sheet + 
     '&headers=1&tq=' + escape(where);
-  //console.log(url);
-  var catlist = get_spreadsheet(url); 
-  var cats = catlist.table.rows;
-  allgroups = groups.split(',');
+    alert(url);
 
-  // Get a list of the found categories and nested list of 
-  // the div index's that the categorie are found on
-  // Needed later for AND/OR filtering 
-  var catsel = $(selector).parent().parent().next();
-  $(catsel).find('div.summary-item').each(function(index, value) {
-        $(this).find(catloc).filter(function (index2) {
-            var t = this.href.indexOf('?category=');
-            var cat = this.href.substr(t+10).toLowerCase(); 
-            var i = mycats.indexOf(cat);
-            if (i == -1) {
-                mycats.push(cat);
-                mycatsids.push([index]);
-                console.log('index=' + index + ' cat=' + cat);
-            }  
-            else {
-                if (mycatsids[i].indexOf(index) == -1) {
-                    mycatsids[i].push(index);
+    // Fetch the spreadsheet data 
+    fetchGoogleDataAll([url]).then(dataArrayx => {
+        if (dataArrayx[1]) {  // if there was a status error of some kind
+          jQuery('#classList .gallery-items')
+            .html('<div class="errorMessage">Error fetching spreadsheet, status= ' + dataArrayx[1] + ' try refreshing page</div>');
+          return; 
+        }
+        var cats = dataArrayx[0][0].table.rows;
+        allgroups = groups.split(',');
+
+        // Get a list of the found categories and nested list of 
+        // the div index's that the categorie are found on
+        // Needed later for AND/OR filtering 
+        var catsel = $(selector).parent().parent().next();
+        $(catsel).find('div.summary-item').each(function(index, value) {
+            $(this).find(catloc).filter(function (index2) {
+                var t = this.href.indexOf('?category=');
+                var cat = this.href.substr(t+10).toLowerCase(); 
+                var i = mycats.indexOf(cat);
+                if (i == -1) {
+                    mycats.push(cat);
+                    mycatsids.push([index]);
+                }  
+                else {
+                    if (mycatsids[i].indexOf(index) == -1) {
+                        mycatsids[i].push(index);
+                    }
                 }
-            }
-        })     
+            })     
+        }); 
+
+        var out = '<div class="flexBox">\n';
+        for (i = 0; i < allgroups.length; i++) { 
+        var group = allgroups[i].trim().toLowerCase();
+        var labels = allgroups[i].split(':');
+        var type = 'checkbox'; // default
+        var temp = group.split(':');
+        var validtypes = ['radio','checkbox'];
+        if (temp.length > 1) {
+          group = temp[0];
+          if (validtypes.indexOf(temp[1]) > -1) {
+            type = temp[1];
+          }
+        }
+        var defaultvalue = '';
+        if (temp.length > 2) {
+          defaultvalue = temp[2].toLowerCase().replaceAll(' ','+');
+        } 
+        group = group.toLowerCase();
+        groupparts = group.split('/');
+        group = groupparts[0];
+        grouplabel = (groupparts[1]) ? groupparts[1] : group;
+
+        var prettyname = grouplabel.charAt(0).toUpperCase() + grouplabel.slice(1); 
+        if (labels.length > 2 && typeof(labels[2]) != 'undefined') {
+          prettyname = labels[2];
+        }
+        out = out + '<div class="filterGroup">\n';
+        out = out + '<span>' + prettyname + '</span><table class="outer">\n';
+        var colorClass = "group" + group.charAt(0).toUpperCase() + group.slice(1);
+        var numcols = 1;
+        if (group == 'grades') {
+          numcols = 2;
+        }
+        numcols = (groupparts[2]) ? groupparts[2] : numcols;
+        var curcol = 0;
+        var tr = '<tr>';
+        if (type == 'radio') {
+          if (defaultvalue == '') {checked = ' checked ';}
+          out = out + tr + '<td><input type="' + type + '" value="" name="' + group + '"' + checked + '><span>Any</span></td>\n';
+          curcol = curcol + 1; 
+        }
+        for (n = 0; n < cats.length; n++) {
+          if (cats[n] && cats[n].c[0].v.toLowerCase() == group) {
+            var item = cats[n];
+            var lookup = item.c[2].v.toLowerCase().replaceAll(' ','+'); 
+            // Only show category if it appears in at least one blog entry
+            if (mycats.indexOf(lookup) !== -1) {
+              curcol = curcol + 1;
+
+              if (parseInt(curcol) > parseInt(1) && parseInt(curcol) <= parseInt(numcols)) {
+                tr = ''; 
+                
+              }
+              else {
+                tr = '<tr>';
+                curcol = 1;
+              }
+              if (curcol > numcols) { curcol = 1;}
+              //var item = cats[n];
+              var checked = '';
+              var lookup = item.c[2].v.toLowerCase().replaceAll(' ','+'); 
+              if (defaultvalue == lookup) {
+                checked = ' checked '; 
+              }
+
+              out = out + tr + '<td><input type="' + type + '" value="' + lookup + '" name="' + group + '"' + checked + '><span>' + item.c[3].v + '</span></td>\n';  
+            }   
+          }
+        }
+        out = out + '</table></div>\n';
+        }
+        var out = out + '</div>\n'; 
+        $(selector).html(out);
+        filter_showvals(selector); 
+        filter_values (selector);
+        return; 
     });
-  console.log('mycats=' + mycats);
-  console.log('mycatsids=' + mycatsids);  
-
-  var out = '<div class="flexBox">\n';
-  for (i = 0; i < allgroups.length; i++) { 
-    var group = allgroups[i].trim().toLowerCase();
-    var labels = allgroups[i].split(':');
-    var type = 'checkbox'; // default
-    var temp = group.split(':');
-    var validtypes = ['radio','checkbox'];
-    if (temp.length > 1) {
-      group = temp[0];
-      if (validtypes.indexOf(temp[1]) > -1) {
-        type = temp[1];
-      }
-    }
-    var defaultvalue = '';
-    if (temp.length > 2) {
-      defaultvalue = temp[2].toLowerCase().replaceAll(' ','+');
-    } 
-    group = group.toLowerCase();
-    groupparts = group.split('/');
-    group = groupparts[0];
-    grouplabel = (groupparts[1]) ? groupparts[1] : group;
-    
-    var prettyname = grouplabel.charAt(0).toUpperCase() + grouplabel.slice(1); 
-    if (labels.length > 2 && typeof(labels[2]) != 'undefined') {
-      prettyname = labels[2];
-    }
-    out = out + '<div class="filterGroup">\n';
-    out = out + '<span>' + prettyname + '</span><table class="outer">\n';
-    var colorClass = "group" + group.charAt(0).toUpperCase() + group.slice(1);
-    var numcols = 1;
-    if (group == 'grades') {
-      numcols = 2;
-    }
-    numcols = (groupparts[2]) ? groupparts[2] : numcols;
-    var curcol = 0;
-    var tr = '<tr>';
-    if (type == 'radio') {
-      if (defaultvalue == '') {checked = ' checked ';}
-      out = out + tr + '<td><input type="' + type + '" value="" name="' + group + '"' + checked + '><span>Any</span></td>\n';
-      curcol = curcol + 1; 
-    }
-    for (n = 0; n < cats.length; n++) {
-      if (cats[n] && cats[n].c[0].v.toLowerCase() == group) {
-        var item = cats[n];
-        var lookup = item.c[2].v.toLowerCase().replaceAll(' ','+'); 
-        // Only show category if it appears in at least one blog entry
-        if (mycats.indexOf(lookup) !== -1) {
-          curcol = curcol + 1;
-
-          if (parseInt(curcol) > parseInt(1) && parseInt(curcol) <= parseInt(numcols)) {
-            tr = ''; 
-            
-          }
-          else {
-            tr = '<tr>';
-            curcol = 1;
-          }
-          if (curcol > numcols) { curcol = 1;}
-          //var item = cats[n];
-          var checked = '';
-          var lookup = item.c[2].v.toLowerCase().replaceAll(' ','+'); 
-          if (defaultvalue == lookup) {
-            checked = ' checked '; 
-          }
-
-          out = out + tr + '<td><input type="' + type + '" value="' + lookup + '" name="' + group + '"' + checked + '><span>' + item.c[3].v + '</span></td>\n';  
-        }   
-      }
-    }
-    out = out + '</table></div>\n';
-  }
-  var out = out + '</div>\n'; 
-  $(selector).html(out);
-  filter_showvals(selector); 
-  filter_values (selector);
-  return; 
-
 } 
 
 /* ----------------------------------------------------------- */
