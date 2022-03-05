@@ -4,11 +4,16 @@
 /*-------------------------------------------------------------*/
 
 :root { 
+    --global-color-unity: 77, 54, 59;
     --global-color-aahom: 60,100,168;
     --global-color-leslie: 109,143,60;
     --global-color-yankee: 237,27,48;
     --global-color-challenger: 237,159,33;
     --global-color-experience: 248,197,21;
+    --global-color-links: 0, 0, 255;
+    --global-color-section: 64, 77, 92;
+    --global-color-submenu: 77, 54, 59;
+    --global-color-submenu-active: 131, 124,124;
 }
 
 /* ----- Readmore links ----- */
@@ -16,13 +21,26 @@ div.readmore a,
 #tabs a.readmore,
 .sqs-block-html a,
 div.summary-content a.summary-read-more-link {
-    color: blue;
     text-decoration: underline;
+}
+
+/* ----- All links except title ----- */
+#page a {
+    color: rgb(var(--global-color-links));
+}
+#page a:hover {
+    color: rgb(var(--global-color-links));
+}
+#page div.title a {
+  color: inherit;
+}
+#page div.title a:hover {
+  color: inherit;
 }
 
 /* ------ All page background ------ */
 #page section.page-section .section-background {
-   background-color: rgba(64, 77, 92,.05) !important;
+   background-color: rgba(var(--global-color-section),.05) !important;
 }
 
 div.faq_container .ui-state-active a {
@@ -45,17 +63,17 @@ div.faq_container .colorUnity.ui-state-active,
 .colorUnity,
 #accordion .ui-state-active,
 .subMenuBar nav a {
-  background: rgb(77, 54, 59);
+  background: rgb(var(--global-color-submenu-active));
   color: white;
 }
 
 .subMenuBar nav a.active {
-  background: rgb(131, 124,124);
+  background: rgb(var(--global-color-submenu-active));
   color: white;
 }
 
 #filterContainer .flexBox .filterGroup > span {
-    background: rgb(131, 124,124);
+    background: rgb(var(--global-color-submenu-active));
     color: white;
 }
 
