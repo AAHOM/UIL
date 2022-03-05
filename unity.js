@@ -1314,7 +1314,6 @@ function filterSelections(
     var url = 'https://docs.google.com/spreadsheets/u/0/d/'
     + file_id + '/gviz/tq?tqx=out:json&sheet=' + sheet + 
     '&headers=1&tq=' + escape(where);
-    alert(url);
 
     // Fetch the spreadsheet data 
     fetchGoogleDataAll([url]).then(dataArrayx => {
