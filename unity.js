@@ -1300,6 +1300,18 @@ function filterSelections(
           return; 
         }
         var cats = dataArrayx[0][0].table.rows;
+        // This is for a quick check for abbreviated category names.
+        // facilitates swapping out the abbreviation with the full name
+        var catsAbbrev = [];
+        var catsFull = [];
+        cats.forEach(function(item,key) {
+            var abbrev = item.c[2].v;
+            var full = item.c[3].v;
+            if (abbrev.toLowerCase() != full.toLowerCase()) {
+                catsAbbrev.push(abbrev.toLowerCase());
+                catsFull.push(full);
+            }
+        })
         allgroups = groups.split(',');
 
         // Get a list of the found categories and nested list of 
@@ -1310,6 +1322,12 @@ function filterSelections(
             $(this).find(catloc).filter(function (index2) {
                 var t = this.href.indexOf('?category=');
                 var cat = this.href.substr(t+10).toLowerCase(); 
+                var x = catsAbbrev.indexOf(cat);
+                if (x != -1) {
+                    // Abbreviation found, swap it out with full name
+                    $(this).prop("href", href.substr(0,t+10) + catsFull[x]);
+                    $(this).text(catsFull[x]);
+                }
                 var i = mycats.indexOf(cat);
                 if (i == -1) {
                     mycats.push(cat);

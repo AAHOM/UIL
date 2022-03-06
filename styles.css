@@ -1384,7 +1384,7 @@ div.summary-metadata .filterCat {
     pointer-events: none;
 }
 
-div.summary-metadata .active.filterCat {
+#page div.summary-metadata a.active.filterCat {
     color: red;
 }
 
