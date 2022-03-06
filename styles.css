@@ -621,7 +621,7 @@ div.flipBoxContainer .flip-card-back {
     z-index: 0;
 }
 
-div.flipBoxContainer .flip-card-back a {
+#page div.flipBoxContainer .flip-card-back a {
     position: absolute;
     top: 0;
     left: 0;
