@@ -374,9 +374,10 @@ div.section-background div.mySlides {
     width: 100%  
 }
 div.section-background div.mySlides div.slideCaption a {
-        pointer-events: none;
-        cursor: none;
-        text-decoration: none;
+    pointer-events: none;
+    cursor: none;
+    text-decoration: none;
+    color:  white !important;
 }
 div.section-background div.mySlides.opaque div.slideCaption a {
     pointer-events: auto;
