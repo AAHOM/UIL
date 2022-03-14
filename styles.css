@@ -477,6 +477,11 @@ article:first-of-type section:first-of-type div.content-wrapper div.content {
   object-fit: cover;
 }
 
+#iconBarFoot {
+    width: calc(100% - 6vw);
+    margin: 0 auto;
+}
+
 @media (max-width: 800px) {
   #iconBar .iconBarFlex .flex-item img,
   #iconBarFoot .iconBarFlex .flex-item img {
