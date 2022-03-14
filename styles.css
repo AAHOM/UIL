@@ -76,7 +76,7 @@ div.faq_container .colorUnity.ui-state-active,
 .colorUnity,
 #accordion .ui-state-active,
 .subMenuBar nav a {
-  background: rgb(var(--global-color-submenu-active));
+  background: rgb(var(--global-color-submenu));
   color: white;
 }
 
