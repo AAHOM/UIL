@@ -25,12 +25,18 @@ div.summary-content a.summary-read-more-link {
 }
 
 /* ----- All links except title ----- */
-a {
-    color: rgb(var(--global-color-links));
+#page a {
+    /*color: rgb(var(--global-color-links));*/
 }
-a:hover {
-   color: rgb(var(--global-color-links)); 
+#page a:hover {
+    /* color: rgb(var(--global-color-links)); */
 }
+
+.sqs-block-image .design-layout-collage .image-title a, 
+.sqs-block-image .design-layout-collage .image-subtitle a {
+  color: rgb(var(--global-color-links));
+}
+
 #page div.title a {
   color: inherit;
 }
