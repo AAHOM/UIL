@@ -29,7 +29,7 @@ div.summary-content a.summary-read-more-link {
     /*color: rgb(var(--global-color-links));*/
 }
 #page a:hover {
-    color: rgb(var(--global-color-links));
+    /* color: rgb(var(--global-color-links)); */
 }
 #page div.title a {
   color: inherit;
