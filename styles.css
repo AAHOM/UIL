@@ -1724,23 +1724,6 @@ div.tabListContainer .toggle div.openCloseList {
   flex-direction: column;
 }
 
-@media only screen and (min-width: 768px) {
-    .subMenuBar nav { 
-        flex-direction: row; 
-    }
-}
-@media only screen and (max-width: 768px) {
-    #subMenu {
-        display: none;
-    }
-    #subMenu.open {
-        display: block;
-    }  
-    div.learnMenuButton .toggle a {
-      color: rgb(var(--global-color-links));
-    } 
-}
-
 .subMenuBar nav a{
   flex: 1;
   text-align: center;
@@ -1784,4 +1767,21 @@ div.learnMenuButton {
 
 div.learnMenuButton .toggle a {
   color:  black;
+}
+
+@media only screen and (min-width: 768px) {
+    .subMenuBar nav { 
+        flex-direction: row; 
+    }
+}
+@media only screen and (max-width: 768px) {
+    #subMenu {
+        display: none;
+    }
+    #subMenu.open {
+        display: block;
+    }  
+    div.learnMenuButton .toggle a {
+      color: rgb(var(--global-color-links));
+    } 
 }
