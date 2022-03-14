@@ -1735,7 +1735,10 @@ div.tabListContainer .toggle div.openCloseList {
     }
     #subMenu.open {
         display: block;
-    }   
+    }  
+    div.learMenuButton .toggle a {
+      color: rgb(var(--global-color-links));
+    } 
 }
 
 .subMenuBar nav a{
@@ -1777,4 +1780,8 @@ div.learnMenuButton {
     display: block;
     text-align: center;
     font-weight: 400;
+}
+
+div.learMenuButton .toggle a {
+  color:  black;
 }
