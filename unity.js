@@ -1136,6 +1136,7 @@ function subMenuBar(act = '', sel = '#subMenu') {
   '</nav>\n' +
 '</div>\n';
 
+  act = act.toLowerCase();
   // add the menu code
   $(menu).appendTo('#subMenu');
   // Set the appropriate active 
