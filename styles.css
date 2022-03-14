@@ -33,10 +33,10 @@ div.summary-content a.summary-read-more-link {
 }
 
 a {
-    /*color: rgb(var(--global-color-links));*/
+    color: rgb(var(--global-color-links));
 }
 a:hover {
-    /* color: rgb(var(--global-color-links)); */
+    color: rgb(var(--global-color-links));
 }
 
 .sqs-block-image .design-layout-collage .image-title a, 
