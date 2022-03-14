@@ -213,6 +213,37 @@ function showIconBar(sticky = true, iconID = 'iconBar') {
   } 
 }
 
+/*-------------------------------------------------------------*/
+/* Icon Bar - new version.                                     */
+/*    03/14/2022 - initial                                     */
+/*-------------------------------------------------------------*/
+
+function addIconBar(where = 'header') {
+  where = where.toUpperCase(); 
+  var temp = '<ul class="iconBarFlex">';
+  icons.forEach(function(item,key) {
+    temp += '<li class="flex-item ' + 'logo' + iconsFor[key] + '"><img src="' + item + '"></li>\n';
+  })
+  temp += '</ul>\n';
+
+  if (where == 'HEADER') { // stick to header
+    var s = $('article:first-of-type section:first-of-type div.content-wrapper div.content');
+    var h = s.height();
+    h = parseInt(h) + 100; 
+    s.height(h + 'px'); 
+    temp = '<div id="iconBar" class="sticky">' + temp + '</div>';
+    $(temp).appendTo('#page article:first-of-type section:first-of-type div.section-background');
+        $('div.mySlides div.slideCaption').css('bottom','100px');
+  } 
+  else if (where == 'FOOTER') { // stick to footer
+    temp = '<div id="iconBarFoot">' + temp + '</div>';
+    $(temp).prependTo('footer:first-of-type');
+  }
+  else {
+    // do nothing. 
+  }
+}
+
 /* ----------------------------------------------------------- */
 /* Flipbox - Home page flip boxes                              */
 /*    04/10/2021 - initial                                     */

@@ -193,3 +193,76 @@ $('.theCarousel').slick({
 });
 
 }
+
+/*-------------------------------------------------------------*/
+/* Icon Bar                                                    */
+/*    04/17/2021 - initial                                     */
+/*-------------------------------------------------------------*/
+
+// unity
+// 'https://static1.squarespace.com/static/5f73ca8db43a982332ef42a7/60316dbd7dd52d12ad920e7f/605f48578926120327029e3f/1616857176069/uil.png',
+// Challenger
+// https://images.squarespace-cdn.com/content/v1/5f73ca8db43a982332ef42a7/1614786000565-L6LRAQGSOU2RCTJO0GMR/ke17ZwdGBToddI8pDm48kPxxGCBoMQSgw3nyp-BaIiZZw-zPPgdn4jUwVcJE1ZvWhcwhEtWJXoshNdA9f1qD7baX_VdYN7eZTOScYEC6H_pLV4CKJoqyvEGc-h-owCr40lNeO9O4GGfQSgSHrTD7DA/Logo_mainHeader.png
+var iconsFor = ['aahom','leslie','yankee','Challenger']; 
+/* updated 6/3/21 with Ari's new image */
+var icons = [
+'https://images.squarespace-cdn.com/content/v1/5f73ca8db43a982332ef42a7/e7aeba34-467f-40cf-8056-3fba38fd490a/ke17ZwdGBToddI8pDm48kBkSiM__EzOQIDgmzlPq1lAUqsxRUqqbr1mOJYKfIPR7LoDQ9mXPOjoJoqy81S2I8N_N4V1vUb5AoIIIbLZhVYxCRW4BPu10St3TBAUQYVKcHu3Ya3GWyjn2T6Pyc7Qz5bVN2MLWeLldKxJgMp5MiZ5EAsHAx8kgg2xyUEBRqgnS/AAHOM+1200+x+480+Transparency.png?format=300w',
+'https://images.squarespace-cdn.com/content/v1/5f73ca8db43a982332ef42a7/2c40ddd6-3359-4061-a531-43ff65632a6c/ke17ZwdGBToddI8pDm48kBkSiM__EzOQIDgmzlPq1lAUqsxRUqqbr1mOJYKfIPR7LoDQ9mXPOjoJoqy81S2I8N_N4V1vUb5AoIIIbLZhVYxCRW4BPu10St3TBAUQYVKcHu3Ya3GWyjn2T6Pyc7Qz5bVN2MLWeLldKxJgMp5MiZ5EAsHAx8kgg2xyUEBRqgnS/LSNC+1200+x+480+Transparency.png?format=300w',
+'https://images.squarespace-cdn.com/content/v1/5f73ca8db43a982332ef42a7/20c32031-135c-435b-a9b0-4c45bc0acbf0/ke17ZwdGBToddI8pDm48kBkSiM__EzOQIDgmzlPq1lAUqsxRUqqbr1mOJYKfIPR7LoDQ9mXPOjoJoqy81S2I8N_N4V1vUb5AoIIIbLZhVYxCRW4BPu10St3TBAUQYVKcHu3Ya3GWyjn2T6Pyc7Qz5bVN2MLWeLldKxJgMp5MiZ5EAsHAx8kgg2xyUEBRqgnS/YAM+1200+x+480+Transparency.png?format=300w',
+'https://images.squarespace-cdn.com/content/v1/5f73ca8db43a982332ef42a7/3419d464-2d84-4a93-bd05-d877700324df/ke17ZwdGBToddI8pDm48kBkSiM__EzOQIDgmzlPq1lAUqsxRUqqbr1mOJYKfIPR7LoDQ9mXPOjoJoqy81S2I8N_N4V1vUb5AoIIIbLZhVYxCRW4BPu10St3TBAUQYVKcHu3Ya3GWyjn2T6Pyc7Qz5bVN2MLWeLldKxJgMp5MiZ5EAsHAx8kgg2xyUEBRqgnS/Challenger+1200+x+480+Transparency.png?format=300w'
+];
+// 'Experience',
+// 'https://images.squarespace-cdn.com/content/5f73ca8db43a982332ef42a7/3bace990-2ca4-4963-a409-06cb861b15b4/experience_logo.png',
+function showIconBar(sticky = true, iconID = 'iconBar') {
+  var temp = '<ul class="iconBarFlex">';
+  icons.forEach(function(item,key) {
+    temp += '<li class="flex-item ' + 'logo' + iconsFor[key] + '"><img src="' + item + '"></li>\n';
+  })
+  temp += '</ul>\n';
+  $('#' + iconID).html(temp); 
+
+  var isEditor = window.frameElement ? true : false;
+  //  && isEditor === false
+  // was if (sticky && isEditor === false) {
+  if (sticky) {
+    var s = $('article:first-of-type section:first-of-type div.content-wrapper div.content');
+    var h = s.height();
+    h = parseInt(h) + 100; 
+    s.height(h + 'px'); 
+    $('#' + iconID).addClass('sticky');
+    $('#' + iconID).appendTo('#page article:first-of-type section:first-of-type div.section-background');
+        $('div.mySlides div.slideCaption').css('bottom','100px');
+  } 
+}
+
+/* 
+
+Retired 3/14/22, replaced by AddIconBar function 
+
+-- Usage Home page header , Advanced code injections
+
+<script>
+$( document ).ready(function() {
+   showIconBar(true);
+})
+</script>
+
+-- Usage All pages footer, Footer section code section 
+
+<style>
+#iconBar, #iconBarFoot {
+    width: calc(100% - 6vw);
+    margin: 0 auto;
+}
+</style>
+<script>
+$( document ).ready(function() {
+   showIconBar(false, 'iconBarFoot');
+  $('#iconBarFoot').prependTo('footer:first-of-type');
+})
+</script>
+<div id=iconBarFoot></div>
+
+*/
+
+
