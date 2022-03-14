@@ -1118,7 +1118,7 @@ function build_calendars(
 /*    05/18/2021 - initial                                     */
 /* ----------------------------------------------------------- */
 
-function subMenuBar(act = '', sel = '#subMenu') {
+function subMenuBar(selectorID = '#subMenu', act = '') {
 
   var menu = 
   '<div class="subMenuBar">\n' +
@@ -1138,16 +1138,16 @@ function subMenuBar(act = '', sel = '#subMenu') {
 
   act = act.toLowerCase();
   // add the menu code
-  $(menu).appendTo('#subMenu');
+  $(menu).appendTo(selectorID);
   // Set the appropriate active 
-  $(sel).find('.subMenuBar a[name="' + act + '"]').addClass('active');
+  $(selectorID).find('.subMenuBar a[name="' + act + '"]').addClass('active');
   var temp = '<div class="learnMenuButton">' +
     '<div class="toggle">' +
     '<a href=""></i>- More Opportunities -</a></div></div>';
-  $(temp).insertBefore('#subMenu');
+  $(temp).insertBefore(selectorID);
   $('.learnMenuButton .toggle a').click(function(e) {
     e.preventDefault(); 
-    $('#subMenu').toggleClass("open")
+    $(selectorID).toggleClass("open")
   })
 return menu; 
 }
