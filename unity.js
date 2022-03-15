@@ -1,27 +1,3 @@
-/* files included  
-
-common.css
-gallery.css
-iconbar.css
-flipbox3.css
-hours.css
-faqs2.css
-teamboxes2.css
-filter.css
-donor.css
-
-common.js
-gallery.js
-iconbar.js
-flipbox3.js
-hours.js
-faqs2.js
-teamboxes2.js
-filter.js
-donor.js
-
-*/ 
-
 /*-------------------------------------------------------------*/
 /* Initialize the standard list of museums                     */
 /*    02/21/2022 - initial                                     */
@@ -191,27 +167,6 @@ var icons = [
 ];
 // 'Experience',
 // 'https://images.squarespace-cdn.com/content/5f73ca8db43a982332ef42a7/3bace990-2ca4-4963-a409-06cb861b15b4/experience_logo.png',
-function showIconBar(sticky = true, iconID = 'iconBar') {
-  var temp = '<ul class="iconBarFlex">';
-  icons.forEach(function(item,key) {
-    temp += '<li class="flex-item ' + 'logo' + iconsFor[key] + '"><img src="' + item + '"></li>\n';
-  })
-  temp += '</ul>\n';
-  $('#' + iconID).html(temp); 
-
-  var isEditor = window.frameElement ? true : false;
-  //  && isEditor === false
-  // was if (sticky && isEditor === false) {
-  if (sticky) {
-    var s = $('article:first-of-type section:first-of-type div.content-wrapper div.content');
-    var h = s.height();
-    h = parseInt(h) + 100; 
-    s.height(h + 'px'); 
-    $('#' + iconID).addClass('sticky');
-    $('#' + iconID).appendTo('#page article:first-of-type section:first-of-type div.section-background');
-        $('div.mySlides div.slideCaption').css('bottom','100px');
-  } 
-}
 
 /*-------------------------------------------------------------*/
 /* Icon Bar - new version.                                     */
