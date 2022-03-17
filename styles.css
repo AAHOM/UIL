@@ -1426,6 +1426,142 @@ body.flex-gap
 }  
 
 /* ------------------------------------------------ */
+/* New summary block for filter                     */
+/*   Initial 03/17/2020                             */
+/* ------------------------------------------------ */
+
+:root {
+    --rgap: 20px;
+    --cgap: 30px;
+    --backcolor: #eee;
+    --square: 100px;
+    --columns: 5;
+}
+
+div.summaryFilterContainer {
+    display: inline-flex;
+    flex-flow: row wrap;
+    justify-content: space-around;
+    /*row-gap: var(--rgap, 20px);*/
+    /*column-gap: var(--cgap, 20px);*/
+    ;
+    width: 100%;
+    /*margin: 20px auto;*/
+    margin: 0;
+    gap: 12px;
+    max-width: unset;
+}
+
+div.summaryFilterContainer .itemFilter {
+    box-sizing: border-box;
+    /*width: calc((100% / 5) -(2 * var(--rgap, 12px)));*/
+    width: calc((100% / 4) - 20px);
+  /*width: 30%; */
+    margin: 0;
+    /*min-width: 200px;*/
+    position: relative;
+}
+
+div.summaryFilterContainer .itemFilter * {
+    box-sizing: inherit;
+}
+
+div.summaryFilterContainer .itemFilterImage {
+    display: block;
+}
+
+div.summaryFilterContainer .itemFilterContent {
+    display: block;
+    line-height: 19.2px;
+}
+
+div.summaryFilterContainer .itemFilter img {
+    width: 100%;
+    margin: 0;
+    object-fit: cover;
+}
+
+div.summaryFilterContainer .itemFilter figitem {
+    flex: 1 1 50%;
+}
+
+div.summaryFilterContainer .itemFilter .title {
+    font-size: 20px;
+    font-weight: normal;
+    text-align: left;
+    font-style: normal;
+    opacity: .9;
+    margin-top: 5px;
+}
+
+div.summaryFilterContainer .itemFilter p {
+    font-size: 14px;
+    font-weight: 300;
+    opacity: 1;
+}
+
+div.summaryFilterContainer .itemFilter a, .itemFilter a:hover, div.summaryFilterContainer .itemFilter a:visited {
+    text-decoration: none;
+    color: blue;
+}
+
+div.summaryFilterContainer .itemFilter .theCats a {
+    color: unset;
+}
+
+div.summaryFilterContainer .itemFilter .summary-read-more-link {
+    margin: 0 0 10px 0;
+    font-size: 14px;
+    line-height: 20px;
+    text-align: left;
+    display: block;
+}
+
+div.summaryFilterContainer .info {
+    display: none;
+}
+
+div.summaryFilterContainer .theCats {
+    display: none;
+    opacity: .7;
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.4em;
+    text-transform: none;
+    display: inline-block;
+}
+#newSummaryItems {
+  position: relative;
+  width: 100%;
+  display:  none;
+}
+  
+#newSummaryItems div.summaryFilterContainer .itemFilterCats a.active {
+      color: red;
+}
+
+#newSummaryItems div.summaryFilterContainer .itemFilterCats .summary-metadata--primary,
+#newSummaryItems div.summaryFilterContainer .itemFilterCats .summary-metadata-item--date {
+      display: none;
+}
+
+@media all and (max-width: 900px) {
+    div.summaryFilterContainer .itemFilter {
+        /*width: calc((100% / 4) -(2 * var(--gap, 12px)));*/
+      width: calc((100% / 3) - 20px);
+    }
+
+@media all and (max-width: 600px) {
+    div.summaryFilterContainer .itemFilter {
+        min-width: auto;
+        width: 100%;
+    }
+    div.summaryFilterContainer .itemFilter img {
+        max-width: unset;
+    }
+}
+
+/* ------------------------------------------------ */
 /* Donor wall                                       */
 /*   Updated 02/26/22                               */
 /* ------------------------------------------------ */
