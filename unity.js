@@ -1376,9 +1376,7 @@ sheet='Categories') {
             var img = $(value).find('.summary-thumbnail-outer-container img').data('src');
             var spancat = $(value).find('div.summary-metadata-container').html();
             img = (!img) ? 'https://via.placeholder.com/300x200?text=Coming%20Soon' : img; 
-          console.log('index=' + index);
-          console.log(spancat);
-          
+        
             testout += 
             `<div class="itemFilter">
                   <div class="itemFilterImage">
