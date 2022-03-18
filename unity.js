@@ -1199,8 +1199,8 @@ function filter_showvals(selector='#filterContainer') {
 
     });
 
-    var catsel = $(selector).parent().parent().next();
-    var allcats = $(catsel).find('div.summary-item').css('display', 'block');
+//    var catsel = $(selector).parent().parent().next();
+//    var allcats = $(catsel).find('div.summary-item').css('display', 'block');
 
     // default is to turn them all on initially
     var catsel2 = $("#newSummaryItems div.itemFilter");
@@ -1209,7 +1209,7 @@ function filter_showvals(selector='#filterContainer') {
  
     var common = [];
     if (mygroups.length > 0) {
-        $(allcats).css('display', 'none')
+//        $(allcats).css('display', 'none')
         $(allcats2).css('display','none');
         common = mygroupids[0];
         for (n = 1; n < mygroups.length; n++) {
@@ -1217,10 +1217,10 @@ function filter_showvals(selector='#filterContainer') {
         }
     }
     for (n = 0; n < common.length; n++) {
-        $(allcats).eq(common[n]).css('display', 'block');
+//        $(allcats).eq(common[n]).css('display', 'block');
         $(allcats2).eq(common[n]).css('display','block');
     }
-
+/*
     var catsel = $(selector).parent().parent().next();
     $(catsel).find('a.active').removeClass('active');
     $(catsel).find('div.summary-item').each(function(index, value) {
@@ -1234,6 +1234,7 @@ function filter_showvals(selector='#filterContainer') {
         })
 
     });
+*/
 
     var catsel2 = $("#newSummaryItems div.itemFilter");
     $(catsel2).find('a.active').removeClass('active');
