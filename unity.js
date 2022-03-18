@@ -1494,7 +1494,7 @@ sheet='Categories') {
         var out = out + '</div>\n';
         $(selector).html(out);
         $('<div id="newSummaryItems"><div class="summaryFilterContainer">' + 
-            testout + '</div></div>').insertAfter(selector);
+            testout + '</div></div>').appendTo(selector);
         filter_showvals(selector);
         filter_values(selector);
         $(selector).parent().parent().next().find('div.summary-item').remove();
