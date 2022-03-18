@@ -1349,15 +1349,16 @@ div.team_container div.item_title {
 
 #filterContainer {
     display: flex; 
+    margin-bottom: 15px;
 }
 
 #filterContainer .flexBox {
     display: flex;
     flex-wrap: wrap;
-    margin-bottom: 15px;
+    
     flex-basis: auto;
     flex-grow: 1;
-    margin-left:  -10px;
+    /*margin-left:  -10px;*/
 }
 
 #filterContainer .flexBox .filterGroup {
