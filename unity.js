@@ -1410,7 +1410,7 @@ sheet='Categories') {
         })
 
         $('<div id="newSummaryItems"><div class="summaryFilterContainer">' + 
-            testout + '</div></div>').appendTo(selector);
+            testout + '</div></div>').insertAfter(selector);
     
 
         /* Here we are building the actual html checkbox/radio buttons based 
