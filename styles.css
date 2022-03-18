@@ -1440,24 +1440,18 @@ body.flex-gap
 div.summaryFilterContainer {
     display: inline-flex;
     flex-flow: row wrap;
-    justify-content: space-around;
-    /*row-gap: var(--rgap, 20px);*/
-    /*column-gap: var(--cgap, 20px);*/
-    ;
+    justify-content: start;
     width: 100%;
-    /*margin: 20px auto;*/
     margin: 0;
-    gap: 12px;
+    gap: 25px;
     max-width: unset;
 }
 
 div.summaryFilterContainer .itemFilter {
     box-sizing: border-box;
     /*width: calc((100% / 5) -(2 * var(--rgap, 12px)));*/
-    width: calc((100% / 5) - 20px);
-  /*width: 30%; */
+    width: calc((100% / 5) - 25px);
     margin: 0;
-    /*min-width: 200px;*/
     position: relative;
 }
 
@@ -1506,6 +1500,7 @@ div.summaryFilterContainer .itemFilter a, .itemFilter a:hover, div.summaryFilter
 
 div.summaryFilterContainer .itemFilter .theCats a {
     color: unset;
+    pointer-events: none;
 }
 
 div.summaryFilterContainer .itemFilter .summary-read-more-link {
@@ -1540,11 +1535,21 @@ div.summaryFilterContainer .theCats {
 }
 
 #newSummaryItems div.summaryFilterContainer .itemFilterCats .summary-metadata--primary,
-#newSummaryItems div.summaryFilterContainer .itemFilterCats .summary-metadata-item--date {
+#newSummaryItems div.summaryFilterContainer .itemFilterCats .summary-metadata-item--date,
+#newSummaryItems div.summaryFilterContainer .itemFilterCats .summary-metadata-item--tags,
+#newSummaryItems div.summaryFilterContainer .itemFilterCats .summary-metadata-item--author {
       display: none;
 }
 
-@media all and (max-width: 1100px) {
+
+@media all and (max-width: 900px) {
+    div.summaryFilterContainer .itemFilter {
+      width: calc((100% / 3) - 20px);
+    }
+}
+
+
+@media all and (max-width: 1200px) {
     div.summaryFilterContainer .itemFilter {
       width: calc((100% / 4) - 20px);
     }
