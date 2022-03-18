@@ -1346,7 +1346,7 @@ div.team_container div.item_title {
 /* ------------------------------------------------------------------- */
 
 #filterContainer {
-    display: flex; 
+  /*  display: flex; */
     margin-bottom: 15px;
 }
 
