@@ -1296,6 +1296,11 @@ sheet='Categories') {
     + file_id + '/gviz/tq?tqx=out:json&sheet=' + sheet +
     '&headers=1&tq=' + escape(where);
 
+    // hide the squarespace summary block, we are going to 
+    // build an entirly new flexbox list
+    $(selector).parent().parent().next().find('div.summary-item-list')
+      .css('display','none !important');
+
     // Fetch the spreadsheet data 
     fetchGoogleDataAll([url]).then(dataArrayx => {
         if (dataArrayx[1]) {
