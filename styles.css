@@ -1455,7 +1455,7 @@ div.summaryFilterContainer {
 div.summaryFilterContainer .itemFilter {
     box-sizing: border-box;
     /*width: calc((100% / 5) -(2 * var(--rgap, 12px)));*/
-    width: calc((100% / 4) - 20px);
+    width: calc((100% / 5) - 20px);
   /*width: 30%; */
     margin: 0;
     /*min-width: 200px;*/
@@ -1547,7 +1547,7 @@ div.summaryFilterContainer .theCats {
 
 @media all and (max-width: 1100px) {
     div.summaryFilterContainer .itemFilter {
-      width: calc((100% / 3) - 20px);
+      width: calc((100% / 4) - 20px);
     }
 }
 
