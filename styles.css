@@ -1345,8 +1345,6 @@ div.team_container div.item_title {
 /* Filter checkboxes for programs, events                              */
 /* ------------------------------------------------------------------- */
 
-// Filter flexbox
-
 #filterContainer {
     display: flex; 
     margin-bottom: 15px;
