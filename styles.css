@@ -1541,17 +1541,15 @@ div.summaryFilterContainer .theCats {
       display: none;
 }
 
+@media all and (max-width: 1200px) {
+    div.summaryFilterContainer .itemFilter {
+      width: calc((100% / 4) - 20px);
+    }
+}
 
 @media all and (max-width: 900px) {
     div.summaryFilterContainer .itemFilter {
       width: calc((100% / 3) - 20px);
-    }
-}
-
-
-@media all and (max-width: 1200px) {
-    div.summaryFilterContainer .itemFilter {
-      width: calc((100% / 4) - 20px);
     }
 }
 
