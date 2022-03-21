@@ -1541,6 +1541,26 @@ div.summaryFilterContainer .theCats {
       display: none;
 }
 
+div.summaryFilterContainer .itemFilter a.itemTitle,
+div.summaryFilterContainer .itemFilter a.itemTitle:visited,
+div.summaryFilterContainer .itemFilter a.itemTitle:hover {
+  color: green; 
+  font-size: 16px;
+  line-height: 19.2px;
+}
+#newSummaryItems {
+   display: block; 
+}
+div.summaryFilterContainer .itemFilter * {
+  font-size: 13px;
+  line-height: 1.4em;
+  text-transform: none;
+}
+
+.newCats.active {
+  color: red; 
+}
+
 @media all and (max-width: 1200px) {
     div.summaryFilterContainer .itemFilter {
       width: calc((100% / 4) - 20px);
