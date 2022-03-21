@@ -1645,3 +1645,391 @@ function do_maps(
     })
   }) // End of promis
 }
+
+/*--------------------  New gallery filter code  ------------------ */
+
+
+/* here we find the intersection of two arrays */
+function intersection(first, second)
+{
+    first = new Set(first);
+    second = new Set(second);
+    return [...first].filter(item => second.has(item));
+}
+
+function adjustGalleryItemHeight() {
+  var aspect_ratio_box2 = 0.66666666;
+  var box2 = jQuery(".summaryFilterContainer img");
+  /*
+  var focal = $(".summaryFilterContainer img").data('image-focal-point');
+  if (focal) {
+    focalparts = focal.split(" ",2);
+    var newfocal = (focal[0] * 100) + '% ' + (focal[1] * 100) + '%';
+    if (newfocal != '50% 50%') {
+      box2.css('object-position',newfocal);
+    }
+  }
+  */
+  var w = box2.width();
+  var h = w * aspect_ratio_box2;
+  box2.height(h);
+}
+
+/* ------------------------------------------------------- */
+/* CleanUpArray - take spreadsheet data and normalize      */
+/*     into a normal array                                 */
+/* ------------------------------------------------------- */
+
+function cleanUpArray(dataArray, num=5) {
+  // Clean up the Google array data
+    dataRows = [];
+    dataArray.forEach(function(item,key) {
+      if (item.c[0] != null) {
+        var ar = [];
+        for (let i = 0; i < num; i++) {
+          var val =  (item.c[i] != null) ? item.c[i].v : '';
+          ar.push(val);
+        } 
+        dataRows.push(ar);
+      }
+    });
+    return dataRows;
+}
+
+function filterGalleryShowvals(selectorID, mycats, mycatsids) {
+
+    // get an array of checked items
+    var ids = [];
+    var xidsx = [];
+    mygroups = [];
+    mygroupids = [];
+    selectedcats = [];
+    var selectedcatsids = [];
+    $('#filterContainer input[type=checkbox]:checked, ' +
+    '#filterContainer input[type=radio]:checked')
+    .each(function() {
+        if (this.value) {
+            ids.push(this.value);
+            var group = $(this).attr('name');
+            var cat = this.value;
+            cat = cat.replace("&", "%26");
+            selectedcats.push(cat);
+            var i = mycats.findIndex(element => {  // compare lower case 
+                  return element.toLowerCase().replaceAll(' ', '+').replaceAll('%20', '+') === cat.toLowerCase().replaceAll(' ', '+').replaceAll('%20', '+');
+                })
+            selectedcatsids.push(i);
+            //i = mycats.indexOf(cat);
+            if (i != -1) {
+                var x = mygroups.indexOf(group);
+                if (x == -1) {
+                    mygroups.push(group);
+                    mygroupids.push(mycatsids[i]);
+                }
+                else {
+                    var newids = mygroupids[x].concat(mycatsids[i]);
+                    mygroupids[x] = newids;
+                }
+            }
+            else {
+                var x = mygroups.indexOf(group);
+                if (x == -1) {
+                    mygroups.push(group);
+                    mygroupids.push([999]);
+                }
+                else {
+                    var newids = mygroupids[x].concat([999]);
+                    mygroupids[x] = newids;
+                }
+            }
+        }
+
+    });
+
+    // default is to turn them all on initially
+    var catsel2 = $("#newSummaryItems div.itemFilter");
+    var allcats2 = $(catsel2).css('display','block');
+    $(allcats2).find('div.itemFilterCats .newCats').removeClass('active');
+
+ 
+    var common = [];
+    if (mygroups.length > 0) {
+        $(allcats2).css('display','none');
+        common = mygroupids[0];
+        for (n = 1; n < mygroups.length; n++) {
+            common = intersection(common, mygroupids[n]);
+        }
+    }
+
+    // Turn on the items that were selected
+    for (n = 0; n < common.length; n++) {
+        $(allcats2).eq(common[n]).css('display','block');
+    }
+
+    // set the selected categories to active 
+    for (n = 0; n < selectedcatsids.length; n++) {
+      $(allcats2).find('div.itemFilterCats .newCats[data-id="' + 
+      selectedcatsids[n] + '"]').addClass('active');
+    }
+  } 
+
+function makeFilterBoxes(selectorID, cats, groupinfo, mycats, mycatsids) {
+
+     /* Here we are building the actual html checkbox/radio buttons based 
+        on the requested groups in the call.  I.e. "locations, grades". 
+    */
+
+    var groups = 'grades,outreach';
+/*
+    // group, order, abberv, category  from spreadsheet
+    var cats = [
+        ['grades',10,'PreK','PreK'],
+        ['grades',20,'K','K'],
+        ['locations',10,'aahom','Ann Arbor Hands-On Museum'],
+        ['locations',20,'leslie','Leslie Science & Nature Center'],
+        ['outreach',10,'Classroom Workshop','Classroom Workshop'],
+        ['outreach',10,'Super Science Day','Super Science Day']
+    ];
+
+    // group, label, type
+    var groupinfo = [
+        ['locations','Locations','radio'],
+        ['grades','Grades','checkbox'],
+        ['outreach','Outreach','checkbox']
+    ];
+
+    var mycats = [
+        'PreK','K',
+        'Ann+Arbor+Hands-On+Museum',
+        'Leslie+Science+&+Nature+Center',
+        'Super+Science+day'
+    ];
+*/
+    allgroups = groups.split(',');
+   
+    var out = '<div class="flexBox">\n';
+    for (i = 0; i < allgroups.length; i++) {
+        var groupx = allgroups[i].trim().toLowerCase();
+        var groupparts = groupx.split(':',3);
+        var group = groupparts[0];
+        var label = group; 
+        var type = 'checkbox';
+        for (x = 0; x < groupinfo.length; x++) {
+          if (groupinfo[x][0] == group) {
+            label = groupinfo[x][1];
+            type = groupinfo[x][2];
+          }
+        }      
+        label = (typeof groupparts[1] != 'undefined' && groupparts[1] != '') ? groupparts[1] : label;
+        type = (typeof groupparts[2] != 'undefined' && groupparts[2] != '') ? groupparts[2] : type;
+   
+        out = out + '<div class="filterGroup">\n';
+        out = out + '<span>' + label + '</span><table class="outer">\n';
+        var colorClass = "group" + group.charAt(0).toUpperCase() + group.slice(1);
+        var numcols = 1;
+        if (group == 'grades') {
+            numcols = 2;
+        }
+        var curcol = 0;
+        var tr = '<tr>';
+        var defaultvalue = '';
+        if (type == 'radio') {
+            if (defaultvalue == '') {
+                checked = ' checked ';
+            }
+            out = out + tr + '<td><input type="' + type + '" value="" name="' + group + '"' + checked + '><span>Any</span></td>\n';
+            curcol = curcol + 1;
+        }
+        for (n = 0; n < cats.length; n++) { 
+            if (cats[n][0].toLowerCase() == group) {
+                var item = cats[n];
+                var lookup = cats[n][3].toLowerCase().replaceAll(' ', '+').replaceAll('%20', '+');
+                // Only show category if it appears in at least one blog entry
+
+                var x = mycats.findIndex(element => {  // compare lower case 
+                  return element.toLowerCase().replaceAll(' ', '+').replaceAll('%20', '+') === lookup.toLowerCase();
+                })
+                if (x !== -1) {
+                    curcol = curcol + 1;
+                    if (parseInt(curcol) > parseInt(1) && parseInt(curcol) <= parseInt(numcols)) {
+                        tr = '';
+                    }
+                    else {
+                        tr = '<tr>';
+                        curcol = 1;
+                    }
+                    if (curcol > numcols) {
+                        curcol = 1;
+                    }
+                    var checked = '';
+                    var lookup = cats[n][2].toLowerCase().replaceAll(' ', '+').replaceAll('%20', '+');
+                    if (defaultvalue == lookup) {
+                        checked = ' checked ';
+                    }
+                    out = out + tr + '<td><input type="' + type + '" value="' + lookup + '" name="' + group + '"' + checked + '><span>' + cats[n][3] + '</span></td>\n';
+                }
+            }
+        }
+        out = out + '</table></div>\n';
+    }
+    var out = out + '</div>\n';
+    $(selectorID).html(out);
+
+}
+
+function getData(theurl) {
+    var result = "";
+    $.ajax({
+        url: theurl,
+        dataType: 'text',
+        async: false,
+        success: function(data) {
+            result = data;
+        }
+    });
+    return result;
+}
+
+  function createFilteredGallery(
+    selectorID, 
+    json, 
+    groups='locations, groups') {
+
+    var file_id='1qrUPQu2qs8eOOi-yZwvzOuGseDFjkvj5_mSnoz0tJVc';
+    var where = "SELECT A,B,C,D,E WHERE E != 'Yes' AND A IS NOT NULL ORDER BY A,B";
+    var url = 'https://docs.google.com/spreadsheets/u/0/d/'
+    + file_id + '/gviz/tq?tqx=out:json&sheet=Categories' +
+    '&headers=1&tq=' + escape(where);
+
+    var url2 = 'https://docs.google.com/spreadsheets/u/0/d/'
+    + file_id + '/gviz/tq?tqx=out:json&sheet=groups' +
+    '&headers=1&tq=';
+
+    //var url3 = 'https://www.uildev.com/outreach-1';
+
+    //var res = getData(url3);
+    //console.log(res);
+
+    // hide the squarespace summary block, we are going to 
+    // build an entirly new flexbox list
+    $(selectorID).parent().parent().next().find('div.summary-item-list')
+      .css('display','none !important');
+
+    // Fetch the spreadsheet data 
+    fetchGoogleDataAll([url,url2]).then(dataArrayx => {
+        if (dataArrayx[1]) {
+            // if there was a status error of some kind
+            jQuery('#classList .gallery-items')
+            .html('<div class="errorMessage">Error fetching spreadsheet, status= ' + dataArrayx[1] + ' try refreshing page</div>');
+            return;
+        }
+        var cats = cleanUpArray(dataArrayx[0][0].table.rows,4);
+        var info = cleanUpArray(dataArrayx[0][1].table.rows,3);
+        allgroups = groups.split(',');
+        var dataArray = formatGalleryItems(selectorID, json);
+        $('<div id="filterContainer"></div>').prependTo(selectorID);
+
+        makeFilterBoxes('#filterContainer',cats, info, dataArray[0], dataArray[1]); 
+        
+        filterGalleryShowvals(selectorID, dataArray[0], dataArray[1]);
+        // Process selection when a radio or checkbox is changes 
+        $('#filterContainer input[type=checkbox], ' +
+          '#filterContainer input[type=radio]')
+          .on('change', function(e) {
+            filterGalleryShowvals(selectorID, dataArray[0], dataArray[1]);
+        })
+     })   
+  }
+
+  function formatGalleryItems(selectorID, json) {
+    var temp = json;
+    var a = temp['items'];
+    var testout = ''; 
+    var mycats = []; // unique list of categories found 
+    var mycatsids = []; 
+    for (var i=0; i < a.length; i++) {
+      var index = i;
+      var href = a[i]['fullUrl'];
+      var img = a[i]['assetUrl'];
+      var lastPart = img.replace(/\\$/,'').split('\\').pop();
+      var title = a[i]['title'];
+      var excerpt = a[i]['excerpt'];
+      excerpt = excerpt.replace(/(<([^>]+)>)/gi, "");
+      var focal = a[i]['mediaFocalPoint'];
+      var focalx = focal['x'];
+      var focaly = focal['y'];
+      var categories = a[i]['categories'];
+      var cats = ''; 
+      var sep = ''; 
+      var body = a[i]['body'];
+      var x=body.indexOf('<img');
+      var temp = body.substr(x,300);
+      var bodyimg = a[i]['fullUrl']
+      if (lastPart.indexOf('.jpg') == -1) {
+        var regexp = /<img[^>]+src\s*=\s*['"]([^'"]+)['"][^>]*>/;
+        var src = temp.match(regexp);
+        if (src != null) {
+           img = src[1];
+        }
+      }
+      for (var n=0; n < categories.length; n++) {
+        x = mycats.indexOf(categories[n]);
+        if (x == -1) {
+          mycats.push(categories[n]);
+          x = mycats.length - 1;
+          mycatsids.push([i]); 
+        }
+        else {
+          if (mycatsids[x].indexOf(i) == -1) {
+              mycatsids[x].push(index);
+          }
+      } 
+        cats += `<span class="newCats" data-id="${x}">${sep}${categories[n]}</span>`;
+        sep = ', '; 
+      }
+
+      //var imgpos = imgtemp.attr('data-image-focal-point');
+      var focalpoint = ''; 
+      if (focalx != '' && focaly != '') {
+        var newfocal = (focalx * 100) + '% ' + (focaly * 100) + '%';
+        if (newfocal != '50% 50%') {
+            box2.css('object-position',newfocal);
+            focalpoint = ' style="object-position:' + newfocal + ';"';
+        }
+      }
+      
+      testout += 
+            `<div class="itemFilter" data-itemid="${index}">
+                  <div class="itemFilterImage">
+                      <a href="${href}">
+                      <img src="${img}/?format=300w"${focalpoint}>
+                      </a>
+                  </div>
+                  <div class="itemFilterContent">
+                      <a href="${href}" class="itemTitle">
+                          ${title}</a>
+                          <p class="message">${excerpt}</p>
+                      
+                      <a href="${href}" class="summary-read-more-link">
+                          Read More →
+                      </a>
+                      <div class="itemFilterCats">
+                          <!-- Categories -->
+                              ${cats}
+                      </div>
+                  </div>
+              </div>`;
+    }
+   
+    $(document).ready(function() { 
+      var temp = `<div id="newSummaryItems">
+        <div class="summaryFilterContainer">out</div>`;
+      $(selectorID).html(temp); 
+      $('.summaryFilterContainer').html(testout);
+      adjustGalleryItemHeight();
+      jQuery(window).resize(function() {
+        adjustGalleryItemHeight(); 
+      });
+    });
+    return [mycats,mycatsids];
+
+  }
