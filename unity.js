@@ -2043,15 +2043,3 @@ function createFilteredGallery(
     return [mycats,mycatsids];
 
   }
-
-/* Usage
-  <squarespace:query collection="outreach-1" limit="100">
-  <script>
-    createFilteredGallery(
-      '#collectionData',
-      {@|json},
-      'grades,outreach');
-  </script>
-</squarespace:query>
-*/
-<div id="collectionData"></div>
