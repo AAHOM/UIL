@@ -1940,19 +1940,40 @@ function getData(theurl) {
      })   
   }
 
-  function formatGalleryItems(selectorID, json) {
+ function formatGalleryItems(selectorID, json, cats = []) {
+/*
+   var cats = [
+        ['grades',10,'PreK','PreK'],
+        ['grades',20,'K','K'],
+        ['locations',10,'aahom','Ann Arbor Hands-On Museum'],
+        ['locations',20,'leslie','Leslie Science & Nature Center'],
+        ['outreach',10,'Classroom Workshop','Classroom Workshop'],
+        ['outreach',10,'Super Science Day','Super Science Day']
+    ];
+*/
+    // cats array is from category spreadsheet 
+    // used here to substitute aliase names if any
+    var aliasname = [];
+    var realname = [];
+    for (var i=0; i < cats.length; i++) {
+      if (cats[i][2] != cats[i][3]) {
+        aliasname.push(cats[i][2].toLowerCase());
+        realname.push(cats[i][3]);
+      }
+    }
+
     var temp = json;
     var a = temp['items'];
     var testout = ''; 
     var mycats = []; // unique list of categories found 
     var mycatsids = []; 
+    var allowedExtensions =  /(\.jpg|\.jpeg|\.png|\.gif)$/i; 
+    var regexp = /<img[^>]+src\s*=\s*['"]([^'"]+)['"][^>]*>/;
     for (var i=0; i < a.length; i++) {
       var index = i;
-      var href = a[i]['fullUrl'];
       var img = a[i]['assetUrl'];
-      var lastPart = img.replace(/\\$/,'').split('\\').pop();
-      var title = a[i]['title'];
       var excerpt = a[i]['excerpt'];
+      // remove html tags from excerpt.
       excerpt = excerpt.replace(/(<([^>]+)>)/gi, "");
       var focal = a[i]['mediaFocalPoint'];
       var focalx = focal['x'];
@@ -1960,18 +1981,32 @@ function getData(theurl) {
       var categories = a[i]['categories'];
       var cats = ''; 
       var sep = ''; 
-      var body = a[i]['body'];
-      var x=body.indexOf('<img');
-      var temp = body.substr(x,300);
-      var bodyimg = a[i]['fullUrl']
-      if (lastPart.indexOf('.jpg') == -1) {
-        var regexp = /<img[^>]+src\s*=\s*['"]([^'"]+)['"][^>]*>/;
-        var src = temp.match(regexp);
-        if (src != null) {
-           img = src[1];
+      if (!allowedExtensions.exec(img)) {
+        // doesn't look like an image url, look inside the body
+        var temp = $(a[i]['body']).find('img').eq(0);
+        var imgtmp = $(temp).data('src');
+        if (imgtmp) {
+          img = imgtmp; 
+          focaltmp = $(temp).data('image-focal-point');
+          console.log('focal=' + focaltmp);
+          if (focaltmp) {
+            focal = focaltmp.split(",");
+            focalx = focal[0];
+            focaly = focal[1];
+            console.log('focalx=' + focalx + ' focaly=' + focaly);
+            console.log(typeof focalx + ' math=' + focalx * 100); 
+          }
         }
       }
+      var fx = (isNaN(focalx)) ? '50%' : (focalx * 100) + '%';
+      var fy = (isNaN(focaly)) ? '50%' : (focaly * 100) + '%';
+      var newfocal = fx + ' ' + fy;
       for (var n=0; n < categories.length; n++) {
+        // look for a possible alise name and swap out
+        var x = aliasname.indexOf(categories[n].toLowerCase());
+        if (x != -1) {
+          categories[n] = realname[x];
+        }
         x = mycats.indexOf(categories[n]);
         if (x == -1) {
           mycats.push(categories[n]);
@@ -1987,29 +2022,25 @@ function getData(theurl) {
         sep = ', '; 
       }
 
-      //var imgpos = imgtemp.attr('data-image-focal-point');
       var focalpoint = ''; 
-      if (focalx != '' && focaly != '') {
-        var newfocal = (focalx * 100) + '% ' + (focaly * 100) + '%';
-        if (newfocal != '50% 50%') {
-            box2.css('object-position',newfocal);
-            focalpoint = ' style="object-position:' + newfocal + ';"';
-        }
+      if (newfocal != '50% 50%') {
+         // box2.css('object-position',newfocal);
+          focalpoint = ' style="object-position:' + newfocal + ';"';
       }
       
       testout += 
             `<div class="itemFilter" data-itemid="${index}">
                   <div class="itemFilterImage">
-                      <a href="${href}">
+                      <a href="${a[i]['fullUrl']}">
                       <img src="${img}/?format=300w"${focalpoint}>
                       </a>
                   </div>
                   <div class="itemFilterContent">
-                      <a href="${href}" class="itemTitle">
-                          ${title}</a>
+                      <a href="${a[i]['fullUrl']}" class="itemTitle">
+                          ${a[i]['title']}</a>
                           <p class="message">${excerpt}</p>
                       
-                      <a href="${href}" class="summary-read-more-link">
+                      <a href="${a[i]['fullUrl']}" class="summary-read-more-link">
                           Read More →
                       </a>
                       <div class="itemFilterCats">
