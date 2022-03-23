@@ -1772,13 +1772,13 @@ function filterGalleryShowvals(selectorID, mycats, mycatsids) {
     }
   } 
 
-function makeFilterBoxes(selectorID, cats, groupinfo, mycats, mycatsids) {
+function makeFilterBoxes(selectorID, groups, cats, groupinfo, mycats, mycatsids) {
 
      /* Here we are building the actual html checkbox/radio buttons based 
         on the requested groups in the call.  I.e. "locations, grades". 
     */
 
-    var groups = 'grades,outreach';
+    //var groups = 'grades,outreach,unknown';
 /*
     // group, order, abberv, category  from spreadsheet
     var cats = [
@@ -1804,6 +1804,11 @@ function makeFilterBoxes(selectorID, cats, groupinfo, mycats, mycatsids) {
         'Super+Science+day'
     ];
 */
+
+    var param = getSearchParams("groups");
+    if (param) {
+      groups = param;
+    }
     allgroups = groups.split(',');
    
     var out = '<div class="flexBox">\n';
@@ -1814,7 +1819,7 @@ function makeFilterBoxes(selectorID, cats, groupinfo, mycats, mycatsids) {
         var label = group; 
         var type = 'checkbox';
         for (x = 0; x < groupinfo.length; x++) {
-          if (groupinfo[x][0] == group) {
+          if (groupinfo[x][0].toLowerCase() == group.toLowerCase()) {
             label = groupinfo[x][1];
             type = groupinfo[x][2];
           }
@@ -1840,14 +1845,14 @@ function makeFilterBoxes(selectorID, cats, groupinfo, mycats, mycatsids) {
             curcol = curcol + 1;
         }
         for (n = 0; n < cats.length; n++) { 
+            var lookup = cats[n][3].toLowerCase().replaceAll(' ', '+').replaceAll('%20', '+');
+                // Only show category if it appears in at least one blog entry
+            var x = mycats.findIndex(element => {  // compare lower case 
+              return element.toLowerCase().replaceAll(' ', '+').replaceAll('%20', '+') === lookup.toLowerCase();
+            })
             if (cats[n][0].toLowerCase() == group) {
                 var item = cats[n];
-                var lookup = cats[n][3].toLowerCase().replaceAll(' ', '+').replaceAll('%20', '+');
-                // Only show category if it appears in at least one blog entry
-
-                var x = mycats.findIndex(element => {  // compare lower case 
-                  return element.toLowerCase().replaceAll(' ', '+').replaceAll('%20', '+') === lookup.toLowerCase();
-                })
+                
                 if (x !== -1) {
                     curcol = curcol + 1;
                     if (parseInt(curcol) > parseInt(1) && parseInt(curcol) <= parseInt(numcols)) {
@@ -1889,7 +1894,7 @@ function getData(theurl) {
     return result;
 }
 
-  function createFilteredGallery(
+function createFilteredGallery(
     selectorID, 
     json, 
     groups='locations, groups') {
@@ -1928,7 +1933,7 @@ function getData(theurl) {
         var dataArray = formatGalleryItems(selectorID, json);
         $('<div id="filterContainer"></div>').prependTo(selectorID);
 
-        makeFilterBoxes('#filterContainer',cats, info, dataArray[0], dataArray[1]); 
+        makeFilterBoxes('#filterContainer',groups, cats, info, dataArray[0], dataArray[1]); 
         
         filterGalleryShowvals(selectorID, dataArray[0], dataArray[1]);
         // Process selection when a radio or checkbox is changes 
@@ -2017,7 +2022,7 @@ function getData(theurl) {
           if (mycatsids[x].indexOf(i) == -1) {
               mycatsids[x].push(index);
           }
-      } 
+        } 
         cats += `<span class="newCats" data-id="${x}">${sep}${categories[n]}</span>`;
         sep = ', '; 
       }
