@@ -1398,6 +1398,11 @@ div.team_container div.item_title {
   padding-left: 10px;
 }
 
+#filterItemCount {
+  font-style: italic;
+  font-size: 14px;
+}
+
 div.summary-metadata .filterCat {
     pointer-events: none;
 }

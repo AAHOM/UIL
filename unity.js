@@ -1752,13 +1752,16 @@ function filterGalleryShowvals(selectorID, mycats, mycatsids) {
 
  
     var common = [];
+    var showing = catsel2.length;
     if (mygroups.length > 0) {
         $(allcats2).css('display','none');
         common = mygroupids[0];
         for (n = 1; n < mygroups.length; n++) {
             common = intersection(common, mygroupids[n]);
         }
+        showing = common.length;
     }
+    $('div#filterItemCount').html('Showing: ' + showing + ' of ' + catsel2.length);
 
     // Turn on the items that were selected
     for (n = 0; n < common.length; n++) {
@@ -1770,7 +1773,8 @@ function filterGalleryShowvals(selectorID, mycats, mycatsids) {
       $(allcats2).find('div.itemFilterCats .newCats[data-id="' + 
       selectedcatsids[n] + '"]').addClass('active');
     }
-  } 
+
+}
 
 function makeFilterBoxes(selectorID, groups, cats, groupinfo, mycats, mycatsids) {
 
@@ -1931,7 +1935,8 @@ function createFilteredGallery(
         var info = cleanUpArray(dataArrayx[0][1].table.rows,3);
         allgroups = groups.split(',');
         var dataArray = formatGalleryItems(selectorID, json);
-        $('<div id="filterContainer"></div>').prependTo(selectorID);
+        var counter = '<div id="filterItemCount"></div>';
+        $('<div id="filterContainer"></div>' + counter).prependTo(selectorID);
 
         makeFilterBoxes('#filterContainer',groups, cats, info, dataArray[0], dataArray[1]); 
         
@@ -2055,6 +2060,7 @@ function createFilteredGallery(
                   </div>
               </div>`;
     }
+    testout += '<div class="itemCount"></div>';
    
     $(document).ready(function() { 
       var temp = `<div id="newSummaryItems">
