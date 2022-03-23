@@ -1659,19 +1659,10 @@ function intersection(first, second)
 
 function adjustGalleryItemHeight() {
   var aspect_ratio_box2 = 0.66666666;
-  var box2 = jQuery(".summaryFilterContainer img");
-  /*
-  var focal = $(".summaryFilterContainer img").data('image-focal-point');
-  if (focal) {
-    focalparts = focal.split(" ",2);
-    var newfocal = (focal[0] * 100) + '% ' + (focal[1] * 100) + '%';
-    if (newfocal != '50% 50%') {
-      box2.css('object-position',newfocal);
-    }
-  }
-  */
+  var box2 = jQuery(".summaryFilterContainer img").not(':hidden');
   var w = box2.width();
   var h = w * aspect_ratio_box2;
+  console.log('setting img height w=' + w + ' h=' + h);
   box2.height(h);
 }
 
