@@ -1989,13 +1989,12 @@ function createFilteredGallery(
         if (imgtmp) {
           img = imgtmp; 
           focaltmp = $(temp).data('image-focal-point');
-          console.log('focal=' + focaltmp);
+          
           if (focaltmp) {
             focal = focaltmp.split(",");
             focalx = focal[0];
             focaly = focal[1];
-            console.log('focalx=' + focalx + ' focaly=' + focaly);
-            console.log(typeof focalx + ' math=' + focalx * 100); 
+            
           }
         }
       }
