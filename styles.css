@@ -1755,6 +1755,31 @@ div.theCarousel div.item div.title {
   margin-top: 0;
 }
 
+div.theCarousel div.slick-list .itemFilterCats {
+  font-size: 13px;
+  line-height: 1.4em;
+  text-transform: none;
+}
+div.theCarousel div.slick-list div.classcontent {
+  margin-bottom: 10px;
+}
+div.theCarousel div.slick-list div.readmore {
+  margin: 0 0 10px 0;
+  font-size: 14px;
+  line-height: 20px;
+  text-align: left;
+  display: block;
+}
+div.theCarousel ul.slick-dots {
+  bottom: unset;
+}
+div.theCarousel div.item .itemFilterCats {
+  display: none;
+}
+div.theCarousel div.item .itemFilterCats.active {
+  display: block;
+}
+
 @media (max-width: 640px) {
   .theCarousel  div.item {
     margin: 0;
