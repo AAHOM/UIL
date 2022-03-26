@@ -2023,7 +2023,7 @@ function createFilteredGallery(
           }
         } 
         var catname = categories[n].toLowerCase().replaceAll(' ', '+').replaceAll('%20', '+');
-        cats += `${sep}<span class="newCats" data-catname="${catname}" data-id="${x}">${categories[n]}</span>`;
+        cats += `${sep}<span class="newCats" data-itemid="${i}" data-catname="${catname}" data-id="${x}">${categories[n]}</span>`;
         sep = ', '; 
       }
 
@@ -2127,7 +2127,7 @@ function formatSlickCarousel(selectorID, json, findCats = '', showCats = false) 
           found = true;
           classNames += ' active';
         }
-        cats += `${sep}<span class="${classNames}" data-cat="${temp}">${categories[n]}</span>`;
+        cats += `${sep}<span class="${classNames}" data-itemid="${i}" data-catname="${temp}">${categories[n]}</span>`;
         sep = ', ';
       }
       if (findCatsArray.length == 0 ) { found = true;}
