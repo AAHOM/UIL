@@ -1894,6 +1894,9 @@ function createFilteredGallery(
     attr) {
 
     var groups = ('groups' in attr) ? attr['groups'] : 'grades,outreach';
+    var findCats = ('findcats' in attr) ? attr['findcats'] : '';
+    var showCats = ('showcats' in attr) ? attr['showcats'] : false; 
+    var showDots = ('dots' in attr) ? attr['dots'] : false; 
   
     var file_id='1qrUPQu2qs8eOOi-yZwvzOuGseDFjkvj5_mSnoz0tJVc';
     var where = "SELECT A,B,C,D,E WHERE E != 'Yes' AND A IS NOT NULL ORDER BY A,B";
@@ -2019,7 +2022,8 @@ function createFilteredGallery(
               mycatsids[x].push(index);
           }
         } 
-        cats += `<span class="newCats" data-id="${x}">${sep}${categories[n]}</span>`;
+        var catname = categories[n].toLowerCase().replaceAll(' ', '+').replaceAll('%20', '+');
+        cats += `${sep}<span class="newCats" data-catname="${catname}" data-id="${x}">${categories[n]}</span>`;
         sep = ', '; 
       }
 
