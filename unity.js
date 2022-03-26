@@ -1891,14 +1891,16 @@ function getData(theurl) {
 function createFilteredGallery(
     selectorID, 
     json, 
-    groups='locations, groups') {
+    attr) {
 
+    var groups = ('groups' in attr) ? attr['groups'] : 'grades,outreach';
+  
     var file_id='1qrUPQu2qs8eOOi-yZwvzOuGseDFjkvj5_mSnoz0tJVc';
     var where = "SELECT A,B,C,D,E WHERE E != 'Yes' AND A IS NOT NULL ORDER BY A,B";
     var url = 'https://docs.google.com/spreadsheets/u/0/d/'
     + file_id + '/gviz/tq?tqx=out:json&sheet=Categories' +
     '&headers=1&tq=' + escape(where);
-
+ 
     var url2 = 'https://docs.google.com/spreadsheets/u/0/d/'
     + file_id + '/gviz/tq?tqx=out:json&sheet=groups' +
     '&headers=1&tq=';
