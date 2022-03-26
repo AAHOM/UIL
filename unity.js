@@ -2057,7 +2057,7 @@ function createFilteredGallery(
     }
     testout += '<div class="itemCount"></div>';
    
-    $(document).ready(function() { 
+    //$(document).ready(function() { 
       var temp = `<div id="newSummaryItems">
         <div class="summaryFilterContainer">out</div>`;
       $(selectorID).html(temp); 
@@ -2066,7 +2066,7 @@ function createFilteredGallery(
       jQuery(window).resize(function() {
         adjustGalleryItemHeight(); 
       });
-    });
+   // });
     return [mycats,mycatsids];
 
   }
