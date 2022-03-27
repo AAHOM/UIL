@@ -1751,7 +1751,7 @@ function filterGalleryShowvals(selectorID, mycats, mycatsids) {
         }
         showing = common.length;
     }
-    $('div#filterItemCount').html('Showing: ' + showing + ' of ' + catsel2.length);
+    $(selectorID + ' div.filterItemCount').html('Showing: ' + showing + ' of ' + catsel2.length);
 
     // Turn on the items that were selected
     for (n = 0; n < common.length; n++) {
@@ -1930,7 +1930,7 @@ function createFilteredGallery(
         var info = cleanUpArray(dataArrayx[0][1].table.rows,3);
         allgroups = groups.split(',');
         var dataArray = formatGalleryItems(selectorID, json);
-        var counter = '<div id="filterItemCount"></div>';
+        var counter = '<div class="filterItemCount"></div>';
         $('<div id="filterContainer"></div>' + counter).prependTo(selectorID);
 
         makeFilterBoxes('#filterContainer',groups, cats, info, dataArray[0], dataArray[1]); 
