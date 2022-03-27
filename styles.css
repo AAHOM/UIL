@@ -1398,9 +1398,16 @@ div.team_container div.item_title {
   padding-left: 10px;
 }
 
-#filterItemCount {
+
+
+div.filterItemCount {
   font-style: italic;
   font-size: 14px;
+  display:  none;
+}
+
+div.filterItemCount.active {
+  display: block;
 }
 
 div.summary-metadata .filterCat {
