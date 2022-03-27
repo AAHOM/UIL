@@ -1736,7 +1736,7 @@ function filterGalleryShowvals(selectorID, mycats, mycatsids) {
     });
 
     // default is to turn them all on initially
-    var catsel2 = $("#newSummaryItems div.itemFilter");
+    var catsel2 = $(selectorID + " #newSummaryItems div.itemFilter");
     var allcats2 = $(catsel2).css('display','block');
     $(allcats2).find('div.itemFilterCats .newCats').removeClass('active');
 
