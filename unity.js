@@ -2195,3 +2195,571 @@ function formatSlickCarousel(selectorID, json, findCats = '', showCats = false) 
     });
     return;
   }
+
+  // Added 3/28/22 -----------------------------------------
+
+  function filterGalleryShowvals(selectorID, mycats, mycatsids, displayType='') {
+
+    // get an array of checked items
+    var ids = [];
+    var xidsx = [];
+    mygroups = [];
+    mygroupids = [];
+    selectedcats = [];
+    var selectedcatsids = [];
+    $('#filterContainer input[type=checkbox]:checked, ' +
+    '#filterContainer input[type=radio]:checked')
+    .each(function() {
+        if (this.value) {
+            ids.push(this.value);
+            var group = $(this).attr('name');
+            var cat = this.value;
+            cat = cat.replace("&", "%26");
+            selectedcats.push(cat);
+            var i = mycats.findIndex(element => {  // compare lower case 
+                  return element.toLowerCase().replaceAll(' ', '+').replaceAll('%20', '+') === cat.toLowerCase().replaceAll(' ', '+').replaceAll('%20', '+');
+                })
+            selectedcatsids.push(i);
+            //i = mycats.indexOf(cat);
+            if (i != -1) {
+                var x = mygroups.indexOf(group);
+                if (x == -1) {
+                    mygroups.push(group);
+                    mygroupids.push(mycatsids[i]);
+                }
+                else {
+                    var newids = mygroupids[x].concat(mycatsids[i]);
+                    mygroupids[x] = newids;
+                }
+            }
+            else {
+                var x = mygroups.indexOf(group);
+                if (x == -1) {
+                    mygroups.push(group);
+                    mygroupids.push([999]);
+                }
+                else {
+                    var newids = mygroupids[x].concat([999]);
+                    mygroupids[x] = newids;
+                }
+            }
+        }
+
+    });
+
+    // default is to turn them all on initially
+    var catsel2 = $(selectorID + " div.theCarousel div.item"); // carousel type
+
+    if (displayType == 'grid') {
+      var catsel2 = $(selectorID + " #newSummaryItems div.itemFilter"); // grid
+    }
+    var allcats2 = $(catsel2).css('display','block');
+    $(allcats2).find('div.itemFilterCats .newCats').removeClass('active');
+
+ 
+    var common = [];
+    var showing = catsel2.length;
+    if (mygroups.length > 0) {
+        $(allcats2).css('display','none');
+        common = mygroupids[0];
+        for (n = 1; n < mygroups.length; n++) {
+            common = intersection(common, mygroupids[n]);
+        }
+        showing = common.length;
+    }
+    $(selectorID + ' div.filterItemCount').html('Showing: ' + showing + ' of ' + catsel2.length);
+
+    // Turn on the items that were selected
+    for (n = 0; n < common.length; n++) {
+        $(allcats2).eq(common[n]).css('display','block');
+    }
+
+    // set the selected categories to active 
+    for (n = 0; n < selectedcatsids.length; n++) {
+      $(allcats2).find('div.itemFilterCats .newCats[data-id="' + 
+      selectedcatsids[n] + '"]').addClass('active');
+    }
+
+    //$(selectorID).find('.theCarousel').slick('refresh');
+    //$(selectorID).find('.theCarousel').slick('slickGoTo', 0);
+
+}
+
+/* ----------------------------------------------------------- */
+/* Recursive AJAX call to get SquareSpace collection items     */
+/*    as json array data                                       */
+/* ----------------------------------------------------------- */
+
+function recursiveAjaxCall(
+  collection, offset = '', 
+  selectorID, 
+  callback, 
+  items=[], 
+  attr) {
+
+    $.ajax({
+      url: collection,
+      data: {offset: offset,
+      format: 'json'},
+      async:   true
+    })
+    .done(function (data) { 
+      var j = data;
+        console.log(data);
+        items = items.concat(data['items']);
+        if ('pagination' in j && 'nextPageOffset' in j['pagination']) {
+          var off = j['pagination']['nextPageOffset'];
+          recursiveAjaxCall(collection, off, selectorID, callback, items, attr);
+        }
+        else {
+            callback(selectorID, {items: items}, attr);
+        }
+    })
+    .fail(function (jqXHR, textStatus, errorThrown) {
+      console.log(jqXHR);
+      var status = jqXHR['status'];
+      var msg = 'Error encountered, status="' + status + '" errorTrhown="' + errorThrown + '"';
+      if (status == '404') {
+        msg = 'Could not find collection "' + collection + '"';
+      }
+      msg = '<div class="errorMsg">Error: ' + msg + '</div>';
+      $(selectorID).html(msg);
+    });
+}
+
+/* ----------------------------------------------------------- */
+/* Redirect control function for collection display            */
+/*                                                             */
+/* ----------------------------------------------------------- */
+
+function collectionControl(
+  selectorID, 
+  collection, 
+  type = 'carousel',  
+  attr = {}) {
+
+  var msg = ''; 
+  var sel = $(selectorID);
+  if (sel.length == 0) {
+    msg = 'Error: Selector "' + selectorID + '" not found.';
+    msg = '<div class="errorMsg">Error: ' + msg + '</div>';
+    $('#page').find('article').eq(0).find('div.content').eq(0).prepend(msg);
+    return;
+  }
+  else if (sel.length > 1) {
+    msg = 'Error: Found more than one selector "' + selectorID + '"'; 
+    msg = '<div class="errorMsg">Error: ' + msg + '</div>';
+    $(selectorID).eq(0).html(msg);
+    return; 
+  }
+
+  type = type.toLowerCase();
+  if (type == 'carousel') {
+    recursiveAjaxCall(collection,'',selectorID,theCarouselCallback, [], attr);
+  }
+  else if (type == 'grid') {
+    recursiveAjaxCall(collection,'',selectorID,theGridCallback, [], attr);
+  } 
+  else if (type == 'team') {
+   // recursiveAjaxCall(collection,'',selectorID,theTeamCallback, [], attr);
+  } 
+  else {
+    msg = 'Error: Unknown type="' + type + '"'
+    msg = '<div class="errorMsg">Error: ' + msg + '</div>';
+    $(selectorID).eq(0).html(msg);
+  }
+}
+
+// Callback for Grid
+function theGridCallback(selectorID,json, attr) {
+   createGridGallery(selectorID, json, attr);
+}
+
+// Callback for Carousel
+function theCarouselCallback(selectorID, json, attr) {
+  formatSlickCarousel(selectorID,json, attr);
+}
+
+// Callback for Team
+function theTeamCallback(selectorID, json, attr) {
+  formatTeamDisplay(selectorID,json, attr);
+}
+
+function formatTeamDisplay(selectorID, json, attr) {
+
+    var a = json['items'];
+    var testout = ''; 
+    var allowedExtensions =  /(\.jpg|\.jpeg|\.png|\.gif)$/i; 
+    var regexp = /<img[^>]+src\s*=\s*['"]([^'"]+)['"][^>]*>/;
+
+    var findCats = ('findcats' in attr) ? attr['findcats'] : '';
+    var showCats = ('showcats' in attr) ? attr['showcats'] : false; 
+    var showDots = ('dots' in attr) ? attr['dots'] : false; 
+
+    // Set up an array with requested categories
+    var findCatsArray = []; 
+    if (findCats.trim() != '') {
+      findCatsArray = findCats.split(',');
+    }
+    for (var n=0; n < findCatsArray.length; n++) {
+         findCatsArray[n] = findCatsArray[n].trim()
+         .toLowerCase().replaceAll(' ', '+').replaceAll('%20', '+');
+    }
+
+    // Set up active class if we are showing categories
+    showcats = '';
+    if (showCats) {
+      showcats = ' active';
+    }
+
+
+}
+
+function createGridGallery(
+    selectorID, 
+    json, 
+    attr) {
+
+    /* Process the parameters passed in the object array attr */
+
+    var groups = ('groups' in attr) ? attr['groups'] : 'grades,outreach';
+    var findCats = ('findcats' in attr) ? attr['findcats'] : '';
+    var filter = ('filter' in attr) ? attr['filter'] : true;
+    var showCats = ('showcats' in attr) ? attr['showcats'] : false; 
+    var showDots = ('dots' in attr) ? attr['dots'] : false; 
+    var showCount = ('showcount' in attr) ? attr['showcount'] : true; 
+  
+    /* Using the json array, fill in the html for all of the items 
+    found in the array, plus all of the categories found */
+
+    var dataArray = formatGalleryItems(selectorID, json);
+
+    /* If we are showing counts, then set the count class to active */
+
+
+    var theclass = (showCount==true) ? ' active' : '';
+    console.log('showCount=' + showCount + ' theclass=' + theclass);
+    var counter = `<div class="testing filterItemCount${theclass}"></div>`;
+    $('<div id="filterContainer"></div>' + counter).prependTo(selectorID);
+
+    /* Now, build the filter boxes and set up events, if requested */
+
+    if (filter) {
+      collectFilterInfo(selectorID, groups, 'grid');
+    }
+  }
+
+function collectFilterInfo(selectorID, groups = 'grades,outreach', displayType) {
+
+    
+    var file_id='1qrUPQu2qs8eOOi-yZwvzOuGseDFjkvj5_mSnoz0tJVc';
+    var where = "SELECT A,B,C,D,E WHERE E != 'Yes' AND A IS NOT NULL ORDER BY A,B";
+    var url = 'https://docs.google.com/spreadsheets/u/0/d/'
+    + file_id + '/gviz/tq?tqx=out:json&sheet=Categories' +
+    '&headers=1&tq=' + escape(where);
+ 
+    var url2 = 'https://docs.google.com/spreadsheets/u/0/d/'
+    + file_id + '/gviz/tq?tqx=out:json&sheet=groups' +
+    '&headers=1&tq=';
+
+    /* Read the two Google spreadsheets that contain information about
+    filtering groups*/
+
+    fetchGoogleDataAll([url,url2]).then(dataArrayx => {
+        if (dataArrayx[1]) {
+            // if there was a status error of some kind
+            jQuery('#classList .gallery-items')
+            .html('<div class="errorMessage">Error fetching spreadsheet, status= ' 
+              + dataArrayx[1] + ' try refreshing page</div>');
+            return;
+        }
+        var cats = cleanUpArray(dataArrayx[0][0].table.rows,4);
+        var groupinfo = cleanUpArray(dataArrayx[0][1].table.rows,3);
+        for (var n=0; n < cats.length; n++) {
+          cats[n][0] = cats[n][0].replace(' ','').toLowerCase();
+        }
+
+        /* Navigate through all of the selectors that contain the category 
+        information for each item.  Collect arrays with the item number, 
+        category slug name, and category full name. */   
+ 
+        var allgroups = []; 
+        var mycats = [];
+        var mycatsids = [];
+        var mycatsfull = [];
+        var mycatsgrps = [];
+        var it = $(selectorID).find('div.itemFilterCats span.newCats');
+        console.log('it.length=' + it.length);
+        it.each(function() {
+          var id = $(this).data('itemid');
+          var cat = $(this).data('catname');
+          var full = $(this).text();
+          x = mycats.indexOf(cat);
+          if (x == -1) {
+            mycats.push(cat);
+            mycatsfull.push(full);
+            x = mycats.length - 1;
+            mycatsids.push([id]);
+            var catgroup = 'unknown'; 
+            for (var k=0; k < cats.length; k++) {
+              //console.log('looking for=' + cats[k][0]);
+              if (allgroups.indexOf(cats[k][0])) {
+                catgroup = cats[k][0];
+              }
+            }
+            mycatsgrps.push(catgroup);
+          }
+          else {
+            if (mycatsids[x].indexOf(id) == -1) {
+              mycatsids[x].push(id);
+            }
+          } 
+        })  
+
+        /* At this point we should have two arrays.  mycats contains a list of all of the 
+        unique slug names for categories listed by the items.  mycatsids contains an indexed
+        list of the item id's that each unique slug references.*/
+
+        console.log(mycats);
+        console.log(mycatsids);
+
+        // we can override the groups with a url parameter
+        var param = getSearchParams("groups");
+        if (param) {
+          groups = param;
+        }
+        allgroups = groups.replace(' ','').toLowerCase().split(',');
+
+        var out = '<div id="filterContainer"><div class="flexBox">\n';
+        for (i = 0; i < allgroups.length; i++) {
+          var groupx = allgroups[i].trim().toLowerCase();
+          var groupparts = groupx.split(':',3);
+          var group = groupparts[0];
+          var label = group; 
+        var type = 'checkbox';
+        for (x = 0; x < groupinfo.length; x++) {
+          if (groupinfo[x][0].toLowerCase() == group.toLowerCase()) {
+            label = groupinfo[x][1];
+            type = groupinfo[x][2];
+          }
+        }      
+        label = (typeof groupparts[1] != 'undefined' && groupparts[1] != '') ? groupparts[1] : label;
+        type = (typeof groupparts[2] != 'undefined' && groupparts[2] != '') ? groupparts[2] : type;
+        out = out + '<div class="filterGroup">\n';
+        out = out + '<span>' + label + '</span><table class="outer">\n';
+        var colorClass = "group" + group.charAt(0).toUpperCase() + group.slice(1);
+        var numcols = 1;
+        if (group == 'grades') {
+            numcols = 2;
+        }
+        var curcol = 0;
+        var tr = '<tr>';
+        var defaultvalue = '';
+        if (type == 'radio') {
+            if (defaultvalue == '') {
+                checked = ' checked ';
+            }
+            out = out + tr + '<td><input type="' + type + '" value="" name="' + group + '"' + checked + '><span>Any</span></td>\n';
+            curcol = curcol + 1;
+        }
+        
+        var countOfFilters = 0; 
+        for (n = 0; n < cats.length; n++) { 
+            var lookup = cats[n][3].toLowerCase().replaceAll(' ', '+').replaceAll('%20', '+');
+                // Only show category if it appears in at least one blog entry
+            var x = mycats.findIndex(element => {  // compare lower case 
+              return element.toLowerCase().replaceAll(' ', '+').replaceAll('%20', '+') === lookup.toLowerCase();
+            })
+ 
+            if (cats[n][0].toLowerCase() == group) {
+                var item = cats[n];
+                
+                if (x !== -1) {
+                    curcol = curcol + 1;
+                    if (parseInt(curcol) > parseInt(1) && parseInt(curcol) <= parseInt(numcols)) {
+                        tr = '';
+                    }
+                    else {
+                        tr = '<tr>';
+                        curcol = 1;
+                    }
+                    if (curcol > numcols) {
+                        curcol = 1;
+                    }
+                    var checked = '';
+                    var lookup = cats[n][2].toLowerCase().replaceAll(' ', '+').replaceAll('%20', '+');
+                    if (defaultvalue == lookup) {
+                        checked = ' checked ';
+                    }
+                    out = out + tr + '<td><input type="' + type + '" value="' + lookup + '" name="' + 
+                      group + '"' + checked + '><span>' + cats[n][3] + '</span></td>\n';
+                    countOfFilters++; 
+                }
+            }
+        }
+        out = out + '</table></div>\n';
+        
+        }
+        var out = out + '</div></div>\n';
+        if (countOfFilters) {
+          $(selectorID).prepend(out);
+        
+          /* Call a funcion (filterGalleryShowvals) to read the current checkboxes and 
+          enable or disable the appropriate items.  It will also update the category item
+          class to "active" for those that have been selected. */
+
+          filterGalleryShowvals(selectorID, mycats, mycatsids, displayType);
+
+          /* Set up an event to re-process the checkboxes whenever a change 
+          takes place in one of the checkboxes or radio buttons*/
+
+          $(selectorID + ' #filterContainer input[type=checkbox], ' +
+            selectorID + ' #filterContainer input[type=radio]')
+            .on('change', function(e) {
+              filterGalleryShowvals(selectorID, mycats, mycatsids, displayType);
+          })
+        }
+
+      })
+}
+
+function formatSlickCarousel(selectorID, json, attr) {
+
+    var a = json['items'];
+    var testout = ''; 
+    var allowedExtensions =  /(\.jpg|\.jpeg|\.png|\.gif)$/i; 
+    var regexp = /<img[^>]+src\s*=\s*['"]([^'"]+)['"][^>]*>/;
+
+    var groups = ('groups' in attr) ? attr['groups'] : 'grades,outreach';
+    var findCats = ('findcats' in attr) ? attr['findcats'] : '';
+    var filter = ('filter' in attr) ? attr['filter'] : false;
+    var showCats = ('showcats' in attr) ? attr['showcats'] : false; 
+    var showDots = ('dots' in attr) ? attr['dots'] : false; 
+    var showCount = ('showcount' in attr) ? attr['showcount'] : false; 
+
+    var theclass = (showCount==true) ? ' active' : '';
+    var counter = `<div class="filterItemCount${theclass}"></div>`;
+    $('<div id="filterContainer"></div>' + counter).prependTo(selectorID);
+
+    // Set up an array with requested categories
+    var findCatsArray = []; 
+    if (findCats.trim() != '') {
+      findCatsArray = findCats.split(',');
+    }
+    for (var n=0; n < findCatsArray.length; n++) {
+         findCatsArray[n] = findCatsArray[n].trim()
+         .toLowerCase().replaceAll(' ', '+').replaceAll('%20', '+');
+    }
+
+    // Set up active class if we are showing categories
+    showcats = '';
+    if (showCats) {
+      showcats = ' active';
+    }
+
+    var showing = 0; 
+    var testout = `<div class="slickButtons">
+        <button class="prev slick-arrow"> < </button>
+        <button class="next slick-arrow"> > </button>
+        </div>
+        <div class="theCarousel">`;
+    for (var i=0; i < a.length; i++) {
+      var index = i;
+      var img = a[i]['assetUrl'];
+      var href = a[i]['fullUrl'];
+      var title = a[i]['title'];
+
+      // Process categories and filter if requested
+      var categories = a[i]['categories'].sort();
+      var x = mycats.findIndex(element => {  // compare lower case 
+              return element.toLowerCase().replaceAll(' ', '+').replaceAll('%20', '+') === lookup.toLowerCase();
+            })
+      var cats = '';
+      var sep = '';
+      var found = false;
+
+      for (var n=0; n < categories.length; n++) {
+        var classNames = 'newCats';
+        var temp = categories[n].toLowerCase().replaceAll(' ', '+').replaceAll('%20', '+');
+        var x = findCatsArray.indexOf(temp);
+        if (x != -1) { 
+          found = true;
+          classNames += ' active';
+        } 
+        cats += `${sep}<span class="${classNames}" data-itemid="${i}" data-catname="${temp}">${categories[n]}</span>`;
+        sep = ', ';
+      }
+      if (findCatsArray.length == 0 ) { found = true;}
+      
+      // Get the excerpt and remove html tags 
+      var excerpt = a[i]['excerpt'];
+      excerpt = excerpt.replace(/(<([^>]+)>)/gi, "");
+      
+      // If the image URL looks good then use it, 
+      // otherwise look for first image in body
+      if (!allowedExtensions.exec(img)) {
+        // doesn't look like an image url, look inside the body
+        var temp = $(a[i]['body']).find('img').eq(0);
+        var imgtmp = $(temp).data('src');
+        if (imgtmp) {img = imgtmp;}
+      }
+
+      // output this item unless it is not included in filter
+      
+      if (found == true) {
+        testout += 
+            `<div class="item" data-itemid="${i}">
+              <img src="${img}">
+              <div class="title" data-itemid="${i}><a href="${href}">${title}</a></div>
+              <div class="classcontent">${excerpt}</div>
+              <div class="readmore"><a href="${href}">Read More →</a></div>
+              <div class="itemFilterCats${showcats}">${cats}</div>
+              </div>`;
+        showing++; 
+      }
+        
+    }
+    testout += '</div>';
+
+    $(selectorID + ' div.filterItemCount').html('Showing: ' + showing);
+
+    /* Now, build the filter boxes and set up events, if requested */
+    if (filter) {
+      collectFilterInfo(selectorID, groups, 'carousel');
+    }
+
+    // Ok, now wait for the page and finish up
+    //$(document).ready(function() { 
+      //var temp = 
+      $(selectorID).append(testout);
+      var theCarousel = $(selectorID).find('.theCarousel');
+      $(theCarousel).slick({
+        dots: showDots,
+        adaptiveHeight: true,
+        infinite: true,
+        slidesToShow: 3,
+        slidesToScroll: 3,
+        arrows: true,
+        prevArrow: $(selectorID + ' .prev'),
+        nextArrow: $(selectorID + ' .next'),
+        responsive: [{
+            breakpoint: 500,
+            settings: {
+                slidesToShow: 1,
+                slidesToScroll: 1,
+            }},
+            {
+            breakpoint: 800,
+            settings: {
+                slidesToShow: 2,
+                slidesToScroll: 1,
+            }
+        }]
+      });
+
+    // adjust the image aspect ratio based on width
+    adjustSlickImageHeight();
+
+    //});
+    return;
+}
