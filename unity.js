@@ -2196,9 +2196,9 @@ function formatSlickCarousel(selectorID, json, findCats = '', showCats = false) 
     return;
   }
 
-  // Added 3/28/22 -----------------------------------------
+// Added 3/28/22 -----------------------------------------
 
-  function filterGalleryShowvals(selectorID, mycats, mycatsids, displayType='') {
+function filterGalleryShowvals(selectorID, mycats, mycatsids, displayType='') {
 
     // get an array of checked items
     var ids = [];
@@ -2247,42 +2247,78 @@ function formatSlickCarousel(selectorID, json, findCats = '', showCats = false) 
 
     });
 
-    // default is to turn them all on initially
-    var catsel2 = $(selectorID + " div.theCarousel div.item"); // carousel type
+    if (displayType == 'carousel') {
+      $(selectorID + " div.theCarousel").slick('slickUnfilter');
+      var theCarousel = $(selectorID + " div.theCarousel");
+      var catsel2 = $(selectorID + " div.theCarousel div.item"); // carousel type
+      var allcats2 = $(catsel2).removeClass('active');
+      $(allcats2).find('div.itemFilterCats .newCats').removeClass('active');
+      var thetotal = $(theCarousel).find('.item').length;
 
-    if (displayType == 'grid') {
+      var common = [];
+      var showing = catsel2.length;
+      showing = showing;
+      if (mygroups.length > 0) {
+          //$(allcats2).css('display','none');
+          common = mygroupids[0];
+          for (n = 1; n < mygroups.length; n++) {
+              common = intersection(common, mygroupids[n]);
+          }
+          showing = common.length;
+      }
+      $(selectorID + ' div.filterItemCount').html('Showing: ' + showing + ' of ' + 
+        thetotal);
+
+      // Turn on the items that were selected
+      for (n = 0; n < common.length; n++) {
+        console.log('n=' + n);
+          $(theCarousel).find('.item[data-itemid="' + common[n] + '"]').addClass('active');
+      }
+
+      console.log(mycats);
+      console.log(selectedcatsids);
+
+      // set the selected categories to active 
+      for (n = 0; n < selectedcatsids.length; n++) {
+        $(selectorID + " div.theCarousel").find('div.itemFilterCats .newCats[data-catname="' + 
+        mycats[selectedcatsids[n]] + '"]').addClass('active');
+      }
+
+      if (selectedcatsids.length > 0) {
+        $(selectorID + " div.theCarousel").slick('slickUnfilter').slick('slickFilter','.item.active');
+      }
+    }
+
+    else if (displayType == 'grid') {
+      // default is to turn them all on initially
       var catsel2 = $(selectorID + " #newSummaryItems div.itemFilter"); // grid
+      var allcats2 = $(catsel2).css('display','block');
+      $(allcats2).find('div.itemFilterCats .newCats').removeClass('active');
+
+   
+      var common = [];
+      var showing = catsel2.length;
+      if (mygroups.length > 0) {
+          $(allcats2).css('display','none');
+          common = mygroupids[0];
+          for (n = 1; n < mygroups.length; n++) {
+              common = intersection(common, mygroupids[n]);
+          }
+          showing = common.length;
+      }
+      $(selectorID + ' div.filterItemCount').html('Showing: ' + showing + ' of ' + catsel2.length);
+
+      // Turn on the items that were selected
+      for (n = 0; n < common.length; n++) {
+          $(allcats2).eq(common[n]).css('display','block');
+      }
+
+      // set the selected categories to active 
+      for (n = 0; n < selectedcatsids.length; n++) {
+        $(allcats2).find('div.itemFilterCats .newCats[data-catname="' + 
+        mycats[selectedcatsids[n]] + '"]').addClass('active');
+      }
     }
-    var allcats2 = $(catsel2).css('display','block');
-    $(allcats2).find('div.itemFilterCats .newCats').removeClass('active');
-
- 
-    var common = [];
-    var showing = catsel2.length;
-    if (mygroups.length > 0) {
-        $(allcats2).css('display','none');
-        common = mygroupids[0];
-        for (n = 1; n < mygroups.length; n++) {
-            common = intersection(common, mygroupids[n]);
-        }
-        showing = common.length;
-    }
-    $(selectorID + ' div.filterItemCount').html('Showing: ' + showing + ' of ' + catsel2.length);
-
-    // Turn on the items that were selected
-    for (n = 0; n < common.length; n++) {
-        $(allcats2).eq(common[n]).css('display','block');
-    }
-
-    // set the selected categories to active 
-    for (n = 0; n < selectedcatsids.length; n++) {
-      $(allcats2).find('div.itemFilterCats .newCats[data-id="' + 
-      selectedcatsids[n] + '"]').addClass('active');
-    }
-
-    //$(selectorID).find('.theCarousel').slick('refresh');
-    //$(selectorID).find('.theCarousel').slick('slickGoTo', 0);
-
 }
 
 /* ----------------------------------------------------------- */
@@ -2451,7 +2487,6 @@ function createGridGallery(
 
 function collectFilterInfo(selectorID, groups = 'grades,outreach', displayType) {
 
-    
     var file_id='1qrUPQu2qs8eOOi-yZwvzOuGseDFjkvj5_mSnoz0tJVc';
     var where = "SELECT A,B,C,D,E WHERE E != 'Yes' AND A IS NOT NULL ORDER BY A,B";
     var url = 'https://docs.google.com/spreadsheets/u/0/d/'
@@ -2519,9 +2554,6 @@ function collectFilterInfo(selectorID, groups = 'grades,outreach', displayType) 
         /* At this point we should have two arrays.  mycats contains a list of all of the 
         unique slug names for categories listed by the items.  mycatsids contains an indexed
         list of the item id's that each unique slug references.*/
-
-        console.log(mycats);
-        console.log(mycatsids);
 
         // we can override the groups with a url parameter
         var param = getSearchParams("groups");
