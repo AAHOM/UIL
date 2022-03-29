@@ -2253,11 +2253,10 @@ function filterGalleryShowvals(selectorID, mycats, mycatsids, displayType='') {
       var catsel2 = $(selectorID + " div.theCarousel div.item"); // carousel type
       var allcats2 = $(catsel2).removeClass('active');
       $(allcats2).find('div.itemFilterCats .newCats').removeClass('active');
-      var thetotal = $(theCarousel).find('.item').length;
+      var thetotal = $(selectorID + " div.theCarousel").slick("getSlick").slideCount;
 
       var common = [];
-      var showing = catsel2.length;
-      showing = showing;
+      var showing = thetotal;
       if (mygroups.length > 0) {
           //$(allcats2).css('display','none');
           common = mygroupids[0];
