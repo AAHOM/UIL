@@ -2396,7 +2396,7 @@ function collectionControl(
     recursiveAjaxCall(collection,'',selectorID,theGridCallback, [], attr);
   } 
   else if (type == 'team') {
-   // recursiveAjaxCall(collection,'',selectorID,theTeamCallback, [], attr);
+    recursiveAjaxCall(collection,'',selectorID,theTeamCallback, [], attr);
   } 
   else {
     msg = 'Error: Unknown type="' + type + '"'
@@ -2427,9 +2427,16 @@ function formatTeamDisplay(selectorID, json, attr) {
     var allowedExtensions =  /(\.jpg|\.jpeg|\.png|\.gif)$/i; 
     var regexp = /<img[^>]+src\s*=\s*['"]([^'"]+)['"][^>]*>/;
 
+    var groups = ('groups' in attr) ? attr['groups'] : '';
     var findCats = ('findcats' in attr) ? attr['findcats'] : '';
+    var filter = ('filter' in attr) ? attr['filter'] : false;
     var showCats = ('showcats' in attr) ? attr['showcats'] : false; 
     var showDots = ('dots' in attr) ? attr['dots'] : false; 
+    var showCount = ('showcount' in attr) ? attr['showcount'] : false; 
+
+    var theclass = (showCount==true) ? ' active' : '';
+    var counter = `<div class="filterItemCount${theclass}"></div>`;
+    $('<div id="filterContainer"></div>' + counter).prependTo(selectorID);
 
     // Set up an array with requested categories
     var findCatsArray = []; 
@@ -2447,6 +2454,132 @@ function formatTeamDisplay(selectorID, json, attr) {
       showcats = ' active';
     }
 
+    var showing = 0; 
+    var testout = '';
+    console.log(a[0]['body']);
+    for (var i=0; i < a.length; i++) {
+      var index = i;
+      var img = a[i]['assetUrl'];
+      var href = a[i]['fullUrl'];
+      var title = a[i]['title'];
+      var tags = a[i]['tags'];
+      var itemtitle = (tags.length > 0) ? tags[0] : '';
+
+      var temp = $(a[i]['body']).find('div.sqs-block-html div.sqs-block-content');
+      console.log(temp);
+      var bio = $(temp).html();
+
+      // Process categories and filter if requested
+      var categories = a[i]['categories'].sort();
+      var x = mycats.findIndex(element => {  // compare lower case 
+              return element.toLowerCase().replaceAll(' ', '+').replaceAll('%20', '+') === lookup.toLowerCase();
+            })
+      var cats = '';
+      var sep = '';
+      var found = false;
+
+      for (var n=0; n < categories.length; n++) {
+        var classNames = 'newCats';
+        var temp = categories[n].toLowerCase().replaceAll(' ', '+').replaceAll('%20', '+');
+        var x = findCatsArray.indexOf(temp);
+        if (x != -1) { 
+          found = true;
+          classNames += ' active';
+        } 
+        cats += `${sep}<span class="${classNames}" data-itemid="${i}" data-catname="${temp}">${categories[n]}</span>`;
+        sep = ', ';
+      }
+      if (findCatsArray.length == 0 ) { found = true;}
+      
+      // Get the excerpt and remove html tags 
+      var excerpt = a[i]['excerpt'];
+      excerpt = excerpt.replace(/(<([^>]+)>)/gi, "");
+      
+      // If the image URL looks good then use it, 
+      // otherwise look for first image in body
+      if (!allowedExtensions.exec(img)) {
+        // doesn't look like an image url, look inside the body
+        var temp = $(a[i]['body']).find('img').eq(0);
+        var imgtmp = $(temp).data('src');
+        if (imgtmp) {img = imgtmp;}
+      }
+
+      // output this item unless it is not included in filter
+      
+      if (found == true) {
+        testout = testout + 
+            `<div class="item_box">
+            <div class="item_front">
+                <img class="item_img" src="${img}">
+                <div class="item_name">
+                    <div class="item_title">
+                        <div class="memberName">${title}</div>
+                        <div class="memberTitle">${itemtitle}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="item_back">
+                <div class="item_bio">${bio}
+                </div><button class="readMoreDetails">
+                    <i class="arrow"></i></button>
+            </div>
+        </div>`;
+        showing++; 
+      }
+        
+    }
+    testout += '</div>';
+    $('<div id="teamDetail"></div>').insertBefore(selectorID);
+    $('#teamDetail').hide();
+    $(selectorID).append('<div class="team_container">' + testout + '</div>'); 
+    $(selectorID + ' div.filterItemCount').html('Showing: ' + showing);
+    
+    /* Now, build the filter boxes and set up events, if requested */
+    if (filter) {
+      collectFilterInfo(selectorID, groups, 'team');
+    }
+
+    teamCardResize();
+
+    $('div.item_back').on('click', function() {
+        var content = $(this).find('.item_bio').html();
+        content = (content) ? content : '<p>No bio</p>'
+        var front = $(this).parent();
+        var img = front.find('img').attr('src');
+        //var name = front.find('.item_name').clone().children().remove().end().text();
+        var name = front.find('.item_title .memberName').text();
+        var title = front.find('.item_title .memberTitle').text();
+        var modalContent = `<!-- Modal content -->
+        <div id="teamDetail" class="modal-content" style="display: block;">
+        <div class="teamName">${name}</div>
+        <div class="teamTitle">${title}</div>
+        <div class="teamContent">
+            <img class="item_img" src="${img}">${content}
+        </div>
+        <div style="clear:both;"></div>
+        <div class="topClose close"><a href="#">X</a></div>
+        <div class="bottomClose close"><a href="#">Close</div></a>
+        </div>`;
+
+        $('#myModal').html(modalContent);
+
+        // When the user clicks on close buttons
+        $('#myModal div.topClose, #myModal div.bottomClose')
+            .on('click', function(e) {
+            e.preventDefault();
+            $('#myModal').css('display', 'none');
+        })
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+            if (event.target.id == 'myModal') {
+                $('#myModal').css('display', 'none');
+            }
+        }
+        $('#myModal').show();
+        $('#myModal').scrollTop(0);
+    });
+
+    addMyModal();
 
 }
 
