@@ -1505,7 +1505,12 @@ div.summaryFilterContainer .itemFilter p {
     opacity: 1;
 }
 
-div.summaryFilterContainer .itemFilter a, .itemFilter a:hover, div.summaryFilterContainer .itemFilter a:visited {
+div.summaryFilterContainer .itemFilter a, 
+div.summaryFilterContainer .itemFilter a:hover, 
+div.summaryFilterContainer .itemFilter a:visited,
+div.sqs-block-summary-v2 a.summary-read-more-link,
+div.sqs-block-summary-v2 a.summary-read-more-link:hover,
+div.sqs-block-summary-v2 summary-read-more-link:visited {
     text-decoration: none;
     color: blue;
 }
