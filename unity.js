@@ -2398,6 +2398,9 @@ function collectionControl(
   else if (type == 'team') {
     recursiveAjaxCall(collection,'',selectorID,theTeamCallback, [], attr);
   } 
+  else if (type == 'flexboxes') {
+    recursiveAjaxCall(collection,'',selectorID,theflexBoxesCallback, [], attr);
+  } 
   else {
     msg = 'Error: Unknown type="' + type + '"'
     msg = '<div class="errorMsg">Error: ' + msg + '</div>';
@@ -2418,6 +2421,55 @@ function theCarouselCallback(selectorID, json, attr) {
 // Callback for Team
 function theTeamCallback(selectorID, json, attr) {
   formatTeamDisplay(selectorID,json, attr);
+}
+
+// Callback for Team
+function theflexBoxesCallback(selectorID, json, attr) {
+  formatflexBoxesDisplay(selectorID,json, attr);
+}
+
+function formatflexBoxesDisplay(selectorID,json, attr) {
+
+  var a = json['items'];
+  var testout = '';
+  $(selectorID).append('<div class="flipBoxContainer"><div class="flex-container"></div></div>');
+
+  for (var i=0; i < a.length; i++) {
+    var index = i;
+    var img = a[i]['assetUrl'];
+    var href = a[i]['fullUrl'];
+    var title = a[i]['title'];
+    var tags = a[i]['tags'];
+    var itemtitle = (tags.length > 0) ? tags[0] : '';
+    var source = a[i]['sourceUrl'];
+    var images = []; 
+    var tempimg = $(a[i]['body']).find('div.sqs-gallery div.slide');
+    for (var x=0; x < tempimg.length; x++) {
+      var src = $(tempimg[x]).find('img').data('image');
+      images.push(src);
+
+    }
+    if (tempimg.length == 0) {
+      images.push(img);
+    }
+    var temp = $(a[i]['body']).find('div.sqs-block-html div.sqs-block-content');
+    var bio = $(temp).html();
+    var excerpt = a[i]['excerpt'];
+    excerpt = excerpt.replace(/(<([^>]+)>)/gi, ""); 
+    process_card_info(selectorID, source, images, title, title, excerpt);
+  }
+
+  $('div.front.face img:first-child')
+      .addClass("active");
+      $('')
+  //setTimeout(flip_carousel, 5000);
+  setTimeout(function() {flip_carousel(selectorID)}, 5000);
+
+  flipCardResize(selectorID);
+
+  $( window ).resize(function() {
+    flipCardResize(selectorID);
+  });
 }
 
 function formatTeamDisplay(selectorID, json, attr) {
