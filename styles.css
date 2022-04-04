@@ -907,6 +907,16 @@ div.flipBoxContainer .centerBack div.backLink span{
     text-decoration: underline;
 }
 
+div.hoursContainer ul {
+  white-space: normal;
+  word-wrap: break-word;
+  list-style-type: disc;
+}
+div.hoursContainer div > ul {
+  list-style: none;
+  padding-left: 0;
+}
+
 @media screen and (max-width:  767px ) {
     .hoursContainer {
     flex-direction: column;
