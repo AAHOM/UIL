@@ -531,6 +531,135 @@ function do_faqs2(theSelector, active = 1,
 
 }
 
+
+/*-------------------------------------------------------------*/
+/* Frequently Asked Questions, FAQS3                           */
+/*    04/11/2021 - initial                                     */
+/*    Updated 04/04/2022                                       */
+/*-------------------------------------------------------------*/
+
+function do_faqs3(theSelector, data, attr) {
+
+    // Update 4/4/22
+
+    var active = ('activetab' in attr) ? attr['activetab'] : 1;
+    var single = ('singe' in attr) ? attr['single'] : false;
+    var openfirst = ('openfirst' in attr) ? attr['openfirst'] : true;
+    var collapsable = ('collapsable' in attr) ? attr['collapsable'] : false;
+    var collapsed = ('collapsed' in attr) ? attr['collapsed'] : true;
+    var title = ('title' in attr) ? attr['title'] : 'View Frequently Asked Questions';
+
+    var tabLinks = ''; 
+    var out = '';
+    var activeli = 0;
+    var tabs = []; 
+    active = (active == null) ? 1 : active;
+    single = (single == null) ? 1 : single;
+    collapsable = (collapsable == null) ? 1 : collapsable;
+    collapsed = (collapsed == null) ? 1 : collapsed;
+
+    // find the faq reference data
+    var thedata = {};
+    for (let i = 0; i < data['items'].length; i++) {
+      if (data['items'][i]['fullUrl'] == '/reference-data/faqs') {
+        theMuseumList.forEach(function(item, key) {
+          if (item[2] != true) { // not hiding this museum
+            data2 = parseData(data['items'][i]['body'], '#' + item[0]);
+            thedata[item[0]] = data2;
+          }
+        })
+      }
+    }
+
+    // Check to see if a parameter was passed to 
+    // specify which tab becomes active
+    var tabparam = getSearchParams("tab");
+    if (tabparam) {
+      active = tabparam;
+    }
+    
+    // Set up the collapsed/expanded option 
+    // valid values 0-4 or "none"
+    if (openfirst != true) {
+        activeli = 'none';
+    }
+    
+    if ($(window).width() < 960) {
+      activeli = 'none';
+    }
+    var activeTab = active - 1;  // zero based tabs   
+
+    theMuseumList = getMuseumList(data); 
+
+      // Loop for each tab 
+      theMuseumList.forEach(function(item, key) {
+          if (key && item[2] != true) { 
+            // camelcase css tag for background
+            var background = 'color' + item[0].charAt(0).toUpperCase() + 
+              item[0].slice(1).toLowerCase();
+            val = item[1];
+            var tabnum = +(key+1);
+            var hideme = '';
+            if (single == true && key != active) {
+              hideme = ' hide';
+            }
+            tabLinks = tabLinks + '<li class="' + background + hideme + '"><a href="#tabsFaqs-' + 
+              tabnum + '">' + val + '</a></li>\n'; 
+            var lookfor = item[0].toLowerCase();
+
+            var thisdata = thedata[lookfor];
+            out = out + '<div id="tabsFaqs-' + tabnum + '">\n<div class="accordian">\n'; 
+            for (var i = 0, l = thisdata.length; i < l; i++) {
+                out = out + '<h3 class="' + background + '">' + thisdata[i][0] + '</h3><div>\n';
+                out = out + '<p>' + thisdata[i][1] + '</p></div>\n';
+            }
+
+            out = out + '</div>\n</div>\n';
+          }
+
+        });
+        
+        var toggle = "<div class=\"toggle\">" + 
+          "<div class=\"openCloseList\"><i class=\"arrow down\"></i><a href=\"\">" + title + "</a></div>\n";
+        out = '<div id="tabsFaqs"><ul>' + tabLinks + '</ul>' + out + '</div></div>\n';
+
+        $(theSelector + ' div#tabsFaqs').show();
+        if (collapsable == true) { // hide if collapsable and collapsed
+          out = toggle + out + '</div>';
+          $(out).appendTo(theSelector);
+          if (collapsed == true) {
+            $(theSelector + ' div#tabsFaqs').hide();
+          }
+        }
+        else {
+          $(out).appendTo(theSelector);
+        }
+        
+        $(theSelector).find('li.hide').hide(); 
+        
+        $(theSelector + ' .toggle div.openCloseList a')
+          .click(function(e) {
+          e.preventDefault(); 
+          $(this).toggleClass("open");
+          $(theSelector + ' div#tabsFaqs')
+          .slideToggle('slow');
+          $(theSelector + ' .openCloseList i').toggleClass("down");
+        });
+
+        // Initialize the accordian styles
+        $( ".accordian" ).accordion({
+          collapsible: true, active : activeli,
+          heightStyle: "content"
+        });
+
+        // Display the faqs
+        $(theSelector).addClass('faq_container tabListContainer');
+        $( theSelector + " #tabsFaqs" ).tabs({active: activeTab});
+    
+
+}
+
+
 /* ----------------------------------------------------------- */
 /* Open modal window for calassmate details                    */
 /* ----------------------------------------------------------- */
@@ -1508,13 +1637,16 @@ sheet='Categories') {
 /*    02/24/2022 - initial                                     */
 /* ----------------------------------------------------------- */
 
-function do_maps(
-    theSelector = "#directionDiv",
-    active = 0, 
-    single = false,
-    collapsable = true,
-    collapsed = false,
-    title = "View Location Maps") {
+function do_maps(theSelector, data, attr) {
+
+  // Update 4/4/22
+
+  var active = ('activetab' in attr) ? attr['activetab'] : 0;
+  var single = ('singe' in attr) ? attr['single'] : false;
+  var openfirst = ('openfirst' in attr) ? attr['openfirst'] : true;
+  var collapsable = ('collapsable' in attr) ? attr['collapsable'] : true;
+  var collapsed = ('collapsed' in attr) ? attr['collapsed'] : false;
+  var title = ('title' in attr) ? attr['title'] : 'View Location Maps';
 
   // Point to calendars spreadsheet
   file_id = '1Xrz1gJ0to5c01jiDyMvl38486s_J94lHhERtTHEBw5E', 
@@ -1535,31 +1667,41 @@ function do_maps(
 
   if (active < 1 || active > 4) {active = 1;}
 
-  var where = "SELECT A, B, C, D, E, F WHERE C != 'Yes' AND B IS NOT NULL ORDER BY A, B";
-  var url = 'https://docs.google.com/spreadsheets/u/0/d/'
-    + file_id + '/gviz/tq?tqx=&sheet=' + sheet + 
-    '&headers=1&tq=' + escape(where);
+  theMuseumList = getMuseumList(data);
 
-  // Fetch the spreadsheet data 
-  fetchGoogleDataAll([url]).then(dataArrayx => {
-    if (dataArrayx[1]) {  // if there was a status error of some kind
-      jQuery('#classList .gallery-items')
-        .html('<div class="errorMessage">Error fetching spreadsheet, status= ' + dataArrayx[1] + ' try refreshing page</div>');
-      return; 
-    }
-    dataArray = dataArrayx[0][0].table.rows;
-
-    // Clean up the Google array data
-    dataRows = [];
-    dataArray.forEach(function(item,key) {
-      if (item.c[0] != null) {
-        var ar = [];
-        for (let i = 0; i < 6; i++) {
-          var val =  (item.c[i] != null) ? item.c[i].v : '';
-          ar.push(val);
-        } 
-        dataRows.push(ar);
+  // find the faq reference data
+    var thedata = {};
+    for (let i = 0; i < data['items'].length; i++) {
+      if (data['items'][i]['fullUrl'] == '/reference-data/location-maps') {
+        theMuseumList.forEach(function(item, key) {
+          if (item[2] != true) { // not hiding this museum
+            data2 = parseData(data['items'][i]['body'], '#' + item[0]);
+            thedata[item[0]] = data2;
+          }
+        })
       }
+    }
+
+    var newdata = []; 
+    $.each(thedata, function( index, value ) {
+      var before = '';
+      var iframe = '';
+      var after = ''; 
+      var ar = [];
+      $.each(value,function(index2, value2) {     
+        if (value2.length > 1) {
+          var temp = value2[0].toLowerCase();
+          before = (temp == 'before') ? value2[1] : before;
+          iframe = (temp == 'iframe') ? value2[1] : iframe; 
+          after = (temp == 'after') ? value2[1] : after; 
+          ar = [index2, index,null, before, iframe, after];  
+        }
+        
+      })
+      if (ar.length > 0) {
+        newdata.push(ar);
+      }   
+      
     });
 
     var temp = '';
@@ -1581,6 +1723,7 @@ function do_maps(
     var iframes = []; 
 
     var activeTab = 0;
+    var dataRows = newdata;
 
     dataRows.forEach(function(item, key) {
       var museum = item[1];
@@ -1599,10 +1742,10 @@ function do_maps(
       }
 
       tabs = tabs + 
-        '<li class="' + hideme + '"><a href="#tabs-' + tab + '" data-tab="' + tab + '" class="' + colorClass + '">' + 
+        '<li class="' + hideme + '"><a href="#tabsMaps-' + tab + '" data-tab="' + tab + '" class="' + colorClass + '">' + 
         name + '</a></li>\n';
         tabsdata = tabsdata + 
-        '<div id="tabs-' + tab + '">\n' +
+        '<div id="tabsMaps-' + tab + '">\n' +
         '<p><strong>' + name + '</strong>\n' + before +
         '<div class="calendarLarge">' + iframe + '</div>\n' + after +
         '</div>'; 
@@ -1610,9 +1753,9 @@ function do_maps(
 
     })  
 
-    tabs = '<div id="tabs"><ul>' + tabs + '</ul></div>\n'; 
+    tabs = '<div id="tabsMaps"><ul>' + tabs + '</ul></div>\n'; 
     $(tabs).appendTo(theSelector + ' .theMapsContainer');
-    $(tabsdata).appendTo('#tabs');
+    $(tabsdata).appendTo('#tabsMaps');
 
     $(theSelector + ' .toggle div.openCloseList a')
           .click(function(e) {
@@ -1624,7 +1767,7 @@ function do_maps(
         });
 
     $(theSelector).addClass('faq_container tabListContainer');
-    $( "#tabs" ).tabs({ active: activeTab});
+    $( theSelector + " #tabsMaps" ).tabs({ active: activeTab});
     if (single == true) {
       $(theSelector).find('li.hide').hide(); 
       $(theSelector + ' .theMapsContainer').find('.ui-tabs-nav').hide(); 
@@ -1634,7 +1777,7 @@ function do_maps(
       $(theSelector + ' .openCloseList i').removeClass("down");
     }
     $(theSelector + ' .theMapsContainer iframe').width('100%');
-    $('#tabs a').click(function() {
+    $('#tabsMaps a').click(function() {
       var id = $(this).attr("href");
       var tab = id.substr(6) - 1;
       var x = $(id).find('.calendarLarge iframe').length;
@@ -1643,7 +1786,6 @@ function do_maps(
         $(theSelector + ' .theMapsContainer iframe').width('100%');
       }
     })
-  }) // End of promis
 }
 
 /*--------------------  New gallery filter code  ------------------ */
@@ -2362,6 +2504,135 @@ function recursiveAjaxCall(
     });
 }
 
+var theMuseumList = [
+  ['unity','Unity in Learning', false],
+  ['aahom','Ann Arbor Hands-On Museum', false],
+  ['leslie','Leslie Science & Nature Center', false],
+  ['yankee','Yankee Air Museum', false],
+  ['challenger','Challenger Learning Center at SC4', false],
+  ['experience','Experience Center', true]
+];
+
+/*This function will insure that all of the keys of the 
+passed in object array are lowercase.  This is so we can 
+confidently compare case insensitive keys
+see - https://bobbyhadz.com/blog/javascript-lowercase-object-keys */
+
+function toLowerKeys(obj) {
+  return Object.keys(obj).reduce((accumulator, key) => {
+    accumulator[key.toLowerCase()] = obj[key];
+    return accumulator;
+  }, {});
+}
+
+/*Recursively fetch SquareSpace collections and build data array
+to be passed back.  Multiple collection names can be passed in
+and processed.  Return is an array of collection data arrays. */
+
+function recursiveAjaxCall2(
+  theCollections, offset = '', 
+  selectorID, 
+  callback, 
+  items=[], 
+  attr, theCount=0) {
+
+    $.ajax({
+      url: theCollections[theCount],
+      data: {offset: offset,
+      format: 'json'},
+      async:   true
+    })
+    .done(function (data) { 
+      var j = data;
+        if ('item' in data) {
+          items = items.concat(data['item']);
+        }
+        else {
+          items = items.concat(data['items']);
+        }
+        if ('pagination' in j && 'nextPageOffset' in j['pagination']) {
+          var off = j['pagination']['nextPageOffset'];
+          recursiveAjaxCall2(theCollections, off, selectorID, callback, items, attr,theCount);
+        }
+        else {
+      
+            theCount = theCount + 1; 
+            if (theCollections.length > theCount) {
+              recursiveAjaxCall2(theCollections, off, selectorID, callback, items, attr, theCount);
+            }
+            else {    
+              var dataArray = [];
+              for (let i = 0; i < theCollections.length; i++) {
+                dataArray.push([]);
+              }
+              for (let i = 0; i < items.length; i++) {
+                var temp = items[i]['fullUrl'].split('/');
+
+                var x = theCollections.indexOf(temp[1]);
+                if (x != -1) {
+                  dataArray[x].push(items[i]);
+                }
+              }
+              callback(selectorID, {items: items, dataArray: dataArray}, attr);
+            }
+        }
+    })
+    .fail(function (jqXHR, textStatus, errorThrown) {
+      console.log(jqXHR);
+      var status = jqXHR['status'];
+      var msg = 'Error encountered, status="' + status + '" errorTrhown="' + errorThrown + '"';
+      if (status == '404') {
+        msg = 'Could not find collection "' + theCollections[theCount] + '"';
+      }
+      msg = '<div class="errorMsg">Error: ' + msg + '</div>';
+      //$(selectorID).html(msg);
+      console.log('Error from recursiveAjaxCall2: ' + msg);
+    });
+}
+
+/*Look through the body and collection the list data found
+after the "lookfor" selector.  Then return an array.  It 
+will process a max of two evels of unordered lists */
+function parseData(body, lookfor) {
+
+  var temp1 = $(body).find(lookfor).next('ul').find('> li'); 
+  
+  var data = []; 
+  for (let i = 0; i < temp1.length; i++) {
+    var text1 = $(temp1[i]).html();
+    var x = text1.indexOf('<ul>');
+    var val1 = $(temp1[i]).text();
+    var level1 = '';
+    var level2 = []; 
+    if (x != -1) {
+      var text1html = text1.substr(x);
+      var val1 = text1.substr(0,x);
+      var level1 = val1;
+      var temp2 = $(text1.substr(x)).find('li');
+      for (let n = 0; n < temp2.length; n++) {
+        var text3 = $(temp2[n]).html();
+        var x3 = text3.indexOf('<ul>');
+        var val2 = $(temp2[n]).text(); 
+        var val2html = $(temp2[n]).html();
+        if (x3 != -1) {
+          val2 = val2.substr(0,x3);
+        }
+      //  if (val2html.indexOf('<iframe') == 0) {
+          level2.push(val2html);
+      //  } else {
+      //    level2.push(val2);
+      //  }
+      }
+    }
+    else {
+      level1 = val1;
+    }
+    data.push([level1,level2,text1html]);
+    
+  } 
+  return data; 
+}
+
 /* ----------------------------------------------------------- */
 /* Redirect control function for collection display            */
 /*                                                             */
@@ -2373,7 +2644,11 @@ function collectionControl(
   type = 'carousel',  
   attr = {}) {
 
+  toLowerKeys(attr); // make sure the keys re lowercase
   var msg = ''; 
+
+  /* Validate the selector id, make sure it exists
+  and it is the only one found on the page */
   var sel = $(selectorID);
   if (sel.length == 0) {
     msg = 'Error: Selector "' + selectorID + '" not found.';
@@ -2388,18 +2663,35 @@ function collectionControl(
     return; 
   }
 
+  /* process the requested type, call Ajax to read the 
+  requested collection data and possibly reference data as well,
+  then call the specified callback function to process. */
   type = type.toLowerCase();
   if (type == 'carousel') {
-    recursiveAjaxCall(collection,'',selectorID,theCarouselCallback, [], attr);
+    recursiveAjaxCall2([collection],'',selectorID,theCarouselCallback, [], attr);
   }
   else if (type == 'grid') {
-    recursiveAjaxCall(collection,'',selectorID,theGridCallback, [], attr);
+    var theCollections = [collection,'reference-data'];
+    recursiveAjaxCall2(theCollections,'',selectorID,theGridCallback, [], attr);
   } 
   else if (type == 'team') {
-    recursiveAjaxCall(collection,'',selectorID,theTeamCallback, [], attr);
+    var theCollections = [collection,'reference-data'];
+    recursiveAjaxCall2(theCollections,'',selectorID,theTeamCallback, [], attr);
   } 
   else if (type == 'flexboxes') {
-    recursiveAjaxCall(collection,'',selectorID,theflexBoxesCallback, [], attr);
+    recursiveAjaxCall2([collection],'',selectorID,theflexBoxesCallback, [], attr);
+  } 
+  else if (type == 'faqs') {
+    var theCollections = ['reference-data'];
+    recursiveAjaxCall2(theCollections,'',selectorID,theFaqsCallback, [], attr);
+  } 
+  else if (type == 'address') {
+    var theCollections = ['reference-data'];
+    recursiveAjaxCall2(theCollections,'',selectorID,theAddressCallback, [], attr);
+  } 
+  else if (type == 'locations') {
+    var theCollections = ['reference-data'];
+    recursiveAjaxCall2(theCollections,'',selectorID,theLocationsCallback, [], attr);
   } 
   else {
     msg = 'Error: Unknown type="' + type + '"'
@@ -2408,25 +2700,54 @@ function collectionControl(
   }
 }
 
+
 // Callback for Grid
 function theGridCallback(selectorID,json, attr) {
-   createGridGallery(selectorID, json, attr);
+  //var data = {items: json['dataArray'][0]};
+  createGridGallery(selectorID, json, attr);
 }
 
 // Callback for Carousel
 function theCarouselCallback(selectorID, json, attr) {
-  formatSlickCarousel(selectorID,json, attr);
+  var data = {items: json['dataArray'][0]};
+  formatSlickCarousel(selectorID,data, attr);
 }
 
 // Callback for Team
 function theTeamCallback(selectorID, json, attr) {
-  formatTeamDisplay(selectorID,json, attr);
+  var data = {items: json['dataArray'][0]};
+  formatTeamDisplay(selectorID,data, attr);
 }
 
-// Callback for Team
+// Callback for Flex Boxes
 function theflexBoxesCallback(selectorID, json, attr) {
-  formatflexBoxesDisplay(selectorID,json, attr);
+  var data = {items: json['dataArray'][0]};
+  formatflexBoxesDisplay(selectorID,data, attr);
 }
+
+
+// Callback for Locations
+function theLocationsCallback(selectorID, json, attr) {
+  var data = {items: json['dataArray'][0]};
+  formatLocationsDisplay(selectorID,data, attr);
+}
+
+// Callback for Faqs
+function theFaqsCallback(selectorID, json, attr) {
+  var data = {items: json['dataArray'][0]};
+  formatFaqsDisplay(selectorID,data, attr);
+}
+
+function formatFaqsDisplay(selectorID, data, attr) {
+  do_faqs3(selectorID,data,attr);
+}
+
+// Callback for Address
+function theAddressCallback(selectorID, json, attr) {
+  var data = {items: json['dataArray'][0]};
+  formatAddressDisplay(selectorID,data, attr);
+}
+
 
 function formatflexBoxesDisplay(selectorID,json, attr) {
 
@@ -2635,10 +2956,76 @@ function formatTeamDisplay(selectorID, json, attr) {
 
 }
 
+function formatLocationsDisplay(selectorID, data, attr) {
+  do_maps(selectorID, data, attr);
+}
+
+function getMuseumList(data) {
+
+    var museumList = [];
+    for (let i = 0; i < data['items'].length; i++) {
+      if (data['items'][i]['fullUrl'] == '/reference-data/museum-list') {
+            data2 = parseData(data['items'][i]['body'], '#museums');
+            //museumList['museums'] = data2;
+            for (let n = 0; n < data2.length; n++) {
+              var str = data2[n][0].split(',').map(element => element.trim());;
+              var flag = (str[2].toLowerCase() == 'hide') ? true : false;
+              museumList.push([str[0],str[1],flag]);
+            }
+      }
+    }
+  return museumList;
+}
+
+/*-------------------------------------------------------------*/
+/* Address/Hours/Admissions flex boxes                         */
+/*    04/10/2021 - initial                                     */
+/*    Updated 03/03/2022                                       */
+/*-------------------------------------------------------------*/
+
+function formatAddressDisplay(selectorID, data, attr) {
+
+  var museum = ('museum' in attr) ? attr['museum'] : 'aahom';
+  museum = museum.toLowerCase();
+
+  var colorClass = "museum" + museum.charAt(0).toUpperCase() + museum.slice(1);
+  $(selectorID).addClass(colorClass).addClass('hoursContainer'); 
+
+  // find the faq reference data
+  var thedata = [];
+  for (let i = 0; i < data['items'].length; i++) {
+    if (data['items'][i]['fullUrl'] == '/reference-data/address-hours') {
+      theMuseumList.forEach(function(item, key) {
+          data2 = parseData(data['items'][i]['body'], '#' + item[0]);
+          thedata.push([item[0],data2])
+      })
+    }
+  }
+
+  var out = ''; 
+  $.each(thedata, function( index, value ) {
+    if (value[0] == museum) {
+      $.each(value[1], function(index2, value2) {
+        var add = value2[0];
+        var text = value2[2];
+        text = text.replaceAll(/\\n/g, '');
+        text = text.replaceAll(/<li><\/li>/g, '<li>&nbsp;</li>');
+        out += `<div><h3>${add}</h3>${text}</div>`
+      })   
+    }
+  })
+  $(selectorID).html(out).css('display','flex'); 
+}
+
 function createGridGallery(
     selectorID, 
     json, 
     attr) {
+
+    // Updated 4/4/22
+
+    var data = {items: json['dataArray'][0]};
+    var catdata = json['dataArray'][1];
 
     /* Process the parameters passed in the object array attr */
 
@@ -2652,24 +3039,25 @@ function createGridGallery(
     /* Using the json array, fill in the html for all of the items 
     found in the array, plus all of the categories found */
 
-    var dataArray = formatGalleryItems(selectorID, json);
+    var dataArray = formatGalleryItems(selectorID, data);
 
     /* If we are showing counts, then set the count class to active */
 
 
     var theclass = (showCount==true) ? ' active' : '';
-    console.log('showCount=' + showCount + ' theclass=' + theclass);
     var counter = `<div class="testing filterItemCount${theclass}"></div>`;
     $('<div id="filterContainer"></div>' + counter).prependTo(selectorID);
 
     /* Now, build the filter boxes and set up events, if requested */
 
     if (filter) {
-      collectFilterInfo(selectorID, groups, 'grid');
+      collectFilterInfo(selectorID, groups, 'grid', catdata);
     }
   }
 
-function collectFilterInfo(selectorID, groups = 'grades,outreach', displayType) {
+function collectFilterInfo(selectorID, groups = 'grades,outreach', displayType, catdata) {
+
+    // Updated 4/4/22
 
     var file_id='1qrUPQu2qs8eOOi-yZwvzOuGseDFjkvj5_mSnoz0tJVc';
     var where = "SELECT A,B,C,D,E WHERE E != 'Yes' AND A IS NOT NULL ORDER BY A,B";
@@ -2684,159 +3072,185 @@ function collectFilterInfo(selectorID, groups = 'grades,outreach', displayType) 
     /* Read the two Google spreadsheets that contain information about
     filtering groups*/
 
-    fetchGoogleDataAll([url,url2]).then(dataArrayx => {
-        if (dataArrayx[1]) {
-            // if there was a status error of some kind
-            jQuery('#classList .gallery-items')
-            .html('<div class="errorMessage">Error fetching spreadsheet, status= ' 
-              + dataArrayx[1] + ' try refreshing page</div>');
-            return;
+    // find the category reference data
+    var thedata = {};
+    for (let i = 0; i < catdata.length; i++) {
+      if (catdata[i]['fullUrl'] == '/reference-data/categories') {
+        var ids = $(catdata[i]['body']).find('div.markdown-block h3[id]');
+        for (let n = 0; n < ids.length; n++) {
+          data2 = parseData(catdata[i]['body'], '#' + ids[n]['id']);
+          thedata[ids[n]['id']] = data2;
         }
-        var cats = cleanUpArray(dataArrayx[0][0].table.rows,4);
-        var groupinfo = cleanUpArray(dataArrayx[0][1].table.rows,3);
-        for (var n=0; n < cats.length; n++) {
-          cats[n][0] = cats[n][0].replace(' ','').toLowerCase();
-        }
+      }
+    }
 
-        /* Navigate through all of the selectors that contain the category 
-        information for each item.  Collect arrays with the item number, 
-        category slug name, and category full name. */   
- 
-        var allgroups = []; 
-        var mycats = [];
-        var mycatsids = [];
-        var mycatsfull = [];
-        var mycatsgrps = [];
-        var it = $(selectorID).find('div.itemFilterCats span.newCats');
-        console.log('it.length=' + it.length);
-        it.each(function() {
-          var id = $(this).data('itemid');
-          var cat = $(this).data('catname');
-          var full = $(this).text();
-          x = mycats.indexOf(cat);
-          if (x == -1) {
-            mycats.push(cat);
-            mycatsfull.push(full);
-            x = mycats.length - 1;
-            mycatsids.push([id]);
-            var catgroup = 'unknown'; 
-            for (var k=0; k < cats.length; k++) {
-              //console.log('looking for=' + cats[k][0]);
-              if (allgroups.indexOf(cats[k][0])) {
-                catgroup = cats[k][0];
-              }
-            }
-            mycatsgrps.push(catgroup);
-          }
-          else {
-            if (mycatsids[x].indexOf(id) == -1) {
-              mycatsids[x].push(id);
-            }
-          } 
-        })  
-
-        /* At this point we should have two arrays.  mycats contains a list of all of the 
-        unique slug names for categories listed by the items.  mycatsids contains an indexed
-        list of the item id's that each unique slug references.*/
-
-        // we can override the groups with a url parameter
-        var param = getSearchParams("groups");
-        if (param) {
-          groups = param;
-        }
-        allgroups = groups.replace(' ','').toLowerCase().split(',');
-
-        var out = '<div id="filterContainer"><div class="flexBox">\n';
-        for (i = 0; i < allgroups.length; i++) {
-          var groupx = allgroups[i].trim().toLowerCase();
-          var groupparts = groupx.split(':',3);
-          var group = groupparts[0];
-          var label = group; 
-        var type = 'checkbox';
-        for (x = 0; x < groupinfo.length; x++) {
-          if (groupinfo[x][0].toLowerCase() == group.toLowerCase()) {
-            label = groupinfo[x][1];
-            type = groupinfo[x][2];
-          }
-        }      
-        label = (typeof groupparts[1] != 'undefined' && groupparts[1] != '') ? groupparts[1] : label;
-        type = (typeof groupparts[2] != 'undefined' && groupparts[2] != '') ? groupparts[2] : type;
-        out = out + '<div class="filterGroup">\n';
-        out = out + '<span>' + label + '</span><table class="outer">\n';
-        var colorClass = "group" + group.charAt(0).toUpperCase() + group.slice(1);
-        var numcols = 1;
-        if (group == 'grades') {
-            numcols = 2;
-        }
-        var curcol = 0;
-        var tr = '<tr>';
-        var defaultvalue = '';
-        if (type == 'radio') {
-            if (defaultvalue == '') {
-                checked = ' checked ';
-            }
-            out = out + tr + '<td><input type="' + type + '" value="" name="' + group + '"' + checked + '><span>Any</span></td>\n';
-            curcol = curcol + 1;
-        }
-        
-        var countOfFilters = 0; 
-        for (n = 0; n < cats.length; n++) { 
-            var lookup = cats[n][3].toLowerCase().replaceAll(' ', '+').replaceAll('%20', '+');
-                // Only show category if it appears in at least one blog entry
-            var x = mycats.findIndex(element => {  // compare lower case 
-              return element.toLowerCase().replaceAll(' ', '+').replaceAll('%20', '+') === lookup.toLowerCase();
-            })
- 
-            if (cats[n][0].toLowerCase() == group) {
-                var item = cats[n];
-                
-                if (x !== -1) {
-                    curcol = curcol + 1;
-                    if (parseInt(curcol) > parseInt(1) && parseInt(curcol) <= parseInt(numcols)) {
-                        tr = '';
-                    }
-                    else {
-                        tr = '<tr>';
-                        curcol = 1;
-                    }
-                    if (curcol > numcols) {
-                        curcol = 1;
-                    }
-                    var checked = '';
-                    var lookup = cats[n][2].toLowerCase().replaceAll(' ', '+').replaceAll('%20', '+');
-                    if (defaultvalue == lookup) {
-                        checked = ' checked ';
-                    }
-                    out = out + tr + '<td><input type="' + type + '" value="' + lookup + '" name="' + 
-                      group + '"' + checked + '><span>' + cats[n][3] + '</span></td>\n';
-                    countOfFilters++; 
-                }
-            }
-        }
-        out = out + '</table></div>\n';
-        
-        }
-        var out = out + '</div></div>\n';
-        if (countOfFilters) {
-          $(selectorID).prepend(out);
-        
-          /* Call a funcion (filterGalleryShowvals) to read the current checkboxes and 
-          enable or disable the appropriate items.  It will also update the category item
-          class to "active" for those that have been selected. */
-
-          filterGalleryShowvals(selectorID, mycats, mycatsids, displayType);
-
-          /* Set up an event to re-process the checkboxes whenever a change 
-          takes place in one of the checkboxes or radio buttons*/
-
-          $(selectorID + ' #filterContainer input[type=checkbox], ' +
-            selectorID + ' #filterContainer input[type=radio]')
-            .on('change', function(e) {
-              filterGalleryShowvals(selectorID, mycats, mycatsids, displayType);
-          })
-        }
-
+    // Build the array that we need
+    var newcats = [];
+    $.each(thedata, function( index, value ) {
+      $.each(value,function(index2, value2) {
+        var ar = [index,index2,value2[0],value2[0]];
+        newcats.push(ar);
       })
+    });
+
+    // find the category groups reference data
+    var thegroupdata = {};
+    for (let i = 0; i < catdata.length; i++) {
+      if (catdata[i]['fullUrl'] == '/reference-data/category-groups') {
+        var ids = $(catdata[i]['body']).find('div.markdown-block h3[id]');
+        for (let n = 0; n < ids.length; n++) {
+          data2 = parseData(catdata[i]['body'], '#' + ids[n]['id']);
+          thegroupdata[ids[n]['id']] = data2;
+        }
+      }
+    }
+  
+    // Build the array that we need
+    var newgroups = [];
+    $.each(thegroupdata, function( index, value ) {
+      $.each(value,function(index2, value2) {
+        newgroups.push(value2[0].split(',').map(element => element.trim()));
+      })
+    });
+
+    cats = newcats;
+    groupinfo = newgroups;
+
+    /* Navigate through all of the selectors that contain the category 
+    information for each item.  Collect arrays with the item number, 
+    category slug name, and category full name. */   
+
+    var allgroups = []; 
+    var mycats = [];
+    var mycatsids = [];
+    var mycatsfull = [];
+    var mycatsgrps = [];
+    var it = $(selectorID).find('div.itemFilterCats span.newCats');
+    it.each(function() {
+      var id = $(this).data('itemid');
+      var cat = $(this).data('catname');
+      var full = $(this).text();
+      x = mycats.indexOf(cat);
+      if (x == -1) {
+        mycats.push(cat);
+        mycatsfull.push(full);
+        x = mycats.length - 1;
+        mycatsids.push([id]);
+        var catgroup = 'unknown'; 
+        for (var k=0; k < cats.length; k++) {
+          if (allgroups.indexOf(cats[k][0])) {
+            catgroup = cats[k][0];
+          }
+        }
+        mycatsgrps.push(catgroup);
+      }
+      else {
+        if (mycatsids[x].indexOf(id) == -1) {
+          mycatsids[x].push(id);
+        }
+      } 
+    })  
+
+    /* At this point we should have two arrays.  mycats contains a list of all of the 
+    unique slug names for categories listed by the items.  mycatsids contains an indexed
+    list of the item id's that each unique slug references.*/
+
+    // we can override the groups with a url parameter
+    var param = getSearchParams("groups");
+    if (param) {
+      groups = param;
+    }
+    allgroups = groups.replace(' ','').toLowerCase().split(',');
+
+    var out = '<div id="filterContainer"><div class="flexBox">\n';
+    for (i = 0; i < allgroups.length; i++) {
+      var groupx = allgroups[i].trim().toLowerCase();
+      var groupparts = groupx.split(':',3);
+      var group = groupparts[0];
+      var label = group; 
+    var type = 'checkbox';
+    for (x = 0; x < groupinfo.length; x++) {
+      if (groupinfo[x][0].toLowerCase() == group.toLowerCase()) {
+        label = groupinfo[x][1];
+        type = groupinfo[x][2];
+      }
+    }      
+    label = (typeof groupparts[1] != 'undefined' && groupparts[1] != '') ? groupparts[1] : label;
+    type = (typeof groupparts[2] != 'undefined' && groupparts[2] != '') ? groupparts[2] : type;
+    out = out + '<div class="filterGroup">\n';
+    out = out + '<span>' + label + '</span><table class="outer">\n';
+    var colorClass = "group" + group.charAt(0).toUpperCase() + group.slice(1);
+    var numcols = 1;
+    if (group == 'grades') {
+        numcols = 2;
+    }
+    var curcol = 0;
+    var tr = '<tr>';
+    var defaultvalue = '';
+    if (type == 'radio') {
+        if (defaultvalue == '') {
+            checked = ' checked ';
+        }
+        out = out + tr + '<td><input type="' + type + '" value="" name="' + group + '"' + checked + '><span>Any</span></td>\n';
+        curcol = curcol + 1;
+    }
+    
+    var countOfFilters = 0; 
+    for (n = 0; n < cats.length; n++) { 
+        var lookup = cats[n][3].toLowerCase().replaceAll(' ', '+').replaceAll('%20', '+');
+            // Only show category if it appears in at least one blog entry
+        var x = mycats.findIndex(element => {  // compare lower case 
+          return element.toLowerCase().replaceAll(' ', '+').replaceAll('%20', '+') === lookup.toLowerCase();
+        })
+
+        if (cats[n][0].toLowerCase() == group) {
+            var item = cats[n];
+            
+            if (x !== -1) {
+                curcol = curcol + 1;
+                if (parseInt(curcol) > parseInt(1) && parseInt(curcol) <= parseInt(numcols)) {
+                    tr = '';
+                }
+                else {
+                    tr = '<tr>';
+                    curcol = 1;
+                }
+                if (curcol > numcols) {
+                    curcol = 1;
+                }
+                var checked = '';
+                var lookup = cats[n][2].toLowerCase().replaceAll(' ', '+').replaceAll('%20', '+');
+                if (defaultvalue == lookup) {
+                    checked = ' checked ';
+                }
+                out = out + tr + '<td><input type="' + type + '" value="' + lookup + '" name="' + 
+                  group + '"' + checked + '><span>' + cats[n][3] + '</span></td>\n';
+                countOfFilters++; 
+            }
+        }
+    }
+    out = out + '</table></div>\n';
+    
+    }
+    var out = out + '</div></div>\n';
+    if (countOfFilters) {
+      $(selectorID).prepend(out);
+    
+      /* Call a funcion (filterGalleryShowvals) to read the current checkboxes and 
+      enable or disable the appropriate items.  It will also update the category item
+      class to "active" for those that have been selected. */
+
+      filterGalleryShowvals(selectorID, mycats, mycatsids, displayType);
+
+      /* Set up an event to re-process the checkboxes whenever a change 
+      takes place in one of the checkboxes or radio buttons*/
+
+      $(selectorID + ' #filterContainer input[type=checkbox], ' +
+        selectorID + ' #filterContainer input[type=radio]')
+        .on('change', function(e) {
+          filterGalleryShowvals(selectorID, mycats, mycatsids, displayType);
+      })
+    }
 }
 
 function formatSlickCarousel(selectorID, json, attr) {
