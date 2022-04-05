@@ -2172,7 +2172,8 @@ function createFilteredGallery(
               mycatsids[x].push(index);
           }
         } 
-        var catname = categories[n].toLowerCase().replaceAll(' ', '+').replaceAll('%20', '+');
+        var catname = categories[n].toLowerCase().replaceAll(' ', '+')
+          .replaceAll('%20', '+').replaceAll("&", "%26");
         cats += `${sep}<span class="newCats" data-itemid="${i}" data-catname="${catname}" data-id="${x}">${categories[n]}</span>`;
         sep = ', '; 
       }
@@ -3079,14 +3080,14 @@ function createGridGallery(
 function collectFilterInfo(selectorID, groups = 'grades,outreach', displayType, catdata) {
 
     // Updated 4/5/22
-
     var i = 0;
     var n = 0; 
     var x = 0; 
     var k = 0; 
-
+    
     // find the category reference data
     var thedata = {};
+    var i = 0;
     for (i = 0; i < catdata.length; i++) {
       if (catdata[i]['fullUrl'] === '/reference-data/categories') {
         var ids = $(catdata[i]['body']).find('div.markdown-block h3[id]');
@@ -3211,10 +3212,15 @@ function collectFilterInfo(selectorID, groups = 'grades,outreach', displayType, 
     
     var countOfFilters = 0; 
     for (n = 0; n < cats.length; n++) { 
-        var lookup = cats[n][3].toLowerCase().replaceAll(' ', '+').replaceAll('%20', '+');
+        var lookup = cats[n][3].toLowerCase().replaceAll(' ', '+')
+          .replaceAll('%20', '+')
+          .replaceAll('&','%26');
             // Only show category if it appears in at least one blog entry
         var x = mycats.findIndex((element) => {  // compare lower case 
-          return element.toLowerCase().replaceAll(' ', '+').replaceAll('%20', '+') === lookup.toLowerCase();
+          return element.toLowerCase()
+            .replaceAll(' ', '+')
+            .replaceAll('%20', '+')
+            .replaceAll('&','%26') === lookup.toLowerCase();
         })
 
         if (cats[n][0].toLowerCase() === group) {
@@ -3233,7 +3239,10 @@ function collectFilterInfo(selectorID, groups = 'grades,outreach', displayType, 
                     curcol = 1;
                 }
                 var checked = '';
-                var lookup = cats[n][2].toLowerCase().replaceAll(' ', '+').replaceAll('%20', '+');
+                var lookup = cats[n][2].toLowerCase()
+                  .replaceAll(' ', '+')
+                  .replaceAll('%20', '+')
+                  .replaceAll("&", "%26");
                 if (defaultvalue === lookup) {
                     checked = ' checked ';
                 }
