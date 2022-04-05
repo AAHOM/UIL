@@ -2747,6 +2747,9 @@ function theflexBoxesCallback(selectorID, json, attr) {
 
 // Callback for Locations
 function theLocationsCallback(selectorID, json, attr) {
+  console.log('locations Callback ');
+  console.log(json);
+  return;
   var data = {items: json['dataArray'][0]};
   formatLocationsDisplay(selectorID,data, attr);
 }
