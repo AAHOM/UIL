@@ -1679,6 +1679,7 @@ function do_maps(theSelector, data, attr) {
 
   // find the faq reference data
     var thedata = {};
+    var i = 0;
     for (i = 0; i < data['items'].length; i++) {
       if (data['items'][i]['fullUrl'] == '/reference-data/location-maps') {
         theMuseumList.forEach(function(item, key) {
@@ -2719,8 +2720,8 @@ function collectionControl(
 
 // Callback for Grid
 function theGridCallback(selectorID,json, attr) {
-  console.log('grid Callback ');
-  console.log(json);
+  //console.log('grid Callback ');
+  //console.log(json);
   //return;
   //var data = {items: json['dataArray'][0]};
   createGridGallery(selectorID, json, attr);
@@ -2747,9 +2748,9 @@ function theflexBoxesCallback(selectorID, json, attr) {
 
 // Callback for Locations
 function theLocationsCallback(selectorID, json, attr) {
-  console.log('locations Callback ');
-  console.log(json);
-  return;
+  //console.log('locations Callback ');
+  //console.log(json);
+  //return;
   var data = {items: json['dataArray'][0]};
   formatLocationsDisplay(selectorID,data, attr);
 }
@@ -2766,18 +2767,18 @@ function formatFaqsDisplay(selectorID, data, attr) {
 
 // Callback for Address
 function theAddressCallback(selectorID, json, attr) {
-  console.log('address Callback ');
-  console.log(json);
-  return;
+  //console.log('address Callback ');
+  //console.log(json);
+  //return;
   var data = {items: json['dataArray'][0]};
   formatAddressDisplay(selectorID,data, attr);
 }
 
 // Callback for Locations
 function theCalendarsCallback(selectorID, json, attr) {
-  console.log('calendar Callback ');
-  console.log(json);
-  return;
+  //console.log('calendar Callback ');
+  //console.log(json);
+  //return;
   var data = {items: json['dataArray'][0]};
   formatCalendars(selectorID,data, attr);
 }
