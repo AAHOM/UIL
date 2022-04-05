@@ -3080,6 +3080,11 @@ function collectFilterInfo(selectorID, groups = 'grades,outreach', displayType, 
 
     // Updated 4/5/22
 
+    var i = 0;
+    var n = 0; 
+    var x = 0; 
+    var k = 0; 
+
     // find the category reference data
     var thedata = {};
     for (i = 0; i < catdata.length; i++) {
