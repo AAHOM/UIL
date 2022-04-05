@@ -2721,7 +2721,7 @@ function collectionControl(
 function theGridCallback(selectorID,json, attr) {
   console.log('grid Callback ');
   console.log(json);
-  return;
+  //return;
   //var data = {items: json['dataArray'][0]};
   createGridGallery(selectorID, json, attr);
 }
