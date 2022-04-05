@@ -2763,6 +2763,9 @@ function formatFaqsDisplay(selectorID, data, attr) {
 
 // Callback for Address
 function theAddressCallback(selectorID, json, attr) {
+  console.log('address Callback ');
+  console.log(json);
+  return;
   var data = {items: json['dataArray'][0]};
   formatAddressDisplay(selectorID,data, attr);
 }
