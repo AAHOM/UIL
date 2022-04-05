@@ -1,61 +1,66 @@
+/*jslint browser */
+/* check allow for
+   add "$ = jQuery" option 
+   https://www.jslint.com/ */
 /*-------------------------------------------------------------*/
 /* Initialize the standard list of museums                     */
 /*    02/21/2022 - initial                                     */
 /*-------------------------------------------------------------*/
 
 var theMuseumList = [
-  ['unity','Unity in Learning'],
-  ['aahom','Ann Arbor Hands-On Museum'],
-  ['leslie','Leslie Science & Nature Center'],
-  ['yankee','Yankee Air Museum'],
-  ['challenger','Challenger Learning Center at SC4'],
-  ['experience','Experience Center']
+  ["unity","Unity in Learning"],
+  ["aahom","Ann Arbor Hands-On Museum"],
+  ["leslie","Leslie Science & Nature Center"],
+  ["yankee","Yankee Air Museum"],
+  ["challenger","Challenger Learning Center at SC4"],
+  ["experience","Experience Center"]
 ];
 
 var theMuseumKeys = [
-  'unity',
-  'aahom',
-  'leslie',
-  'yankee',
-  'challenger',
-  'experience'
+  "unity",
+  "aahom",
+  "leslie",
+  "yankee",
+  "challenger",
+  "experience"
 ];
 
 /* ----------------------------------------------------------- */
 /* Do some basic setup on page load                            */
-/* ----------------------------------------------------------- */  
+/* ----------------------------------------------------------- */
 
 $(document).ready(function() {
   // Insert return to previous page on all blog item displays
   var temp = `<div class="returnPrev">
-    <A HREF="javascript:javascript:history.go(-1)"> 
+    <A HREF="javascript:javascript:history.go(-1)">
     Back to previous page</A></div>`;
-  $(temp).insertBefore('div.blog-item-wrapper');
-  $(temp).insertAfter('div.blog-item-wrapper');
-})
+  $(temp).insertBefore("div.blog-item-wrapper");
+  $(temp).insertAfter("div.blog-item-wrapper");
+});
 
 /* ----------------------------------------------------------- */
 /* Search URL Parameters                                       */
 /*    02/16/2022 - initial                                     */
-/* ----------------------------------------------------------- */  
+/* ----------------------------------------------------------- */
 
-/* https://stackoverflow.com/questions/19491336/how-to-get-url-parameter-using-jquery-or-plain-javascript */
+/* https://stackoverflow.com/questions/19491336/
+    how-to-get-url-parameter-using-jquery-or-plain-javascript */
 function getSearchParams(k){
  var p={};
- location.search.replace(/[?&]+([^=&]+)=([^&]*)/gi,function(s,k,v){p[k]=v})
+ location.search.replace(/[?&]+([^=&]+)=([^&]*)/gi,function(s,k,v){p[k]=v});
  return k?p[k]:p;
 }
 
 /* ----------------------------------------------------------- */
 /* Fetch one or more URL's from Google                         */
 /*    02/16/2022 - initial                                     */
-/* ----------------------------------------------------------- */  
+/* ----------------------------------------------------------- */
 
 async function fetchGoogleDataAll(urls) {
-  let promises = [];
+  var promises = [];
   //urls[1] = 'xx'; // to test errors
-  var status = ''; 
-  urls.map(x => promises.push(
+  var status = "";
+  urls.map((x) => promises.push(
     fetch(x)
       .then((response) => {
         if (response.status >= 200 && response.status <= 299) {
@@ -69,9 +74,10 @@ async function fetchGoogleDataAll(urls) {
       })
   ));
   const promisResponse = await Promise.all(promises);
-  var data3 = []; 
+  var i = 0;
+  var data3 = [];
   if (!status) {
-    for (let i = 0; i < promisResponse.length; i++){
+    for (i = 0; i < promisResponse.length; i++) {
       var temp = await promisResponse[i].text();
       data3.push(JSON.parse(temp.substr(47).slice(0, -2)));
     }
@@ -85,23 +91,25 @@ async function fetchGoogleDataAll(urls) {
 
 function doGalleryShow() {
 
-    // get some selectors and data 
-    var background = $('#page article:first-child section:first-child div.section-background');
-    var gallery = $('#page  article:first-child section.gallery-section').first().find('figure.gallery-grid-item');
-    
+    // get some selectors and data
+    var background = $("#page article:first-child section:first-child " +
+        "div.section-background");
+    var gallery = $("#page  article:first-child section.gallery-section")
+        .first().find("figure.gallery-grid-item");
+
     // If no gallery found so abort
-    if (gallery.length == 0) {
+    if (gallery.length === 0) {
         return false;
-    } 
+    }
 
     // Hide the initial template, not needed.
-    background.find('img').css('display','none');
+    background.find("img").css("display","none");
 
     // https://stackoverflow.com/questions/326069/how-to-identify-if-a-webpage-is-being-loaded-inside-an-iframe-or-directly-into-t
     // See if we are editing the SquareSpace page, if so hide the gallery section
     var isEditor = window.frameElement ? true : false;
     if (isEditor == false) {
-       gallery.closest('section').css('display', 'none'); 
+       gallery.closest("section").css("display", "none"); 
     }
 
     // Loop through each figure and add to the list of slides 
@@ -118,7 +126,7 @@ function doGalleryShow() {
 
         imgpos = imgpos.split(",");
         var temp = "";
-        for (var i = 0; i < imgpos.length; i++) {
+        for (i = 0; i < imgpos.length; i++) {
             imgpos[i] = imgpos[i] * 100;
             temp = temp + " " + imgpos[i] + "%";
         }
@@ -281,7 +289,7 @@ function build_flipcards(selectorID, boxNumber = '1') {
 
   $(selectorID).html('<div class="flex-container"></div>');
 
-  fetchGoogleDataAll([url]).then(dataArrayx => {
+  fetchGoogleDataAll([url]).then((dataArrayx) => {
     if (dataArrayx[1]) {  // if there was a status error of some kind
     jQuery('#classList .gallery-items')
       .html('<div class="errorMessage">Error fetching spreadsheet, status= ' + dataArrayx[1] + ' try refreshing page</div>');
@@ -307,7 +315,7 @@ function build_flipcards(selectorID, boxNumber = '1') {
       if (item.c[5] != null) {background = item.c[5].v;}
       if (item.c[6] != null) {color = item.c[6].v;}
       if (item.c[7] != null) {message = item.c[7].v;}
-      for (var i = 8; i < 15; i++) {
+      for (i = 8; i < 15; i++) {
         if (item.c[i] != null) { 
           var src = item.c[i].v;
           if (src.indexOf('images.squarespace-cdn.com')) {
@@ -357,7 +365,7 @@ function showAddressInfo(selectorID, museum = 'aahom') {
     $(selectorID).addClass(colorClass).addClass('hoursContainer'); 
 
      // Fetch the spreadsheet data 
-    fetchGoogleDataAll([url]).then(dataArrayx => {
+    fetchGoogleDataAll([url]).then((dataArrayx) => {
         if (dataArrayx[1]) {  // if there was a status error of some kind
             jQuery('#classList .gallery-items')
             .html('<div class="errorMessage">Error fetching spreadsheet, status= ' + dataArrayx[1] + ' try refreshing page</div>');
@@ -437,7 +445,7 @@ function do_faqs2(theSelector, active = 1,
     }
     var activeTab = active - 1;  // zero based tabs    
 
-    fetchGoogleDataAll([url]).then(dataArrayx => {
+    fetchGoogleDataAll([url]).then((dataArrayx) => {
       if (dataArrayx[1]) {  // if there was a status error of some kind
         jQuery('#classList .gallery-items')
           .html('<div class="errorMessage">Error fetching spreadsheet, status= ' + dataArrayx[1] + ' try refreshing page</div>');
@@ -449,7 +457,7 @@ function do_faqs2(theSelector, active = 1,
       dataArray.forEach(function(item,key) {
         if (item.c[0] != null) {
           var ar = [];
-          for (let i = 0; i < 5; i++) {
+          for (i = 0; i < 5; i++) {
             var val =  (item.c[i] != null) ? item.c[i].v : '';
             ar.push(val);
           } 
@@ -560,7 +568,7 @@ function do_faqs3(theSelector, data, attr) {
 
     // find the faq reference data
     var thedata = {};
-    for (let i = 0; i < data['items'].length; i++) {
+    for (i = 0; i < data['items'].length; i++) {
       if (data['items'][i]['fullUrl'] == '/reference-data/faqs') {
         theMuseumList.forEach(function(item, key) {
           if (item[2] != true) { // not hiding this museum
@@ -609,7 +617,7 @@ function do_faqs3(theSelector, data, attr) {
 
             var thisdata = thedata[lookfor];
             out = out + '<div id="tabsFaqs-' + tabnum + '">\n<div class="accordian">\n'; 
-            for (var i = 0, l = thisdata.length; i < l; i++) {
+            for (i = 0; i < thisdata.length; i++) {
                 out = out + '<h3 class="' + background + '">' + thisdata[i][0] + '</h3><div>\n';
                 out = out + '<p>' + thisdata[i][1] + '</p></div>\n';
             }
@@ -745,7 +753,7 @@ function do_team_members(selectorID) {
     var url = 'https://docs.google.com/spreadsheets/u/0/d/'
     + file_id + '/gviz/tq?sheet=' + sheet + '&tqx=out:json&headers=1&tq=' + escape("SELECT A, B, C, D, E, F, G, H, I WHERE F = 'No' ORDER BY B, A");
 
-    fetchGoogleDataAll([url]).then(dataArray => {
+    fetchGoogleDataAll([url]).then((dataArray) => {
         if (dataArray[1]) {
             // if there was a status error of some kind    
             jQuery('div#loading').hide();
@@ -889,7 +897,7 @@ function do_donor_wall(selectorID) {
     + file_id + '/gviz/tq?sheet=' + sheet + '&tqx=out:json&headers=1&tq=' 
     + escape('SELECT A, B, C, D, E ORDER BY A DESC');
 
-    fetchGoogleDataAll([url]).then(dataArrayx => {
+    fetchGoogleDataAll([url]).then((dataArrayx) => {
         if (dataArrayx[1]) {  // if there was a status error of some kind
         jQuery('#classList .gallery-items')
           .html('<div class="errorMessage">Error fetching spreadsheet, status= ' + dataArrayx[1] + ' try refreshing page</div>');
@@ -901,7 +909,7 @@ function do_donor_wall(selectorID) {
         dataArray.forEach(function(item,key) {
             if (item.c[0] != null) {
               var ar = [];
-              for (let i = 0; i < 5; i++) {
+              for (i = 0; i < 5; i++) {
                 var val =  (item.c[i] != null) ? item.c[i].v : '';
                 ar.push(val);
               } 
@@ -1067,7 +1075,7 @@ function build_calendars(
     collapsed = false) {
 
   // Point to calendars spreadsheet
-  file_id = '1i5EjZCpxI4UnvXyMYXCLyLP9tSCNt0PZYemaU6f6XtU', 
+  file_id = '1i5EjZCpxI4UnvXyMYXCLyLP9tSCNt0PZYemaU6f6XtU';
   sheet = 'Calendars';
 
   // Make sure null parameters are handled
@@ -1089,7 +1097,7 @@ function build_calendars(
     '&headers=1&tq=' + escape(where);
 
   // Fetch the spreadsheet data 
-  fetchGoogleDataAll([url]).then(dataArrayx => {
+  fetchGoogleDataAll([url]).then((dataArrayx) => {
     if (dataArrayx[1]) {  // if there was a status error of some kind
       jQuery('#classList .gallery-items')
         .html('<div class="errorMessage">Error fetching spreadsheet, status= ' + dataArrayx[1] + ' try refreshing page</div>');
@@ -1102,7 +1110,7 @@ function build_calendars(
     dataArray.forEach(function(item,key) {
       if (item.c[0] != null) {
         var ar = [];
-        for (let i = 0; i < 5; i++) {
+        for (i = 0; i < 5; i++) {
           var val =  (item.c[i] != null) ? item.c[i].v : '';
           ar.push(val);
         } 
@@ -1281,7 +1289,7 @@ function intersection(first, second)
 {
     first = new Set(first);
     second = new Set(second);
-    return [...first].filter(item => second.has(item));
+    return [...first].filter((item) => second.has(item));
 }
 
 function filter_showvals(selector='#filterContainer') {
@@ -1432,7 +1440,7 @@ sheet='Categories') {
       .css('display','none !important');
 
     // Fetch the spreadsheet data 
-    fetchGoogleDataAll([url]).then(dataArrayx => {
+    fetchGoogleDataAll([url]).then((dataArrayx) => {
         if (dataArrayx[1]) {
             // if there was a status error of some kind
             jQuery('#classList .gallery-items')
@@ -1649,7 +1657,7 @@ function do_maps(theSelector, data, attr) {
   var title = ('title' in attr) ? attr['title'] : 'View Location Maps';
 
   // Point to calendars spreadsheet
-  file_id = '1Xrz1gJ0to5c01jiDyMvl38486s_J94lHhERtTHEBw5E', 
+  file_id = '1Xrz1gJ0to5c01jiDyMvl38486s_J94lHhERtTHEBw5E';
   sheet = 'Maps';
 
   // Make sure null parameters are handled
@@ -1671,7 +1679,7 @@ function do_maps(theSelector, data, attr) {
 
   // find the faq reference data
     var thedata = {};
-    for (let i = 0; i < data['items'].length; i++) {
+    for (i = 0; i < data['items'].length; i++) {
       if (data['items'][i]['fullUrl'] == '/reference-data/location-maps') {
         theMuseumList.forEach(function(item, key) {
           if (item[2] != true) { // not hiding this museum
@@ -1796,7 +1804,7 @@ function intersection(first, second)
 {
     first = new Set(first);
     second = new Set(second);
-    return [...first].filter(item => second.has(item));
+    return [...first].filter((item) => second.has(item));
 }
 
 function adjustGalleryItemHeight() {
@@ -1818,7 +1826,7 @@ function cleanUpArray(dataArray, num=5) {
     dataArray.forEach(function(item,key) {
       if (item.c[0] != null) {
         var ar = [];
-        for (let i = 0; i < num; i++) {
+        for (i = 0; i < num; i++) {
           var val =  (item.c[i] != null) ? item.c[i].v : '';
           ar.push(val);
         } 
@@ -1846,7 +1854,7 @@ function filterGalleryShowvals(selectorID, mycats, mycatsids) {
             var cat = this.value;
             cat = cat.replace("&", "%26");
             selectedcats.push(cat);
-            var i = mycats.findIndex(element => {  // compare lower case 
+            var i = mycats.findIndex((element) => {  // compare lower case 
                   return element.toLowerCase().replaceAll(' ', '+').replaceAll('%20', '+') === cat.toLowerCase().replaceAll(' ', '+').replaceAll('%20', '+');
                 })
             selectedcatsids.push(i);
@@ -1983,7 +1991,7 @@ function makeFilterBoxes(selectorID, groups, cats, groupinfo, mycats, mycatsids)
         for (n = 0; n < cats.length; n++) { 
             var lookup = cats[n][3].toLowerCase().replaceAll(' ', '+').replaceAll('%20', '+');
                 // Only show category if it appears in at least one blog entry
-            var x = mycats.findIndex(element => {  // compare lower case 
+            var x = mycats.findIndex((element) => {  // compare lower case 
               return element.toLowerCase().replaceAll(' ', '+').replaceAll('%20', '+') === lookup.toLowerCase();
             })
             if (cats[n][0].toLowerCase() == group) {
@@ -2061,7 +2069,7 @@ function createFilteredGallery(
       .css('display','none !important');
 
     // Fetch the spreadsheet data 
-    fetchGoogleDataAll([url,url2]).then(dataArrayx => {
+    fetchGoogleDataAll([url,url2]).then((dataArrayx) => {
         if (dataArrayx[1]) {
             // if there was a status error of some kind
             jQuery('#classList .gallery-items')
@@ -2102,7 +2110,7 @@ function createFilteredGallery(
     // used here to substitute aliase names if any
     var aliasname = [];
     var realname = [];
-    for (var i=0; i < cats.length; i++) {
+    for (i=0; i < cats.length; i++) {
       if (cats[i][2] != cats[i][3]) {
         aliasname.push(cats[i][2].toLowerCase());
         realname.push(cats[i][3]);
@@ -2116,7 +2124,7 @@ function createFilteredGallery(
     var mycatsids = []; 
     var allowedExtensions =  /(\.jpg|\.jpeg|\.png|\.gif)$/i; 
     var regexp = /<img[^>]+src\s*=\s*['"]([^'"]+)['"][^>]*>/;
-    for (var i=0; i < a.length; i++) {
+    for (i=0; i < a.length; i++) {
       var index = i;
       var img = a[i]['assetUrl'];
       var excerpt = a[i]['excerpt'];
@@ -2147,7 +2155,7 @@ function createFilteredGallery(
       var fx = (isNaN(focalx)) ? '50%' : (focalx * 100) + '%';
       var fy = (isNaN(focaly)) ? '50%' : (focaly * 100) + '%';
       var newfocal = fx + ' ' + fy;
-      for (var n=0; n < categories.length; n++) {
+      for (n=0; n < categories.length; n++) {
         // look for a possible alise name and swap out
         var x = aliasname.indexOf(categories[n].toLowerCase());
         if (x != -1) {
@@ -2231,7 +2239,7 @@ function formatSlickCarousel(selectorID, json, findCats = '', showCats = false) 
     if (findCats.trim() != '') {
       findCatsArray = findCats.split(',');
     }
-    for (var n=0; n < findCatsArray.length; n++) {
+    for (n=0; n < findCatsArray.length; n++) {
          findCatsArray[n] = findCatsArray[n].trim()
          .toLowerCase().replaceAll(' ', '+').replaceAll('%20', '+');
     }
@@ -2247,7 +2255,7 @@ function formatSlickCarousel(selectorID, json, findCats = '', showCats = false) 
         <button class="next slick-arrow"> > </button>
         </div>
         <div class="theCarousel">`;
-    for (var i=0; i < a.length; i++) {
+    for (i=0; i < a.length; i++) {
       var index = i;
       var img = a[i]['assetUrl'];
       var href = a[i]['fullUrl'];
@@ -2255,13 +2263,13 @@ function formatSlickCarousel(selectorID, json, findCats = '', showCats = false) 
 
       // Process categories and filter if requested
       var categories = a[i]['categories'].sort();
-      var x = mycats.findIndex(element => {  // compare lower case 
+      var x = mycats.findIndex((element) => {  // compare lower case 
               return element.toLowerCase().replaceAll(' ', '+').replaceAll('%20', '+') === lookup.toLowerCase();
             })
       var cats = '';
       var sep = '';
       var found = false;
-      for (var n=0; n < categories.length; n++) {
+      for (n=0; n < categories.length; n++) {
         var classNames = 'newCats';
         var temp = categories[n].toLowerCase().replaceAll(' ', '+').replaceAll('%20', '+');
         var x = findCatsArray.indexOf(temp);
@@ -2358,7 +2366,7 @@ function filterGalleryShowvals(selectorID, mycats, mycatsids, displayType='') {
             var cat = this.value;
             cat = cat.replace("&", "%26");
             selectedcats.push(cat);
-            var i = mycats.findIndex(element => {  // compare lower case 
+            var i = mycats.findIndex((element) => {  // compare lower case 
                   return element.toLowerCase().replaceAll(' ', '+').replaceAll('%20', '+') === cat.toLowerCase().replaceAll(' ', '+').replaceAll('%20', '+');
                 })
             selectedcatsids.push(i);
@@ -2562,10 +2570,10 @@ function recursiveAjaxCall2(
             }
             else {    
               var dataArray = [];
-              for (let i = 0; i < theCollections.length; i++) {
+              for (i = 0; i < theCollections.length; i++) {
                 dataArray.push([]);
               }
-              for (let i = 0; i < items.length; i++) {
+              for (i = 0; i < items.length; i++) {
                 var temp = items[i]['fullUrl'].split('/');
 
                 var x = theCollections.indexOf(temp[1]);
@@ -2598,7 +2606,7 @@ function parseData(body, lookfor) {
   var temp1 = $(body).find(lookfor).next('ul').find('> li'); 
   
   var data = []; 
-  for (let i = 0; i < temp1.length; i++) {
+  for (i = 0; i < temp1.length; i++) {
     var text1 = $(temp1[i]).html();
     var x = text1.indexOf('<ul>');
     var val1 = $(temp1[i]).text();
@@ -2609,7 +2617,7 @@ function parseData(body, lookfor) {
       var val1 = text1.substr(0,x);
       var level1 = val1;
       var temp2 = $(text1.substr(x)).find('li');
-      for (let n = 0; n < temp2.length; n++) {
+      for (n = 0; n < temp2.length; n++) {
         var text3 = $(temp2[n]).html();
         var x3 = text3.indexOf('<ul>');
         var val2 = $(temp2[n]).text(); 
@@ -2765,7 +2773,7 @@ function formatflexBoxesDisplay(selectorID,json, attr) {
   var testout = '';
   $(selectorID).append('<div class="flipBoxContainer"><div class="flex-container"></div></div>');
 
-  for (var i=0; i < a.length; i++) {
+  for (i=0; i < a.length; i++) {
     var index = i;
     var img = a[i]['assetUrl'];
     var href = a[i]['fullUrl'];
@@ -2775,7 +2783,7 @@ function formatflexBoxesDisplay(selectorID,json, attr) {
     var source = a[i]['sourceUrl'];
     var images = []; 
     var tempimg = $(a[i]['body']).find('div.sqs-gallery div.slide');
-    for (var x=0; x < tempimg.length; x++) {
+    for (x=0; x < tempimg.length; x++) {
       var src = $(tempimg[x]).find('img').data('image');
       images.push(src);
 
@@ -2826,7 +2834,7 @@ function formatTeamDisplay(selectorID, json, attr) {
     if (findCats.trim() != '') {
       findCatsArray = findCats.split(',');
     }
-    for (var n=0; n < findCatsArray.length; n++) {
+    for (n=0; n < findCatsArray.length; n++) {
          findCatsArray[n] = findCatsArray[n].trim()
          .toLowerCase().replaceAll(' ', '+').replaceAll('%20', '+');
     }
@@ -2840,7 +2848,7 @@ function formatTeamDisplay(selectorID, json, attr) {
     var showing = 0; 
     var testout = '';
     console.log(a[0]['body']);
-    for (var i=0; i < a.length; i++) {
+    for (i=0; i < a.length; i++) {
       var index = i;
       var img = a[i]['assetUrl'];
       var href = a[i]['fullUrl'];
@@ -2854,14 +2862,14 @@ function formatTeamDisplay(selectorID, json, attr) {
 
       // Process categories and filter if requested
       var categories = a[i]['categories'].sort();
-      var x = mycats.findIndex(element => {  // compare lower case 
+      var x = mycats.findIndex((element) => {  // compare lower case 
               return element.toLowerCase().replaceAll(' ', '+').replaceAll('%20', '+') === lookup.toLowerCase();
             })
       var cats = '';
       var sep = '';
       var found = false;
 
-      for (var n=0; n < categories.length; n++) {
+      for (n=0; n < categories.length; n++) {
         var classNames = 'newCats';
         var temp = categories[n].toLowerCase().replaceAll(' ', '+').replaceAll('%20', '+');
         var x = findCatsArray.indexOf(temp);
@@ -2973,12 +2981,12 @@ function formatLocationsDisplay(selectorID, data, attr) {
 function getMuseumList(data) {
 
     var museumList = [];
-    for (let i = 0; i < data['items'].length; i++) {
+    for (i = 0; i < data['items'].length; i++) {
       if (data['items'][i]['fullUrl'] == '/reference-data/museum-list') {
             data2 = parseData(data['items'][i]['body'], '#museums');
             //museumList['museums'] = data2;
-            for (let n = 0; n < data2.length; n++) {
-              var str = data2[n][0].split(',').map(element => element.trim());;
+            for (n = 0; n < data2.length; n++) {
+              var str = data2[n][0].split(',').map((element) => element.trim());;
               var flag = (str[2].toLowerCase() == 'hide') ? true : false;
               museumList.push([str[0],str[1],flag]);
             }
@@ -3003,7 +3011,7 @@ function formatAddressDisplay(selectorID, data, attr) {
 
   // find the faq reference data
   var thedata = [];
-  for (let i = 0; i < data['items'].length; i++) {
+  for (i = 0; i < data['items'].length; i++) {
     if (data['items'][i]['fullUrl'] == '/reference-data/address-hours') {
       theMuseumList.forEach(function(item, key) {
           data2 = parseData(data['items'][i]['body'], '#' + item[0]);
@@ -3045,11 +3053,15 @@ function createGridGallery(
     var showCats = ('showcats' in attr) ? attr['showcats'] : false; 
     var showDots = ('dots' in attr) ? attr['dots'] : false; 
     var showCount = ('showcount' in attr) ? attr['showcount'] : true; 
+    var featuredimage = ('image' in attr) ? attr['image'] : true; 
   
     /* Using the json array, fill in the html for all of the items 
     found in the array, plus all of the categories found */
 
     var dataArray = formatGalleryItems(selectorID, data);
+    if (featuredimage != true) {
+      $(selectorID + ' div.itemFilterImage').remove(); 
+    }
 
     /* If we are showing counts, then set the count class to active */
 
@@ -3064,30 +3076,16 @@ function createGridGallery(
       collectFilterInfo(selectorID, groups, 'grid', catdata);
     }
   }
-
 function collectFilterInfo(selectorID, groups = 'grades,outreach', displayType, catdata) {
 
-    // Updated 4/4/22
-
-    var file_id='1qrUPQu2qs8eOOi-yZwvzOuGseDFjkvj5_mSnoz0tJVc';
-    var where = "SELECT A,B,C,D,E WHERE E != 'Yes' AND A IS NOT NULL ORDER BY A,B";
-    var url = 'https://docs.google.com/spreadsheets/u/0/d/'
-    + file_id + '/gviz/tq?tqx=out:json&sheet=Categories' +
-    '&headers=1&tq=' + escape(where);
- 
-    var url2 = 'https://docs.google.com/spreadsheets/u/0/d/'
-    + file_id + '/gviz/tq?tqx=out:json&sheet=groups' +
-    '&headers=1&tq=';
-
-    /* Read the two Google spreadsheets that contain information about
-    filtering groups*/
+    // Updated 4/5/22
 
     // find the category reference data
     var thedata = {};
-    for (let i = 0; i < catdata.length; i++) {
-      if (catdata[i]['fullUrl'] == '/reference-data/categories') {
+    for (i = 0; i < catdata.length; i++) {
+      if (catdata[i]['fullUrl'] === '/reference-data/categories') {
         var ids = $(catdata[i]['body']).find('div.markdown-block h3[id]');
-        for (let n = 0; n < ids.length; n++) {
+        for (n = 0; n < ids.length; n++) {
           data2 = parseData(catdata[i]['body'], '#' + ids[n]['id']);
           thedata[ids[n]['id']] = data2;
         }
@@ -3105,10 +3103,10 @@ function collectFilterInfo(selectorID, groups = 'grades,outreach', displayType, 
 
     // find the category groups reference data
     var thegroupdata = {};
-    for (let i = 0; i < catdata.length; i++) {
-      if (catdata[i]['fullUrl'] == '/reference-data/category-groups') {
+    for (i = 0; i < catdata.length; i++) {
+      if (catdata[i]['fullUrl'] === '/reference-data/category-groups') {
         var ids = $(catdata[i]['body']).find('div.markdown-block h3[id]');
-        for (let n = 0; n < ids.length; n++) {
+        for (n = 0; n < ids.length; n++) {
           data2 = parseData(catdata[i]['body'], '#' + ids[n]['id']);
           thegroupdata[ids[n]['id']] = data2;
         }
@@ -3119,7 +3117,7 @@ function collectFilterInfo(selectorID, groups = 'grades,outreach', displayType, 
     var newgroups = [];
     $.each(thegroupdata, function( index, value ) {
       $.each(value,function(index2, value2) {
-        newgroups.push(value2[0].split(',').map(element => element.trim()));
+        newgroups.push(value2[0].split(",").map((element) => element.trim()));
       })
     });
 
@@ -3141,13 +3139,13 @@ function collectFilterInfo(selectorID, groups = 'grades,outreach', displayType, 
       var cat = $(this).data('catname');
       var full = $(this).text();
       x = mycats.indexOf(cat);
-      if (x == -1) {
+      if (x === -1) {
         mycats.push(cat);
         mycatsfull.push(full);
         x = mycats.length - 1;
         mycatsids.push([id]);
         var catgroup = 'unknown'; 
-        for (var k=0; k < cats.length; k++) {
+        for (k=0; k < cats.length; k++) {
           if (allgroups.indexOf(cats[k][0])) {
             catgroup = cats[k][0];
           }
@@ -3155,7 +3153,7 @@ function collectFilterInfo(selectorID, groups = 'grades,outreach', displayType, 
         mycatsgrps.push(catgroup);
       }
       else {
-        if (mycatsids[x].indexOf(id) == -1) {
+        if (mycatsids[x].indexOf(id) === -1) {
           mycatsids[x].push(id);
         }
       } 
@@ -3180,25 +3178,26 @@ function collectFilterInfo(selectorID, groups = 'grades,outreach', displayType, 
       var label = group; 
     var type = 'checkbox';
     for (x = 0; x < groupinfo.length; x++) {
-      if (groupinfo[x][0].toLowerCase() == group.toLowerCase()) {
+      if (groupinfo[x][0].toLowerCase() === group.toLowerCase()) {
         label = groupinfo[x][1];
         type = groupinfo[x][2];
       }
     }      
     label = (typeof groupparts[1] != 'undefined' && groupparts[1] != '') ? groupparts[1] : label;
     type = (typeof groupparts[2] != 'undefined' && groupparts[2] != '') ? groupparts[2] : type;
+    type = type.toLowerCase().trim();
     out = out + '<div class="filterGroup">\n';
     out = out + '<span>' + label + '</span><table class="outer">\n';
     var colorClass = "group" + group.charAt(0).toUpperCase() + group.slice(1);
     var numcols = 1;
-    if (group == 'grades') {
+    if (group === 'grades') {
         numcols = 2;
     }
     var curcol = 0;
     var tr = '<tr>';
     var defaultvalue = '';
-    if (type == 'radio') {
-        if (defaultvalue == '') {
+    if (type === 'radio') {
+        if (defaultvalue === '') {
             checked = ' checked ';
         }
         out = out + tr + '<td><input type="' + type + '" value="" name="' + group + '"' + checked + '><span>Any</span></td>\n';
@@ -3209,11 +3208,11 @@ function collectFilterInfo(selectorID, groups = 'grades,outreach', displayType, 
     for (n = 0; n < cats.length; n++) { 
         var lookup = cats[n][3].toLowerCase().replaceAll(' ', '+').replaceAll('%20', '+');
             // Only show category if it appears in at least one blog entry
-        var x = mycats.findIndex(element => {  // compare lower case 
+        var x = mycats.findIndex((element) => {  // compare lower case 
           return element.toLowerCase().replaceAll(' ', '+').replaceAll('%20', '+') === lookup.toLowerCase();
         })
 
-        if (cats[n][0].toLowerCase() == group) {
+        if (cats[n][0].toLowerCase() === group) {
             var item = cats[n];
             
             if (x !== -1) {
@@ -3230,7 +3229,7 @@ function collectFilterInfo(selectorID, groups = 'grades,outreach', displayType, 
                 }
                 var checked = '';
                 var lookup = cats[n][2].toLowerCase().replaceAll(' ', '+').replaceAll('%20', '+');
-                if (defaultvalue == lookup) {
+                if (defaultvalue === lookup) {
                     checked = ' checked ';
                 }
                 out = out + tr + '<td><input type="' + type + '" value="' + lookup + '" name="' + 
@@ -3286,7 +3285,7 @@ function formatSlickCarousel(selectorID, json, attr) {
     if (findCats.trim() != '') {
       findCatsArray = findCats.split(',');
     }
-    for (var n=0; n < findCatsArray.length; n++) {
+    for (n=0; n < findCatsArray.length; n++) {
          findCatsArray[n] = findCatsArray[n].trim()
          .toLowerCase().replaceAll(' ', '+').replaceAll('%20', '+');
     }
@@ -3303,7 +3302,7 @@ function formatSlickCarousel(selectorID, json, attr) {
         <button class="next slick-arrow"> > </button>
         </div>
         <div class="theCarousel">`;
-    for (var i=0; i < a.length; i++) {
+    for (i=0; i < a.length; i++) {
       var index = i;
       var img = a[i]['assetUrl'];
       var href = a[i]['fullUrl'];
@@ -3311,14 +3310,14 @@ function formatSlickCarousel(selectorID, json, attr) {
 
       // Process categories and filter if requested
       var categories = a[i]['categories'].sort();
-      var x = mycats.findIndex(element => {  // compare lower case 
+      var x = mycats.findIndex((element) => {  // compare lower case 
               return element.toLowerCase().replaceAll(' ', '+').replaceAll('%20', '+') === lookup.toLowerCase();
             })
       var cats = '';
       var sep = '';
       var found = false;
 
-      for (var n=0; n < categories.length; n++) {
+      for (n=0; n < categories.length; n++) {
         var classNames = 'newCats';
         var temp = categories[n].toLowerCase().replaceAll(' ', '+').replaceAll('%20', '+');
         var x = findCatsArray.indexOf(temp);
@@ -3437,7 +3436,7 @@ function formatCalendars(theSelector, data, attr) {
 
   // find the faq reference data
     var thedata = {};
-    for (let i = 0; i < data['items'].length; i++) {
+    for (i = 0; i < data['items'].length; i++) {
       if (data['items'][i]['fullUrl'] == '/reference-data/calendars') {
         theMuseumList.forEach(function(item, key) {
           if (item[2] != true) { // not hiding this museum
