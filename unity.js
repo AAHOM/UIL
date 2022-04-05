@@ -2672,6 +2672,9 @@ function collectionControl(
     return; 
   }
 
+  console.log('collectionControl ' + selectorID + ' collection=' + collection);
+  return;
+
   /* process the requested type, call Ajax to read the 
   requested collection data and possibly reference data as well,
   then call the specified callback function to process. */
