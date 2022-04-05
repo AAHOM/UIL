@@ -2673,7 +2673,7 @@ function collectionControl(
   }
 
   console.log('collectionControl ' + selectorID + ' collection=' + collection);
-  return;
+
 
   /* process the requested type, call Ajax to read the 
   requested collection data and possibly reference data as well,
@@ -2719,6 +2719,9 @@ function collectionControl(
 
 // Callback for Grid
 function theGridCallback(selectorID,json, attr) {
+  console.log('grid Callback ');
+  console.log(json);
+  return;
   //var data = {items: json['dataArray'][0]};
   createGridGallery(selectorID, json, attr);
 }
@@ -2760,12 +2763,18 @@ function formatFaqsDisplay(selectorID, data, attr) {
 
 // Callback for Address
 function theAddressCallback(selectorID, json, attr) {
+  console.log('address Callback ');
+  console.log(json);
+  return;
   var data = {items: json['dataArray'][0]};
   formatAddressDisplay(selectorID,data, attr);
 }
 
 // Callback for Locations
 function theCalendarsCallback(selectorID, json, attr) {
+  console.log('calendar Callback ');
+  console.log(json);
+  return;
   var data = {items: json['dataArray'][0]};
   formatCalendars(selectorID,data, attr);
 }
