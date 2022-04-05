@@ -3027,6 +3027,7 @@ function formatAddressDisplay(selectorID, data, attr) {
 
   // find the faq reference data
   var thedata = [];
+  var i = 0; 
   for (i = 0; i < data['items'].length; i++) {
     if (data['items'][i]['fullUrl'] == '/reference-data/address-hours') {
       theMuseumList.forEach(function(item, key) {
@@ -3124,6 +3125,7 @@ function collectFilterInfo(selectorID, groups = 'grades,outreach', displayType, 
 
     // find the category groups reference data
     var thegroupdata = {};
+    var i = 0;
     for (i = 0; i < catdata.length; i++) {
       if (catdata[i]['fullUrl'] === '/reference-data/category-groups') {
         var ids = $(catdata[i]['body']).find('div.markdown-block h3[id]');
@@ -3192,6 +3194,7 @@ function collectFilterInfo(selectorID, groups = 'grades,outreach', displayType, 
     allgroups = groups.replace(' ','').toLowerCase().split(',');
 
     var out = '<div id="filterContainer"><div class="flexBox">\n';
+    var i = 0;
     for (i = 0; i < allgroups.length; i++) {
       var groupx = allgroups[i].trim().toLowerCase();
       var groupparts = groupx.split(':',3);
@@ -3331,6 +3334,7 @@ function formatSlickCarousel(selectorID, json, attr) {
         <button class="next slick-arrow"> > </button>
         </div>
         <div class="theCarousel">`;
+    var i = 0;
     for (i=0; i < a.length; i++) {
       var index = i;
       var img = a[i]['assetUrl'];
@@ -3465,6 +3469,7 @@ function formatCalendars(theSelector, data, attr) {
 
   // find the faq reference data
     var thedata = {};
+    var i = 0;
     for (i = 0; i < data['items'].length; i++) {
       if (data['items'][i]['fullUrl'] == '/reference-data/calendars') {
         theMuseumList.forEach(function(item, key) {
