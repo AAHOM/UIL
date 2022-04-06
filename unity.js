@@ -58,7 +58,7 @@ function getSearchParams(k){
 
 async function fetchGoogleDataAll(urls) {
   var promises = [];
-  //urls[1] = 'xx'; // to test errors
+  //urls[1] = "xx"; // to test errors
   var status = "";
   urls.map((x) => promises.push(
     fetch(x)
@@ -115,14 +115,14 @@ function doGalleryShow() {
     // Loop through each figure and add to the list of slides
     gallery.each(function() {
 
-        var imgtemp = $(this).find('img');
-        var imgcap = $(this).find('figcaption p.gallery-caption-content').text();
-        var caplink = $(this).find('a').first().attr('href');
+        var imgtemp = $(this).find("img");
+        var imgcap = $(this).find("figcaption p.gallery-caption-content").text();
+        var caplink = $(this).find("a").first().attr("href");
         if (caplink && imgcap) {
             imgcap = '<a href="' + caplink + '">' + imgcap + '</a>';
         }
         if (imgcap) { imgcap = '<div class="slideCaption">' + imgcap + '</div>';}
-        var imgpos = imgtemp.attr('data-image-focal-point');
+        var imgpos = imgtemp.attr("data-image-focal-point");
 
         imgpos = imgpos.split(",");
         var temp = "";
@@ -131,9 +131,9 @@ function doGalleryShow() {
             temp = temp + " " + imgpos[i] + "%";
         }
         imgpos = temp.trim();
-        var style = ' style="object-position:' + imgpos + ';';
+        var style = " style="object-position:" + imgpos + ";";
         temp = '<div class="mySlides"><img src="' + imgtemp.attr('data-src') + '"' + style + '">' +
-        imgcap + '</div>';
+        imgcap + "</div>";
         background.append(temp);
     });
 
@@ -145,13 +145,13 @@ function doGalleryShow() {
   var myGalIndex = 0;
   function galleryCarousel() {
     var i;
-    var background = $('#page article:first-child section:first-child div.section-background');
-    var x = background.find('.mySlides');
+    var background = $("#page article:first-child section:first-child div.section-background");
+    var x = background.find(".mySlides");
     if (myGalIndex >= x.length) {
       myGalIndex = 0
     }
     x.removeClass("opaque");
-    background.find('div.mySlides').eq(myGalIndex).addClass("opaque");
+    background.find("div.mySlides").eq(myGalIndex).addClass("opaque");
     myGalIndex++;
     setTimeout(galleryCarousel, 8000);
   }
@@ -165,13 +165,13 @@ function doGalleryShow() {
 // 'https://static1.squarespace.com/static/5f73ca8db43a982332ef42a7/60316dbd7dd52d12ad920e7f/605f48578926120327029e3f/1616857176069/uil.png',
 // Challenger
 // https://images.squarespace-cdn.com/content/v1/5f73ca8db43a982332ef42a7/1614786000565-L6LRAQGSOU2RCTJO0GMR/ke17ZwdGBToddI8pDm48kPxxGCBoMQSgw3nyp-BaIiZZw-zPPgdn4jUwVcJE1ZvWhcwhEtWJXoshNdA9f1qD7baX_VdYN7eZTOScYEC6H_pLV4CKJoqyvEGc-h-owCr40lNeO9O4GGfQSgSHrTD7DA/Logo_mainHeader.png
-var iconsFor = ['aahom','leslie','yankee','Challenger'];
+var iconsFor = ["aahom","leslie","yankee","Challenger"];
 /* updated 6/3/21 with Ari's new image */
 var icons = [
-'https://images.squarespace-cdn.com/content/v1/5f73ca8db43a982332ef42a7/e7aeba34-467f-40cf-8056-3fba38fd490a/ke17ZwdGBToddI8pDm48kBkSiM__EzOQIDgmzlPq1lAUqsxRUqqbr1mOJYKfIPR7LoDQ9mXPOjoJoqy81S2I8N_N4V1vUb5AoIIIbLZhVYxCRW4BPu10St3TBAUQYVKcHu3Ya3GWyjn2T6Pyc7Qz5bVN2MLWeLldKxJgMp5MiZ5EAsHAx8kgg2xyUEBRqgnS/AAHOM+1200+x+480+Transparency.png?format=300w',
-'https://images.squarespace-cdn.com/content/v1/5f73ca8db43a982332ef42a7/2c40ddd6-3359-4061-a531-43ff65632a6c/ke17ZwdGBToddI8pDm48kBkSiM__EzOQIDgmzlPq1lAUqsxRUqqbr1mOJYKfIPR7LoDQ9mXPOjoJoqy81S2I8N_N4V1vUb5AoIIIbLZhVYxCRW4BPu10St3TBAUQYVKcHu3Ya3GWyjn2T6Pyc7Qz5bVN2MLWeLldKxJgMp5MiZ5EAsHAx8kgg2xyUEBRqgnS/LSNC+1200+x+480+Transparency.png?format=300w',
-'https://images.squarespace-cdn.com/content/v1/5f73ca8db43a982332ef42a7/20c32031-135c-435b-a9b0-4c45bc0acbf0/ke17ZwdGBToddI8pDm48kBkSiM__EzOQIDgmzlPq1lAUqsxRUqqbr1mOJYKfIPR7LoDQ9mXPOjoJoqy81S2I8N_N4V1vUb5AoIIIbLZhVYxCRW4BPu10St3TBAUQYVKcHu3Ya3GWyjn2T6Pyc7Qz5bVN2MLWeLldKxJgMp5MiZ5EAsHAx8kgg2xyUEBRqgnS/YAM+1200+x+480+Transparency.png?format=300w',
-'https://images.squarespace-cdn.com/content/v1/5f73ca8db43a982332ef42a7/3419d464-2d84-4a93-bd05-d877700324df/ke17ZwdGBToddI8pDm48kBkSiM__EzOQIDgmzlPq1lAUqsxRUqqbr1mOJYKfIPR7LoDQ9mXPOjoJoqy81S2I8N_N4V1vUb5AoIIIbLZhVYxCRW4BPu10St3TBAUQYVKcHu3Ya3GWyjn2T6Pyc7Qz5bVN2MLWeLldKxJgMp5MiZ5EAsHAx8kgg2xyUEBRqgnS/Challenger+1200+x+480+Transparency.png?format=300w'
+"https://images.squarespace-cdn.com/content/v1/5f73ca8db43a982332ef42a7/e7aeba34-467f-40cf-8056-3fba38fd490a/ke17ZwdGBToddI8pDm48kBkSiM__EzOQIDgmzlPq1lAUqsxRUqqbr1mOJYKfIPR7LoDQ9mXPOjoJoqy81S2I8N_N4V1vUb5AoIIIbLZhVYxCRW4BPu10St3TBAUQYVKcHu3Ya3GWyjn2T6Pyc7Qz5bVN2MLWeLldKxJgMp5MiZ5EAsHAx8kgg2xyUEBRqgnS/AAHOM+1200+x+480+Transparency.png?format=300w",
+"https://images.squarespace-cdn.com/content/v1/5f73ca8db43a982332ef42a7/2c40ddd6-3359-4061-a531-43ff65632a6c/ke17ZwdGBToddI8pDm48kBkSiM__EzOQIDgmzlPq1lAUqsxRUqqbr1mOJYKfIPR7LoDQ9mXPOjoJoqy81S2I8N_N4V1vUb5AoIIIbLZhVYxCRW4BPu10St3TBAUQYVKcHu3Ya3GWyjn2T6Pyc7Qz5bVN2MLWeLldKxJgMp5MiZ5EAsHAx8kgg2xyUEBRqgnS/LSNC+1200+x+480+Transparency.png?format=300w",
+"https://images.squarespace-cdn.com/content/v1/5f73ca8db43a982332ef42a7/20c32031-135c-435b-a9b0-4c45bc0acbf0/ke17ZwdGBToddI8pDm48kBkSiM__EzOQIDgmzlPq1lAUqsxRUqqbr1mOJYKfIPR7LoDQ9mXPOjoJoqy81S2I8N_N4V1vUb5AoIIIbLZhVYxCRW4BPu10St3TBAUQYVKcHu3Ya3GWyjn2T6Pyc7Qz5bVN2MLWeLldKxJgMp5MiZ5EAsHAx8kgg2xyUEBRqgnS/YAM+1200+x+480+Transparency.png?format=300w",
+"https://images.squarespace-cdn.com/content/v1/5f73ca8db43a982332ef42a7/3419d464-2d84-4a93-bd05-d877700324df/ke17ZwdGBToddI8pDm48kBkSiM__EzOQIDgmzlPq1lAUqsxRUqqbr1mOJYKfIPR7LoDQ9mXPOjoJoqy81S2I8N_N4V1vUb5AoIIIbLZhVYxCRW4BPu10St3TBAUQYVKcHu3Ya3GWyjn2T6Pyc7Qz5bVN2MLWeLldKxJgMp5MiZ5EAsHAx8kgg2xyUEBRqgnS/Challenger+1200+x+480+Transparency.png?format=300w"
 ];
 // 'Experience',
 // 'https://images.squarespace-cdn.com/content/5f73ca8db43a982332ef42a7/3bace990-2ca4-4963-a409-06cb861b15b4/experience_logo.png',
@@ -181,26 +181,26 @@ var icons = [
 /*    03/14/2022 - initial                                     */
 /*-------------------------------------------------------------*/
 
-function addIconBar(where = 'header') {
+function addIconBar(where = "header") {
   where = where.toUpperCase();
   var temp = '<ul class="iconBarFlex">';
   icons.forEach(function(item,key) {
     temp += '<li class="flex-item ' + 'logo' + iconsFor[key] + '"><img src="' + item + '"></li>\n';
   })
-  temp += '</ul>\n';
+  temp += "</ul>\n";
 
-  if (where == 'HEADER') { // stick to header
-    var s = $('article:first-of-type section:first-of-type div.content-wrapper div.content');
+  if (where == "HEADER") { // stick to header
+    var s = $("article:first-of-type section:first-of-type div.content-wrapper div.content");
     var h = s.height();
     h = parseInt(h) + 100;
-    s.height(h + 'px');
+    s.height(h + "px");
     temp = '<div id="iconBar" class="sticky">' + temp + '</div>';
-    $(temp).appendTo('#page article:first-of-type section:first-of-type div.section-background');
-        $('div.mySlides div.slideCaption').css('bottom','100px');
+    $(temp).appendTo("#page article:first-of-type section:first-of-type div.section-background");
+        $("div.mySlides div.slideCaption").css("bottom","100px");
   }
-  else if (where == 'FOOTER') { // stick to footer
+  else if (where == "FOOTER") { // stick to footer
     temp = '<div id="iconBarFoot">' + temp + '</div>';
-    $(temp).prependTo('footer:first-of-type');
+    $(temp).prependTo("footer:first-of-type");
   }
   else {
     // do nothing.
@@ -216,29 +216,29 @@ function addIconBar(where = 'header') {
 var columnIndex = 1;
 
 function flipCardResize(selectorID) {
-  var fontsize = parseInt($(selectorID + ' .backContent div').css('font-size'));
-  var height = parseInt($(selectorID + ' .backContent').css('height'));
+  var fontsize = parseInt($(selectorID + " .backContent div").css("font-size"));
+  var height = parseInt($(selectorID + " .backContent").css("height"));
   var lineheight = fontsize * 1.2;
   var lines = parseInt(height / lineheight);
   //alert(fontsize + ' ' + height + ' ' + lineheight + ' ' + lines);
-  $(selectorID + ' .backContent div').css("-webkit-line-clamp", lines.toString());
-  $(selectorID + ' .backContent div').css("line-height", lineheight + 'px');
+  $(selectorID + " .backContent div").css("-webkit-line-clamp", lines.toString());
+  $(selectorID + " .backContent div").css("line-height", lineheight + "px");
 }
 
 function flip_carousel(selectorID) {
   var i;
-  var numColumns = $('.newColumn').length;
+  var numColumns = $(".newColumn").length;
   if (columnIndex > numColumns) { columnIndex = 1;}
-  var background = $('.newColumn:nth-child(' + +columnIndex + ') .flip-card-front');
+  var background = $(".newColumn:nth-child(" + +columnIndex + ") .flip-card-front");
   columnIndex++;
-  var t = background.find('img.active').index();
+  var t = background.find("img.active").index();
   myIndex =  t + 1;
-  var x = background.find('img');
+  var x = background.find("img");
   if (myIndex >= x.length) {
     myIndex = 0
   }
   x.removeClass("active");
-  background.find('img').eq(myIndex).addClass("active");
+  background.find("img").eq(myIndex).addClass("active");
   myIndex++;
   setTimeout(function() {flip_carousel(selectorID)}, 5000);
 }
@@ -268,7 +268,7 @@ function process_card_info(selectorID, link,images, caption, label, message) {
        </div>
       </div>`;
 
-  $(selectorID + ' .flex-container').append(str);
+  $(selectorID + " .flex-container").append(str);
 }
 
 /* ----------------------------------------------------------- */
@@ -276,37 +276,37 @@ function process_card_info(selectorID, link,images, caption, label, message) {
 /*    Updated 03/02/2022                                       */
 /* ----------------------------------------------------------- */
 
-function build_flipcards(selectorID, boxNumber = '1') {
+function build_flipcards(selectorID, boxNumber = "1") {
 
-  file_id = '1wEfSb4Dnjz-eNEayaNiiws3ta1ZEueiQyG5-BTWSXag';
-  sheet = 'Cards2';
-  var where = 'SELECT * WHERE A=' + boxNumber + ' ORDER BY A, B';
-  var url = 'https://docs.google.com/spreadsheets/u/0/d/'
-    + file_id + '/gviz/tq?tqx=out:json&sheet=' + sheet +
-    '&headers=1&tq=' + escape(where);
+  file_id = "1wEfSb4Dnjz-eNEayaNiiws3ta1ZEueiQyG5-BTWSXag";
+  sheet = "Cards2";
+  var where = "SELECT * WHERE A=" + boxNumber + " ORDER BY A, B";
+  var url = "https://docs.google.com/spreadsheets/u/0/d/"
+    + file_id + "/gviz/tq?tqx=out:json&sheet=" + sheet +
+    "&headers=1&tq=" + escape(where);
 
-  $(selectorID).addClass('flipBoxContainer');
+  $(selectorID).addClass("flipBoxContainer");
 
   $(selectorID).html('<div class="flex-container"></div>');
 
   fetchGoogleDataAll([url]).then((dataArrayx) => {
     if (dataArrayx[1]) {  // if there was a status error of some kind
-    jQuery('#classList .gallery-items')
+    jQuery("#classList .gallery-items")
       .html('<div class="errorMessage">Error fetching spreadsheet, status= ' + dataArrayx[1] + ' try refreshing page</div>');
     return;
     }
     var cards = dataArrayx[0][0].table.rows;
 
-    var prevcard = '';
+    var prevcard = "";
     cards.forEach(function(item, key) {
       var images = [];
-      var cardnumber = '';
-      var label = 'More Info';
-      var message = 'See more info';
-      var caption = 'VISIT';
-      var link = '#';
-      var background = 'rgb(102,102,102)';
-      var color = 'white';
+      var cardnumber = "";
+      var label = "More Info";
+      var message = "See more info";
+      var caption = "VISIT";
+      var link = "#";
+      var background = "rgb(102,102,102)";
+      var color = "white";
 
       if (item.c[1] != null) {cardnumber = item.c[1].v;}
       if (item.c[2] != null) {caption = item.c[2].v;}
@@ -318,9 +318,9 @@ function build_flipcards(selectorID, boxNumber = '1') {
       for (i = 8; i < 15; i++) {
         if (item.c[i] != null) {
           var src = item.c[i].v;
-          if (src.indexOf('images.squarespace-cdn.com')) {
-            var temp = src.split('?');
-            var src = temp[0] + '?format=300w';
+          if (src.indexOf("images.squarespace-cdn.com")) {
+            var temp = src.split("?");
+            var src = temp[0] + "?format=300w";
           }
           images.push(src);
         }
@@ -328,9 +328,9 @@ function build_flipcards(selectorID, boxNumber = '1') {
       process_card_info(selectorID, link,images, caption, label, message);
     })
 
-    $('div.front.face img:first-child')
+    $("div.front.face img:first-child")
       .addClass("active");
-      $('')
+      $("")
     //setTimeout(flip_carousel, 5000);
     setTimeout(function() {flip_carousel(selectorID)}, 5000);
 
@@ -349,47 +349,47 @@ function build_flipcards(selectorID, boxNumber = '1') {
 /*    Updated 03/03/2022                                       */
 /*-------------------------------------------------------------*/
 
-function showAddressInfo(selectorID, museum = 'aahom') {
+function showAddressInfo(selectorID, museum = "aahom") {
 
-    var file_id = '1eBU2TqbjAT0-PUkKVa0J9obsoyIBJ7ib_KJMQLNym8Y';
-    var sheet = 'Hours';
+    var file_id = "1eBU2TqbjAT0-PUkKVa0J9obsoyIBJ7ib_KJMQLNym8Y";
+    var sheet = "Hours";
 
     museum = museum.toLowerCase();
     var qry = "SELECT *  WHERE A = '" + museum + "' ORDER BY A, B";
-    var url = 'https://docs.google.com/spreadsheets/u/0/d/'
-    + file_id + '/gviz/tq?tqx=out:json&sheet=' + sheet +
-    '&headers=1&tq=' + escape(qry);
+    var url = "https://docs.google.com/spreadsheets/u/0/d/"
+    + file_id + "/gviz/tq?tqx=out:json&sheet=" + sheet +
+    "&headers=1&tq=" + escape(qry);
     // alert(url);
     var colorClass = "museum" + museum.charAt(0).toUpperCase() + museum.slice(1);
 
-    $(selectorID).addClass(colorClass).addClass('hoursContainer');
+    $(selectorID).addClass(colorClass).addClass("hoursContainer");
 
      // Fetch the spreadsheet data
     fetchGoogleDataAll([url]).then((dataArrayx) => {
         if (dataArrayx[1]) {  // if there was a status error of some kind
-            jQuery('#classList .gallery-items')
+            jQuery("#classList .gallery-items")
             .html('<div class="errorMessage">Error fetching spreadsheet, status= ' + dataArrayx[1] + ' try refreshing page</div>');
             return;
         }
         var adds = dataArrayx[0][0].table.rows;
-        var out = '<p>No data found</p>';
+        var out = "<p>No data found</p>";
         for (i = 0; i < adds.length; i++) {
             if (adds[i] && adds[i].c[0] != null && adds[i].c[0].v == museum) {
               if (adds[0]) {
                 var item = adds[0];
                 var namd = item.c[0].v;
 
-                var add1 = (item.c[1] != null) ? item.c[1].v : 'unknown';
-                var text1 = (item.c[2] != null) ? item.c[2].v : 'unknown';
-                var add2 = (item.c[3] != null) ? item.c[3].v : 'unknown';
-                var text2 = (item.c[4] != null) ? item.c[4].v : 'unknown';
-                var add3 = (item.c[5] != null) ? item.c[5].v : 'unknown';
-                var text3 = (item.c[6] != null) ? item.c[6].v : 'unknown';
-                out = '<div>\n<h3>' + add1 + '</h3>\n' + text1 + '</div>\n';
-                out = out + '<div>\n<h3>' + add2 + '</h3>\n' + text2 + '</div>\n';
-                out = out + '<div>\n<h3>' + add3 + '</h3>\n' + text3 + '</div>\n';
+                var add1 = (item.c[1] != null) ? item.c[1].v : "unknown";
+                var text1 = (item.c[2] != null) ? item.c[2].v : "unknown";
+                var add2 = (item.c[3] != null) ? item.c[3].v : "unknown";
+                var text2 = (item.c[4] != null) ? item.c[4].v : "unknown";
+                var add3 = (item.c[5] != null) ? item.c[5].v : "unknown";
+                var text3 = (item.c[6] != null) ? item.c[6].v : "unknown";
+                out = "<div>\n<h3>" + add1 + "</h3>\n" + text1 + "</div>\n";
+                out = out + "<div>\n<h3>" + add2 + "</h3>\n" + text2 + "</div>\n";
+                out = out + "<div>\n<h3>" + add3 + "</h3>\n" + text3 + "</div>\n";
               }
-              $(selectorID).html(out).css('display','flex');
+              $(selectorID).html(out).css("display","flex");
             }
         }
         return;
@@ -411,8 +411,8 @@ function do_faqs2(theSelector, active = 1,
     var catCol = 1;
     var questionCol = 3;
     var answerCol = 4;
-    var tabLinks = '';
-    var out = '';
+    var tabLinks = "";
+    var out = "";
     var activeli = 0;
     var tabs = [];
     active = (active == null) ? 1 : active;
@@ -426,28 +426,28 @@ function do_faqs2(theSelector, active = 1,
       active = tabparam;
     }
     // point to the FAQ's spreadsheet
-    file_id = '1f3G-ECzjt8p-czZNPyUQGXG8NND016Nue5QypQTf6PQ';
-    var sheet = 'FAQS';
+    file_id = "1f3G-ECzjt8p-czZNPyUQGXG8NND016Nue5QypQTf6PQ";
+    var sheet = "FAQS";
 
-    var url = 'https://docs.google.com/spreadsheets/u/0/d/'
-    + file_id + '/gviz/tq?sheet=' + sheet + '&tqx=out:json&headers=1&tq=' +
+    var url = "https://docs.google.com/spreadsheets/u/0/d/"
+    + file_id + "/gviz/tq?sheet=" + sheet + "&tqx=out:json&headers=1&tq=" +
     escape("SELECT A, B, C, D, E WHERE C != 'Yes'");
-    var spreadSheetLink = 'https://docs.google.com/spreadsheets/d/' + file_id + '/edit';
+    var spreadSheetLink = "https://docs.google.com/spreadsheets/d/" + file_id + "/edit";
 
     // Set up the collapsed/expanded option
     // valid values 0-4 or "none"
     if (openfirst != true) {
-        activeli = 'none';
+        activeli = "none";
     }
 
     if ($(window).width() < 960) {
-      activeli = 'none';
+      activeli = "none";
     }
     var activeTab = active - 1;  // zero based tabs
 
     fetchGoogleDataAll([url]).then((dataArrayx) => {
       if (dataArrayx[1]) {  // if there was a status error of some kind
-        jQuery('#classList .gallery-items')
+        jQuery("#classList .gallery-items")
           .html('<div class="errorMessage">Error fetching spreadsheet, status= ' + dataArrayx[1] + ' try refreshing page</div>');
         return;
       }
@@ -458,7 +458,7 @@ function do_faqs2(theSelector, active = 1,
         if (item.c[0] != null) {
           var ar = [];
           for (i = 0; i < 5; i++) {
-            var val =  (item.c[i] != null) ? item.c[i].v : '';
+            var val =  (item.c[i] != null) ? item.c[i].v : "";
             ar.push(val);
           }
           dataRows.push(ar);
@@ -471,13 +471,13 @@ function do_faqs2(theSelector, active = 1,
       theMuseumList.forEach(function(item, key) {
           if (key) {  // ignore zero (all) for faqs
             // camelcase css tag for background
-            var background = 'color' + item[0].charAt(0).toUpperCase() +
+            var background = "color" + item[0].charAt(0).toUpperCase() +
               item[0].slice(1).toLowerCase();
             val = item[1];
             var tabnum = +(key+1);
-            var hideme = '';
+            var hideme = "";
             if (single == true && key != active) {
-              hideme = ' hide';
+              hideme = " hide";
             }
             tabLinks = tabLinks + '<li class="' + background + hideme + '"><a href="#tabs-' +
               tabnum + '">' + val + '</a></li>\n';
