@@ -2697,6 +2697,10 @@ function collectionControl(
     var theCollections = ['reference-data'];
     recursiveAjaxCall2(theCollections,'',selectorID,theCalendarsCallback, [], attr);
   }
+  else if (type == 'donorwall') {
+    var theCollections = ['reference-data'];
+    recursiveAjaxCall2(theCollections,'',selectorID,theDonorCallback, [], attr);
+  }
   else {
     msg = 'Error: Unknown type="' + type + '"'
     msg = '<div class="errorMsg">Error: ' + msg + '</div>';
@@ -2768,6 +2772,12 @@ function theCalendarsCallback(selectorID, json, attr) {
   //return;
   var data = {items: json['dataArray'][0]};
   formatCalendars(selectorID,data, attr);
+}
+
+// Callback for Grid
+function theDonorCallback(selectorID,json, attr) {
+var data = {items: json['dataArray'][0]};
+  do_donor_wall2(selectorID, data, attr);
 }
 
 
@@ -3588,4 +3598,133 @@ function formatCalendars(theSelector, data, attr) {
         $(theSelector + ' .theCalendarContainer iframe').width('100%');
       }
     })
+}
+
+
+
+function do_donor_wall2(selectorID, jsonData, attr) {
+
+
+
+  var collapsable = ('collapsable' in attr) ? attr['collapsable'] : true;
+  var collapsed = ('collapsed' in attr) ? attr['collapsed'] : false;
+  var title = ('title' in attr) ? attr['title'] : 'View Location Maps';
+
+  var colMin = 0;
+  var colDonor = 1;
+  var colDonors = 2;
+  var colEndowment = 3;
+  var colRecent = 4;
+  var footone = '';
+  var foottwo = '';
+  var notes = '';
+  var donorname = "";
+  var minval = "";
+  var data = '';
+  var foot = '';
+  var donorcount = '';
+  var donor = '';
+  var heading = '';
+  var prevMin = '';
+  var maxval = ' & Above';
+
+  // find the donor reference data and populate array
+  var donors = [];
+  $.each(jsonData['items'], function(index, value) {
+    if (value['fullUrl'] == '/reference-data/donorwall') {
+      var lookfor = 'div.markdown-block div.sqs-block-content pre code';
+      var temp1 = $(value['body']).find(lookfor).eq(0);
+      var result = $(temp1).text().split(/\r?\n/);
+      donors = [];
+      $.each(result, function(index,value) {
+        element = csvToArray(value);
+          if (element[0]) {
+            element[0] = element[0].toString().replaceAll('$','').replaceAll(',','');
+            element[0] = parseInt(element[0]);
+            donors.push(element);
+          }
+      })
+      donors.shift(); // remove heading
+    }
+   })
+
+  donors.forEach(function(item, key) {
+      if (item[colMin] && item[colDonor]) {
+          donorname = item[colDonor];
+          minval = item[colMin];
+          if (prevMin != minval && minval) {
+            // new group
+            if (prevMin) {
+              maxval = ' - ' + formatter.format(prevMin - 1);
+            }
+            var heading = formatter.format(minval);
+            data = data + '<div class="heading">' + heading + maxval + '</div>\n';
+            prevMin = minval;
+          }
+          if (donorname == 'Anonymous') {
+            if (item[colDonors]) {
+              donorcount = '<span class="donorCount">(' + item[colDonors] + ')</span>';
+            }
+            else {
+              donorcount = '<span class="donorCount">(1)</span>';
+            }
+          }
+          else {
+            donorcount = '';
+          }
+          if (item[colEndowment] == 'Yes') {
+            foot = '<sup>E</sup>';
+            footone = '<div class="footnote"><sup>E</sup>&nbsp;Endowment contributor</div>\n';
+          }
+          else {
+            foot = '';
+          }
+          if (item[colMin]) {
+            data  = data + '<div class="donor">' + donorname + donorcount + foot + '</div>';
+          }
+          else {
+            notes  = notes + '<div class="note">' + donorname + '</div>';
+          }
+
+      }
+  })
+  $(selectorID).addClass('donorWall');
+  $(selectorID).append(footone).append(notes).append(data);
+}
+
+//https://stackoverflow.com/questions/8493195/how-can-i-parse-a-csv-string-with-javascript-which-contains-comma-in-data
+
+ function csvToArray(text) {
+    let p = '', row = [''], ret = row, i = 0, r = 0, s = !0, l;
+    for (l of text) {
+        if ('"' === l) {
+            if (s && l === p) row[i] += l;
+            s = !s;
+        } else if (',' === l && s) l = row[++i] = '';
+        else if ('\n' === l && s) {
+            if ('\r' === p) row[i] = row[i].slice(0, -1);
+            row = ret[++r] = [l = '']; i = 0;
+        } else row[i] += l;
+        p = l;
+    }
+    return ret;
+  };
+
+function parseCSV(lines) {
+  let elements = [];
+
+  xlines = ["name,age,location",
+    '"john,doe",36,chicago',
+    "pierre,31,paris",
+    "james,27,newcastle"];
+
+  let headers = lines.splice(0, 1)[0].split(",");
+  let valuesRegExp = /(?:\"([^\"]*(?:\"\"[^\"]*)*)\")|([^\",]+)/g;
+
+  for (let i = 0; i < lines.length; i++) {
+      element = csvToArray(lines[i]);
+      elements.push(element);
+  }
+  console.log(elements);
+  return elements;
 }
