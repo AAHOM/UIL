@@ -8,12 +8,12 @@
 /*-------------------------------------------------------------*/
 
 var theMuseumList = [
-  ["unity","Unity in Learning"],
-  ["aahom","Ann Arbor Hands-On Museum"],
-  ["leslie","Leslie Science & Nature Center"],
-  ["yankee","Yankee Air Museum"],
-  ["challenger","Challenger Learning Center at SC4"],
-  ["experience","Experience Center"]
+  ["unity","Unity in Learning",false],
+  ["aahom","Ann Arbor Hands-On Museum",false],
+  ["leslie","Leslie Science & Nature Center",false],
+  ["yankee","Yankee Air Museum",false],
+  ["challenger","Challenger Learning Center at SC4",false],
+  ["experience","Experience Center",true]
 ];
 
 var theMuseumKeys = [
@@ -2472,48 +2472,6 @@ function filterGalleryShowvals(selectorID, mycats, mycatsids, displayType='') {
     }
 }
 
-/* ----------------------------------------------------------- */
-/* Recursive AJAX call to get SquareSpace collection items     */
-/*    as json array data                                       */
-/* ----------------------------------------------------------- */
-
-function recursiveAjaxCall(
-  collection, offset = '',
-  selectorID,
-  callback,
-  items=[],
-  attr) {
-
-    $.ajax({
-      url: collection,
-      data: {offset: offset,
-      format: 'json'},
-      async:   true
-    })
-    .done(function (data) {
-      var j = data;
-        console.log(data);
-        items = items.concat(data['items']);
-        if ('pagination' in j && 'nextPageOffset' in j['pagination']) {
-          var off = j['pagination']['nextPageOffset'];
-          recursiveAjaxCall(collection, off, selectorID, callback, items, attr);
-        }
-        else {
-            callback(selectorID, {items: items}, attr);
-        }
-    })
-    .fail(function (jqXHR, textStatus, errorThrown) {
-      console.log(jqXHR);
-      var status = jqXHR['status'];
-      var msg = 'Error encountered, status="' + status + '" errorTrhown="' + errorThrown + '"';
-      if (status == '404') {
-        msg = 'Could not find collection "' + collection + '"';
-      }
-      msg = '<div class="errorMsg">Error: ' + msg + '</div>';
-      $(selectorID).html(msg);
-    });
-}
-
 var theMuseumList = [
   ['unity','Unity in Learning', false],
   ['aahom','Ann Arbor Hands-On Museum', false],
@@ -2540,64 +2498,93 @@ to be passed back.  Multiple collection names can be passed in
 and processed.  Return is an array of collection data arrays. */
 
 function recursiveAjaxCall2(
-  theCollections, offset = '',
+  theCollections,
+  offset = "",
   selectorID,
   callback,
   items=[],
-  attr, theCount=0) {
+  attr,
+  theCount=0) {
 
-    $.ajax({
-      url: theCollections[theCount],
-      data: {offset: offset,
-      format: 'json'},
-      async:   true
-    })
-    .done(function (data) {
-      var j = data;
-        if ('item' in data) {
-          items = items.concat(data['item']);
+  var upcoming = true;
+  var past     = false;
+  upcoming     = ("upcoming" in attr) ? attr["upcoming"] : upcoming;
+  past         = ("past" in attr) ? attr["past"] : past;
+
+  $.ajax({
+    url: theCollections[theCount],
+    data: {offset: offset,
+    format: "json"},
+    async:   true
+  })
+  .done(function (data) {
+    var j = data;
+    console.log(data);
+      if ("upcoming" in data || "past" in data) {
+        if ("upcoming" in data && upcoming === true) {
+          items = items.concat(data['upcoming']);
+        }
+        if ("past" in data && past === true) {
+          items = items.concat(data['past']);
+        }
+      }
+      else {
+        if ("item" in data) {
+          items = items.concat(data["item"]);
         }
         else {
-          items = items.concat(data['items']);
+          items = items.concat(data["items"]);
         }
-        if ('pagination' in j && 'nextPageOffset' in j['pagination']) {
-          var off = j['pagination']['nextPageOffset'];
-          recursiveAjaxCall2(theCollections, off, selectorID, callback, items, attr,theCount);
-        }
-        else {
-
-            theCount = theCount + 1;
-            if (theCollections.length > theCount) {
-              recursiveAjaxCall2(theCollections, off, selectorID, callback, items, attr, theCount);
+      }
+      if ("pagination" in j && "nextPageOffset" in j["pagination"]) {
+        var off = j["pagination"]["nextPageOffset"];
+        recursiveAjaxCall2(theCollections, off, selectorID,
+          callback, items, attr,theCount);
+      }
+      else {
+          theCount = theCount + 1;
+          if (theCollections.length > theCount) {
+            recursiveAjaxCall2(theCollections, off, selectorID,
+              callback, items, attr, theCount);
+          }
+          else {
+            var dataArray = [];
+            for (i = 0; i < theCollections.length; i++) {
+              dataArray.push([]);
             }
-            else {
-              var dataArray = [];
-              for (i = 0; i < theCollections.length; i++) {
-                dataArray.push([]);
-              }
-              for (i = 0; i < items.length; i++) {
-                var temp = items[i]['fullUrl'].split('/');
+            console.log('theCount=' + theCount);
+            console.log(items);
+            for (i = 0; i < items.length; i++) {
+              if (typeof items[i] != "undefined") {
+                var temp = items[i]["fullUrl"].split("/");
 
                 var x = theCollections.indexOf(temp[1]);
                 if (x != -1) {
                   dataArray[x].push(items[i]);
                 }
               }
-              callback(selectorID, {items: items, dataArray: dataArray}, attr);
+              else {
+                items.splice(i,1);
+                i = i - 1;
+              }
             }
-        }
-    })
-    .fail(function (jqXHR, textStatus, errorThrown) {
-      console.log(jqXHR);
-      var status = jqXHR['status'];
-      var msg = 'Error encountered, status="' + status + '" errorTrhown="' + errorThrown + '"';
-      if (status == '404') {
-        msg = 'Could not find collection "' + theCollections[theCount] + '"';
+            callback(selectorID, {items: items, dataArray: dataArray}, attr);
+          }
       }
-      msg = '<div class="errorMsg">Error: ' + msg + '</div>';
-      //$(selectorID).html(msg);
-      console.log('Error from recursiveAjaxCall2: ' + msg);
-    });
+  })
+  .fail(function (jqXHR, textStatus, errorThrown) {
+    console.log(jqXHR);
+    var status = jqXHR["status"];
+    var msg = "Error encountered, status=\"" +
+      status + "\" errorTrhown=\"" + errorThrown + "\"";
+    if (status == "404") {
+      msg = "Could not find collection \"" +
+        theCollections[theCount] + "\"";
+    }
+    msg = "<div class=\"errorMsg\">Error: " + msg + "</div>";
+    console.log("Error from recursiveAjaxCall2: " + msg);
+    $(selectorID).html(msg);
+  });
 }
 
 /*Look through the body and collection the list data found
