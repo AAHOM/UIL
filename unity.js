@@ -3600,11 +3600,7 @@ function formatCalendars(theSelector, data, attr) {
     })
 }
 
-
-
 function do_donor_wall2(selectorID, jsonData, attr) {
-
-
 
   var collapsable = ('collapsable' in attr) ? attr['collapsable'] : true;
   var collapsed = ('collapsed' in attr) ? attr['collapsed'] : false;
@@ -3632,17 +3628,16 @@ function do_donor_wall2(selectorID, jsonData, attr) {
   var donors = [];
   $.each(jsonData['items'], function(index, value) {
     if (value['fullUrl'] == '/reference-data/donorwall') {
-      var lookfor = 'div.markdown-block div.sqs-block-content pre code';
+      var lookfor = 'div.sqs-block-code pre.source-code';
       var temp1 = $(value['body']).find(lookfor).eq(0);
       var result = $(temp1).text().split(/\r?\n/);
       donors = [];
       $.each(result, function(index,value) {
         element = csvToArray(value);
-          if (element[0]) {
-            element[0] = element[0].toString().replaceAll('$','').replaceAll(',','');
-            element[0] = parseInt(element[0]);
-            donors.push(element);
-          }
+        for (let i=element.length; i < 5; i++) { element.push("");}
+        if (element[0]) {
+          donors.push(element);
+        }
       })
       donors.shift(); // remove heading
     }
@@ -3650,6 +3645,7 @@ function do_donor_wall2(selectorID, jsonData, attr) {
 
   donors.forEach(function(item, key) {
       if (item[colMin] && item[colDonor]) {
+          item[colMin] = parseInt(item[colMin].toString().replace(/[^0-9.-]+/g,""));
           donorname = item[colDonor];
           minval = item[colMin];
           if (prevMin != minval && minval) {
