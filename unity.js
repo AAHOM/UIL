@@ -2992,8 +2992,17 @@ function formatLocationsDisplay(selectorID, data, attr) {
   do_maps(selectorID, data, attr);
 }
 
+/* Get the list of valid museums and the associated internal code
+name and flag indicating if the museum should be shown or not */
+
 function getMuseumList(data) {
 
+  var theList = getCvsData(data, 'museum-list',3);
+  $.each(donors,function(index,value) {
+    theList[index][2] = (value[2].toLowerCase().trim() === 'hide') ? true : false;
+  })
+  return theList;
+/*
     var museumList = [];
     for (i = 0; i < data['items'].length; i++) {
       if (data['items'][i]['fullUrl'] == '/reference-data/museum-list') {
@@ -3006,7 +3015,10 @@ function getMuseumList(data) {
             }
       }
     }
+    console.log(museumList);
   return museumList;
+*/
+
 }
 
 /*-------------------------------------------------------------*/
