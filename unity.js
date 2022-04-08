@@ -3600,6 +3600,32 @@ function formatCalendars(theSelector, data, attr) {
     })
 }
 
+/* Get CVS data found in the first code block of slugname
+in the reference-data collection.  Return as an array
+with all array rows filled to mincols */
+
+function getCvsData(jsonData,slugname, mincols = 5) {
+// find the reference data code block and return array
+  var retdata = [];
+  $.each(jsonData['items'], function(index, value) {
+    if (value['fullUrl'] == '/reference-data/' + slugname) {
+      var lookfor = 'div.sqs-block-code pre.source-code';
+      var temp1 = $(value['body']).find(lookfor).eq(0);
+      var result = $(temp1).text().split(/\r?\n/);
+      retdata = [];
+      $.each(result, function(index,value) {
+        element = csvToArray(value);
+        for (let i=element.length; i < mincols; i++) { element.push("");}
+        if (element[0]) {
+          retdata.push(element);
+        }
+      })
+      retdata.shift(); // remove heading
+    }
+   })
+  return retdata;
+}
+
 function do_donor_wall2(selectorID, jsonData, attr) {
 
   var collapsable = ('collapsable' in attr) ? attr['collapsable'] : true;
@@ -3624,24 +3650,8 @@ function do_donor_wall2(selectorID, jsonData, attr) {
   var prevMin = '';
   var maxval = ' & Above';
 
-  // find the donor reference data and populate array
-  var donors = [];
-  $.each(jsonData['items'], function(index, value) {
-    if (value['fullUrl'] == '/reference-data/donorwall') {
-      var lookfor = 'div.sqs-block-code pre.source-code';
-      var temp1 = $(value['body']).find(lookfor).eq(0);
-      var result = $(temp1).text().split(/\r?\n/);
-      donors = [];
-      $.each(result, function(index,value) {
-        element = csvToArray(value);
-        for (let i=element.length; i < 5; i++) { element.push("");}
-        if (element[0]) {
-          donors.push(element);
-        }
-      })
-      donors.shift(); // remove heading
-    }
-   })
+  // Get the donor CVS data from reference-data/donorwall
+  var donors = getCvsData(jsonData, 'donorwall',5);
 
   donors.forEach(function(item, key) {
       if (item[colMin] && item[colDonor]) {
