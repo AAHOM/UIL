@@ -2096,7 +2096,7 @@ function createFilteredGallery(
      })
   }
 
- function formatGalleryItems(selectorID, json, cats = []) {
+function formatGalleryItems(selectorID, json, cats = []) {
 /*
    var cats = [
         ['grades',10,'PreK','PreK'],
@@ -2123,18 +2123,22 @@ function createFilteredGallery(
     var testout = '';
     var mycats = []; // unique list of categories found
     var mycatsids = [];
+    var categories = [];
+    var excerpt = '';
     var allowedExtensions =  /(\.jpg|\.jpeg|\.png|\.gif)$/i;
     var regexp = /<img[^>]+src\s*=\s*['"]([^'"]+)['"][^>]*>/;
     for (i=0; i < a.length; i++) {
       var index = i;
       var img = a[i]['assetUrl'];
-      var excerpt = a[i]['excerpt'];
+      if ('excerpt' in a[i]) {excerpt = a[i]['excerpt'];}
       // remove html tags from excerpt.
+      console.log('excerpt=' + excerpt);
       excerpt = excerpt.replace(/(<([^>]+)>)/gi, "");
       var focal = a[i]['mediaFocalPoint'];
       var focalx = focal['x'];
       var focaly = focal['y'];
-      var categories = a[i]['categories'];
+
+      if ('categories' in a[i]) {categories = a[i]['categories'];}
       var cats = '';
       var sep = '';
       if (!allowedExtensions.exec(img)) {
@@ -2156,6 +2160,7 @@ function createFilteredGallery(
       var fx = (isNaN(focalx)) ? '50%' : (focalx * 100) + '%';
       var fy = (isNaN(focaly)) ? '50%' : (focaly * 100) + '%';
       var newfocal = fx + ' ' + fy;
+      console.log(categories);
       for (n=0; n < categories.length; n++) {
         // look for a possible alise name and swap out
         var x = aliasname.indexOf(categories[n].toLowerCase());
@@ -2519,7 +2524,7 @@ function recursiveAjaxCall2(
   })
   .done(function (data) {
     var j = data;
-    console.log(data);
+    //console.log(data);
       if ("upcoming" in data || "past" in data) {
         if ("upcoming" in data && upcoming === true) {
           items = items.concat(data['upcoming']);
@@ -2552,8 +2557,8 @@ function recursiveAjaxCall2(
             for (i = 0; i < theCollections.length; i++) {
               dataArray.push([]);
             }
-            console.log('theCount=' + theCount);
-            console.log(items);
+            //console.log('theCount=' + theCount);
+            //console.log(items);
             for (i = 0; i < items.length; i++) {
               if (typeof items[i] != "undefined") {
                 var temp = items[i]["fullUrl"].split("/");
@@ -2660,7 +2665,7 @@ function collectionControl(
     return;
   }
 
-  console.log('collectionControl ' + selectorID + ' collection=' + collection);
+  //console.log('collectionControl ' + selectorID + ' collection=' + collection);
 
 
   /* process the requested type, call Ajax to read the
@@ -2861,7 +2866,7 @@ function formatTeamDisplay(selectorID, json, attr) {
 
     var showing = 0;
     var testout = '';
-    console.log(a[0]['body']);
+    //console.log(a[0]['body']);
     for (i=0; i < a.length; i++) {
       var index = i;
       var img = a[i]['assetUrl'];
@@ -2871,7 +2876,7 @@ function formatTeamDisplay(selectorID, json, attr) {
       var itemtitle = (tags.length > 0) ? tags[0] : '';
 
       var temp = $(a[i]['body']).find('div.sqs-block-html div.sqs-block-content');
-      console.log(temp);
+      //console.log(temp);
       var bio = $(temp).html();
 
       // Process categories and filter if requested
@@ -2997,9 +3002,11 @@ name and flag indicating if the museum should be shown or not */
 
 function getMuseumList(data) {
 
+  var temp = "";
   var theList = getCvsData(data, 'museum-list',3);
-  $.each(donors,function(index,value) {
-    theList[index][2] = (value[2].toLowerCase().trim() === 'hide') ? true : false;
+  $.each(theList,function(index,value) {
+    temp = value[2].toLowerCase().trim();
+    theList[index][2] = (temp === 'hide' || temp === 'yes') ? true : false;
   })
   return theList;
 /*
@@ -3155,7 +3162,9 @@ function collectFilterInfo(selectorID, groups = 'grades,outreach', displayType, 
     });
 
     cats = newcats;
+    //var cats = getCvsData({'items': catdata}, 'categories',3);
     groupinfo = newgroups;
+    //var groupsinfo = getCvsData({'items': catdata}, 'category-groups',3);
 
     /* Navigate through all of the selectors that contain the category
     information for each item.  Collect arrays with the item number,
@@ -3725,6 +3734,7 @@ function do_donor_wall2(selectorID, jsonData, attr) {
         } else row[i] += l;
         p = l;
     }
+    ret.map((element) => element.trim());
     return ret;
   };
 
@@ -3743,6 +3753,6 @@ function parseCSV(lines) {
       element = csvToArray(lines[i]);
       elements.push(element);
   }
-  console.log(elements);
+  //console.log(elements);
   return elements;
 }
