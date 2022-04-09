@@ -717,16 +717,13 @@ function teamCardResize() {
     temp.css('-webkit-line-clamp','unset');
     temp.css('overflow','unset');
     var afterh = parseInt(temp.height());
-    //console.log('beforeh=' + beforeh + ' afterh=' + afterh);
     if (afterh > beforeh) {
-        //console.log('client=' + client + ' datalines=' + dataLines + ' before=' + beforeh + ' after=' + afterh + ' lines=' + lines);
         lines = lines - 2;
         $(this).find('.readMoreDetails').show();
     }
     temp.css('-webkit-line-clamp',lines.toString());
     temp.css('-webkit-box-orient','vertical');
     temp.css('overflow','hidden');
-
   })
 }
 
@@ -1227,6 +1224,9 @@ function subMenuBar(selectorID = '#subMenu', act = '') {
   '   <a name="distance" href="/distance-learning">Distance Learning</a>\n' +
   '</nav>\n' +
 '</div>\n';
+
+//var path = window.location.pathname;
+//slug = path.split("/").pop();
 
   act = act.toLowerCase();
   // add the menu code
@@ -2059,11 +2059,6 @@ function createFilteredGallery(
     + file_id + '/gviz/tq?tqx=out:json&sheet=groups' +
     '&headers=1&tq=';
 
-    //var url3 = 'https://www.uildev.com/outreach-1';
-
-    //var res = getData(url3);
-    //console.log(res);
-
     // hide the squarespace summary block, we are going to
     // build an entirly new flexbox list
     $(selectorID).parent().parent().next().find('div.summary-item-list')
@@ -2132,7 +2127,6 @@ function formatGalleryItems(selectorID, json, cats = []) {
       var img = a[i]['assetUrl'];
       if ('excerpt' in a[i]) {excerpt = a[i]['excerpt'];}
       // remove html tags from excerpt.
-      console.log('excerpt=' + excerpt);
       excerpt = excerpt.replace(/(<([^>]+)>)/gi, "");
       var focal = a[i]['mediaFocalPoint'];
       var focalx = focal['x'];
@@ -2160,7 +2154,7 @@ function formatGalleryItems(selectorID, json, cats = []) {
       var fx = (isNaN(focalx)) ? '50%' : (focalx * 100) + '%';
       var fy = (isNaN(focaly)) ? '50%' : (focaly * 100) + '%';
       var newfocal = fx + ' ' + fy;
-      console.log(categories);
+
       for (n=0; n < categories.length; n++) {
         // look for a possible alise name and swap out
         var x = aliasname.indexOf(categories[n].toLowerCase());
@@ -2235,7 +2229,6 @@ function formatGalleryItems(selectorID, json, cats = []) {
 
 function formatSlickCarousel(selectorID, json, findCats = '', showCats = false) {
 
-    //console.log(json);
     var a = json['items'];
     var testout = '';
     var allowedExtensions =  /(\.jpg|\.jpeg|\.png|\.gif)$/i;
@@ -2427,12 +2420,8 @@ function filterGalleryShowvals(selectorID, mycats, mycatsids, displayType='') {
 
       // Turn on the items that were selected
       for (n = 0; n < common.length; n++) {
-        console.log('n=' + n);
           $(theCarousel).find('.item[data-itemid="' + common[n] + '"]').addClass('active');
       }
-
-      console.log(mycats);
-      console.log(selectedcatsids);
 
       // set the selected categories to active
       for (n = 0; n < selectedcatsids.length; n++) {
@@ -2524,7 +2513,6 @@ function recursiveAjaxCall2(
   })
   .done(function (data) {
     var j = data;
-    //console.log(data);
       if ("upcoming" in data || "past" in data) {
         if ("upcoming" in data && upcoming === true) {
           items = items.concat(data['upcoming']);
@@ -2557,8 +2545,6 @@ function recursiveAjaxCall2(
             for (i = 0; i < theCollections.length; i++) {
               dataArray.push([]);
             }
-            //console.log('theCount=' + theCount);
-            //console.log(items);
             for (i = 0; i < items.length; i++) {
               if (typeof items[i] != "undefined") {
                 var temp = items[i]["fullUrl"].split("/");
@@ -2667,7 +2653,6 @@ function collectionControl(
 
   //console.log('collectionControl ' + selectorID + ' collection=' + collection);
 
-
   /* process the requested type, call Ajax to read the
   requested collection data and possibly reference data as well,
   then call the specified callback function to process. */
@@ -2716,10 +2701,6 @@ function collectionControl(
 
 // Callback for Grid
 function theGridCallback(selectorID,json, attr) {
-  //console.log('grid Callback ');
-  //console.log(json);
-  //return;
-  //var data = {items: json['dataArray'][0]};
   createGridGallery(selectorID, json, attr);
 }
 
@@ -2744,9 +2725,6 @@ function theflexBoxesCallback(selectorID, json, attr) {
 
 // Callback for Locations
 function theLocationsCallback(selectorID, json, attr) {
-  //console.log('locations Callback ');
-  //console.log(json);
-  //return;
   var data = {items: json['dataArray'][0]};
   formatLocationsDisplay(selectorID,data, attr);
 }
@@ -2763,18 +2741,12 @@ function formatFaqsDisplay(selectorID, data, attr) {
 
 // Callback for Address
 function theAddressCallback(selectorID, json, attr) {
-  //console.log('address Callback ');
-  //console.log(json);
-  //return;
   var data = {items: json['dataArray'][0]};
   formatAddressDisplay(selectorID,data, attr);
 }
 
 // Callback for Locations
 function theCalendarsCallback(selectorID, json, attr) {
-  //console.log('calendar Callback ');
-  //console.log(json);
-  //return;
   var data = {items: json['dataArray'][0]};
   formatCalendars(selectorID,data, attr);
 }
@@ -2866,7 +2838,6 @@ function formatTeamDisplay(selectorID, json, attr) {
 
     var showing = 0;
     var testout = '';
-    //console.log(a[0]['body']);
     for (i=0; i < a.length; i++) {
       var index = i;
       var img = a[i]['assetUrl'];
@@ -2876,7 +2847,6 @@ function formatTeamDisplay(selectorID, json, attr) {
       var itemtitle = (tags.length > 0) ? tags[0] : '';
 
       var temp = $(a[i]['body']).find('div.sqs-block-html div.sqs-block-content');
-      //console.log(temp);
       var bio = $(temp).html();
 
       // Process categories and filter if requested
@@ -3009,22 +2979,6 @@ function getMuseumList(data) {
     theList[index][2] = (temp === 'hide' || temp === 'yes') ? true : false;
   })
   return theList;
-/*
-    var museumList = [];
-    for (i = 0; i < data['items'].length; i++) {
-      if (data['items'][i]['fullUrl'] == '/reference-data/museum-list') {
-            data2 = parseData(data['items'][i]['body'], '#museums');
-            //museumList['museums'] = data2;
-            for (n = 0; n < data2.length; n++) {
-              var str = data2[n][0].split(',').map((element) => element.trim());;
-              var flag = (str[2].toLowerCase() == 'hide') ? true : false;
-              museumList.push([str[0],str[1],flag]);
-            }
-      }
-    }
-    console.log(museumList);
-  return museumList;
-*/
 
 }
 
@@ -3112,69 +3066,27 @@ function createGridGallery(
   }
 function collectFilterInfo(selectorID, groups = 'grades,outreach', displayType, catdata) {
 
-    // Updated 4/5/22
+    // Updated 4/9/22
     var i = 0;
     var n = 0;
     var x = 0;
     var k = 0;
-
-    // find the category reference data
-    var thedata = {};
-    var i = 0;
-    for (i = 0; i < catdata.length; i++) {
-      if (catdata[i]['fullUrl'] === '/reference-data/categories') {
-        var ids = $(catdata[i]['body']).find('div.markdown-block h3[id]');
-        for (n = 0; n < ids.length; n++) {
-          data2 = parseData(catdata[i]['body'], '#' + ids[n]['id']);
-          thedata[ids[n]['id']] = data2;
-        }
-      }
-    }
-
-    // Build the array that we need
-    var newcats = [];
-    $.each(thedata, function( index, value ) {
-      $.each(value,function(index2, value2) {
-        var ar = [index,index2,value2[0],value2[0]];
-        newcats.push(ar);
-      })
-    });
-
-    // find the category groups reference data
-    var thegroupdata = {};
-    var i = 0;
-    for (i = 0; i < catdata.length; i++) {
-      if (catdata[i]['fullUrl'] === '/reference-data/category-groups') {
-        var ids = $(catdata[i]['body']).find('div.markdown-block h3[id]');
-        for (n = 0; n < ids.length; n++) {
-          data2 = parseData(catdata[i]['body'], '#' + ids[n]['id']);
-          thegroupdata[ids[n]['id']] = data2;
-        }
-      }
-    }
-
-    // Build the array that we need
-    var newgroups = [];
-    $.each(thegroupdata, function( index, value ) {
-      $.each(value,function(index2, value2) {
-        newgroups.push(value2[0].split(",").map((element) => element.trim()));
-      })
-    });
-
-    cats = newcats;
-    //var cats = getCvsData({'items': catdata}, 'categories',3);
-    groupinfo = newgroups;
-    //var groupsinfo = getCvsData({'items': catdata}, 'category-groups',3);
-
-    /* Navigate through all of the selectors that contain the category
-    information for each item.  Collect arrays with the item number,
-    category slug name, and category full name. */
+    var countOfFilters = 0;
 
     var allgroups = [];
     var mycats = [];
     var mycatsids = [];
     var mycatsfull = [];
     var mycatsgrps = [];
+
+    // Get the categories and grouping data
+    var cats = getCvsData({'items': catdata}, 'categories',4);
+    var groupinfo = getCvsData({'items': catdata}, 'category-groups',3);
+
+    /* Navigate through all of the selectors that contain the category
+    information for each item.  Collect arrays with the item number,
+    category slug name, and category full name. */
+
     var it = $(selectorID).find('div.itemFilterCats span.newCats');
     it.each(function() {
       var id = $(this).data('itemid');
@@ -3203,7 +3115,7 @@ function collectFilterInfo(selectorID, groups = 'grades,outreach', displayType, 
 
     /* At this point we should have two arrays.  mycats contains a list of all of the
     unique slug names for categories listed by the items.  mycatsids contains an indexed
-    list of the item id's that each unique slug references.*/
+    list of the item id's that each unique slug references. */
 
     // we can override the groups with a url parameter
     var param = getSearchParams("groups");
@@ -3213,85 +3125,81 @@ function collectFilterInfo(selectorID, groups = 'grades,outreach', displayType, 
     allgroups = groups.replace(' ','').toLowerCase().split(',');
 
     var out = '<div id="filterContainer"><div class="flexBox">\n';
-    var i = 0;
-    for (i = 0; i < allgroups.length; i++) {
-      var groupx = allgroups[i].trim().toLowerCase();
+    $.each(allgroups,function(indexall, valueall) {
+      var groupx = valueall.trim().toLowerCase();
       var groupparts = groupx.split(':',3);
       var group = groupparts[0];
       var label = group;
-    var type = 'checkbox';
-    for (x = 0; x < groupinfo.length; x++) {
-      if (groupinfo[x][0].toLowerCase() === group.toLowerCase()) {
-        label = groupinfo[x][1];
-        type = groupinfo[x][2];
+      var type = 'checkbox';
+      for (x = 0; x < groupinfo.length; x++) {
+        if (groupinfo[x][0].toLowerCase() === group.toLowerCase()) {
+          label = groupinfo[x][1];
+          type = groupinfo[x][2];
+        }
       }
-    }
-    label = (typeof groupparts[1] != 'undefined' && groupparts[1] != '') ? groupparts[1] : label;
-    type = (typeof groupparts[2] != 'undefined' && groupparts[2] != '') ? groupparts[2] : type;
-    type = type.toLowerCase().trim();
-    out = out + '<div class="filterGroup">\n';
-    out = out + '<span>' + label + '</span><table class="outer">\n';
-    var colorClass = "group" + group.charAt(0).toUpperCase() + group.slice(1);
-    var numcols = 1;
-    if (group === 'grades') {
-        numcols = 2;
-    }
-    var curcol = 0;
-    var tr = '<tr>';
-    var defaultvalue = '';
-    if (type === 'radio') {
-        if (defaultvalue === '') {
-            checked = ' checked ';
-        }
-        out = out + tr + '<td><input type="' + type + '" value="" name="' + group + '"' + checked + '><span>Any</span></td>\n';
-        curcol = curcol + 1;
-    }
+      label = (typeof groupparts[1] != 'undefined' && groupparts[1] != '') ? groupparts[1] : label;
+      type = (typeof groupparts[2] != 'undefined' && groupparts[2] != '') ? groupparts[2] : type;
+      type = type.toLowerCase().trim();
+      out = out + '<div class="filterGroup">\n';
+      out = out + '<span>' + label + '</span><table class="outer">\n';
+      var colorClass = "group" + group.charAt(0).toUpperCase() + group.slice(1);
+      var numcols = 1;
+      if (group === 'grades') {
+          numcols = 2;
+      }
+      var curcol = 0;
+      var tr = '<tr>';
+      var defaultvalue = '';
+      if (type === 'radio') {
+          if (defaultvalue === '') {
+              checked = ' checked ';
+          }
+          out = out + tr + '<td><input type="' + type + '" value="" name="' + group + '"' + checked + '><span>Any</span></td>\n';
+          curcol = curcol + 1;
+      }
 
-    var countOfFilters = 0;
-    for (n = 0; n < cats.length; n++) {
-        var lookup = cats[n][3].toLowerCase().replaceAll(' ', '+')
-          .replaceAll('%20', '+')
-          .replaceAll('&','%26');
-            // Only show category if it appears in at least one blog entry
-        var x = mycats.findIndex((element) => {  // compare lower case
-          return element.toLowerCase()
-            .replaceAll(' ', '+')
+      /* Now, go through the list of valid categories and see if any blog entries
+      have one of the valid categories.   If so, then add it to the check/radio
+      box selections */
+
+      countOfFilters = 0;
+      var lookup = '';
+      $.each(cats, function(index, value) {
+          lookup = value[1].toLowerCase().replaceAll(' ', '+')
             .replaceAll('%20', '+')
-            .replaceAll('&','%26') === lookup.toLowerCase();
-        })
+            .replaceAll('&','%26');
+          // Only show category if it appears in at least one blog entry
+          x = mycats.indexOf(lookup);
 
-        if (cats[n][0].toLowerCase() === group) {
-            var item = cats[n];
+          if (value[0].toLowerCase() === group) {
+              var item = value;
 
-            if (x !== -1) {
-                curcol = curcol + 1;
-                if (parseInt(curcol) > parseInt(1) && parseInt(curcol) <= parseInt(numcols)) {
-                    tr = '';
-                }
-                else {
-                    tr = '<tr>';
-                    curcol = 1;
-                }
-                if (curcol > numcols) {
-                    curcol = 1;
-                }
-                var checked = '';
-                var lookup = cats[n][2].toLowerCase()
-                  .replaceAll(' ', '+')
-                  .replaceAll('%20', '+')
-                  .replaceAll("&", "%26");
-                if (defaultvalue === lookup) {
-                    checked = ' checked ';
-                }
-                out = out + tr + '<td><input type="' + type + '" value="' + lookup + '" name="' +
-                  group + '"' + checked + '><span>' + cats[n][3] + '</span></td>\n';
-                countOfFilters++;
-            }
-        }
-    }
-    out = out + '</table></div>\n';
+              if (x !== -1) {
+                  curcol = curcol + 1;
+                  if (parseInt(curcol) > parseInt(1) && parseInt(curcol) <= parseInt(numcols)) {
+                      tr = '';
+                  }
+                  else {
+                      tr = '<tr>';
+                      curcol = 1;
+                  }
+                  if (curcol > numcols) {
+                      curcol = 1;
+                  }
+                  var checked = '';
+                  if (defaultvalue === lookup) {
+                      checked = ' checked ';
+                  }
+                  out = out + tr + '<td><input type="' + type + '" value="' + lookup + '" name="' +
+                    group + '"' + checked + '><span>' + value[1] + '</span></td>\n';
+                  countOfFilters++;
+              }
+          }
+     })
+      out = out + '</table></div>\n';
 
-    }
+    })
+
     var out = out + '</div></div>\n';
     if (countOfFilters) {
       $(selectorID).prepend(out);
@@ -3738,7 +3646,7 @@ function do_donor_wall2(selectorID, jsonData, attr) {
     return ret;
   };
 
-function parseCSV(lines) {
+/*function parseCSV(lines) {
   let elements = [];
 
   xlines = ["name,age,location",
@@ -3753,6 +3661,5 @@ function parseCSV(lines) {
       element = csvToArray(lines[i]);
       elements.push(element);
   }
-  //console.log(elements);
   return elements;
-}
+}*/
