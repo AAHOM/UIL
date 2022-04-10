@@ -1239,7 +1239,7 @@ function subMenuBar(selectorID = '#subMenu', act = '') {
   $(temp).insertBefore(selectorID);
   $('.learnMenuButton .toggle a').click(function(e) {
     e.preventDefault();
-    $(selectorID).toggleClass("open")
+    $(selectorID + " .subMenuBar").toggleClass("open")
   })
 return menu;
 }
@@ -2691,6 +2691,10 @@ function collectionControl(
     var theCollections = ['reference-data'];
     recursiveAjaxCall2(theCollections,'',selectorID,theDonorCallback, [], attr);
   }
+  else if (type == 'submenu') {
+    var theCollections = ['reference-data'];
+    recursiveAjaxCall2(theCollections,'',selectorID,theSubMenuCallback, [], attr);
+  }
   else {
     msg = 'Error: Unknown type="' + type + '"'
     msg = '<div class="errorMsg">Error: ' + msg + '</div>';
@@ -2757,6 +2761,49 @@ var data = {items: json['dataArray'][0]};
   do_donor_wall2(selectorID, data, attr);
 }
 
+// Callback for Sub Menu
+function theSubMenuCallback(selectorID,json, attr) {
+
+  var menudata = getCvsData(json, 'submenu-list',4);
+  var menu = ('menu' in attr) ? attr['menu'] : 'learn';
+  var more = ('more' in attr) ? attr['more'] : true;
+  var title = ('title' in attr) ? attr['title'] : 'More Opportunities';
+  var collapsable = (collapsable == null) ? true : collapsable;
+  var collapsed = (collapsed == null) ? false : collapsed;
+  menu.toLowerCase().trim();
+  var out = '';
+  var prevtype = '';
+  var classname = (collapsable && more != false) ? 'subMenuBar collapsable' : 'subMenuBar';
+  $(selectorID).html(`<div class="${classname}"></div>\n`);
+  if (menu) {
+    $.each(menudata,function(index, value) {
+      if (menu === value[0].toLowerCase().trim()) {
+        if (prevtype != value[1].toLowerCase().trim()) {
+          if (prevtype) {out += "</nav>";}
+          out += "<nav>";
+          prevtype = value[1].toLowerCase().trim();
+
+        }
+        out += `<a data-page="${value[3]}" href="${value[3]}">${value[2]}</a>\n`;
+      }
+    });
+    if (prevtype) {out += "</nav>\n";}
+    $(selectorID + ' div.subMenuBar').html(out);
+  }
+
+  var temp = `<div class="learnMenuButton">
+    <div class="toggle">
+    <a href=""></i>- ${title} -</a></div></div>\n`;
+  if (more) {$(temp).insertBefore(selectorID);}
+  $('.learnMenuButton .toggle a').click(function(e) {
+    e.preventDefault();
+    $(selectorID + ' div.subMenuBar').toggleClass("open")
+  })
+
+  var path = window.location.pathname;
+  slug = path.split("/").pop();
+  $(selectorID).find('nav a[data-page="' + slug + '"]').addClass("active");
+}
 
 function formatflexBoxesDisplay(selectorID,json, attr) {
 
