@@ -1488,3 +1488,149 @@ function do_donor_wall(selectorID) {
         $(selectorID).append(footone).append(notes).append(data).append(link);
     })
 }
+
+/* ----------------------------------------------------------- */
+/* Build a tabbed list of calendars from spreadsheet           */
+/*    05/18/2021 - initial                                     */
+/*    Updated to use fetch promise 02/16/22                    */
+/*    Updated parameter list + other things 02/23/22           */
+/* ----------------------------------------------------------- */
+
+function build_calendars(
+    theSelector = "#calendarDiv",
+    active = 0,
+    single = false,
+    collapsable = true,
+    collapsed = false) {
+
+  // Point to calendars spreadsheet
+  file_id = '1i5EjZCpxI4UnvXyMYXCLyLP9tSCNt0PZYemaU6f6XtU';
+  sheet = 'Calendars';
+
+  // Make sure null parameters are handled
+  active = (active == null) ? 1 : active;
+  single = (single == null) ? true : single;
+  collapsable = (collapsable == null) ? true : collapsable;
+  collapsed = (collapsed == null) ? false : collapsed;
+
+  // check url paramaters to see if we need to
+  // default to a particular calendar
+  var tabparam = getSearchParams("tab");
+    if (tabparam) {
+      active = tabparam;
+    }
+
+  var where = "SELECT B, C, E, F, G WHERE D != 'Yes' AND B IS NOT NULL ORDER BY A, B";
+  var url = 'https://docs.google.com/spreadsheets/u/0/d/'
+    + file_id + '/gviz/tq?tqx=&sheet=' + sheet +
+    '&headers=1&tq=' + escape(where);
+
+  // Fetch the spreadsheet data
+  fetchGoogleDataAll([url]).then((dataArrayx) => {
+    if (dataArrayx[1]) {  // if there was a status error of some kind
+      jQuery('#classList .gallery-items')
+        .html('<div class="errorMessage">Error fetching spreadsheet, status= ' + dataArrayx[1] + ' try refreshing page</div>');
+      return;
+    }
+    dataArray = dataArrayx[0][0].table.rows;
+
+    // Clean up the Google array data
+    dataRows = [];
+    dataArray.forEach(function(item,key) {
+      if (item.c[0] != null) {
+        var ar = [];
+        for (i = 0; i < 5; i++) {
+          var val =  (item.c[i] != null) ? item.c[i].v : '';
+          ar.push(val);
+        }
+        dataRows.push(ar);
+      }
+    });
+
+    var temp = '';
+    if (collapsable == true) {
+    temp = `
+      <div class="toggle">
+        <div class="openCloseList">
+        <i class="arrow down"></i>
+          <a href="">View Calendars</a>
+        </div>
+      </div>`;
+    }
+    temp = temp + `<div class="theCalendarContainer"></div>`;
+    $(theSelector).html(temp);
+
+    var tab = 1;
+    var tabs = '';
+    var tabsdata = '';
+    var iframes = [];
+    dataRows.forEach(function(item, key) {
+      var museum = item[0];
+      var name = item[1];
+      var title = item[2];
+      var large = item[3];
+      var small = large.replace(/mode=MONTH/gi,'mode=AGENDA');
+      var after = item[4];
+      var colorClass = "color" + museum.charAt(0).toUpperCase() + museum.slice(1);
+      var ar = [large,small];
+      iframes.push(ar);
+      if ((tab - 1) != active) {
+        large = '';
+        small = '';
+      }
+
+      var hideme = '';
+      if (single == true && key != active) {
+        hideme = 'hide';
+      }
+
+      tabs = tabs +
+        '<li class="' + hideme + '"><a href="#tabs-' + tab + '" data-tab="' + tab + '" class="' + colorClass + '">' +
+        name + '</a></li>\n';
+        tabsdata = tabsdata +
+        '<div id="tabs-' + tab + '">\n' +
+        '<p><strong>' + title + '</strong>\n' +
+        '<div class="calendarLarge">' + large + '</div>\n' +
+        '<div class="calendarSmall">' + small + '</div>\n' +
+        '</p>' +
+        after +
+        '</div>\n';
+      tab = tab + 1;
+    })
+    tabs = '<div id="tabs"><ul>' + tabs + '</ul></div>\n';
+    $(tabs).appendTo(theSelector + ' .theCalendarContainer');
+    $(tabsdata).appendTo('#tabs');
+
+    $(theSelector + ' .toggle div.openCloseList a')
+          .click(function(e) {
+          e.preventDefault();
+          //$(this).toggleClass("open");
+          $(theSelector + ' .theCalendarContainer')
+          .slideToggle('slow');
+          $(theSelector + ' .openCloseList i').toggleClass("down");
+        });
+
+    $(theSelector).addClass('faq_container tabListContainer');
+    $( "#tabs" ).tabs({ active: active});
+    if (single == true) {
+      $(theSelector).find('li.hide').hide();
+      $(theSelector + ' .theCalendarContainer').find('.ui-tabs-nav').hide();
+    }
+    if (collapsable == true && collapsed == true) {
+      $(theSelector + ' .theCalendarContainer').hide();
+      $(theSelector + ' .openCloseList i').removeClass("down");
+    }
+    $(theSelector + ' .theCalendarContainer iframe').width('100%');
+    $('#tabs a').click(function() {
+      var id = $(this).attr("href");
+      var tab = id.substr(6) - 1;
+      var x = $(id).find('.calendarLarge iframe').length;
+      if (!x) {  // if no iframe found, then fill it in
+        $(id).find('.calendarLarge').html(iframes[tab][0]);
+        $(id).find('.calendarSmall').html(iframes[tab][1]);
+        $(theSelector + ' .theCalendarContainer iframe').width('100%');
+      }
+    })
+  }) // End of promis
+}
+
