@@ -1133,3 +1133,270 @@ sheet='Categories') {
     });
 }
 
+/* ----------------------------------------------------------- */
+/* Get data from spreadsheet a build flipcards html            */
+/*    Updated 03/02/2022                                       */
+/* ----------------------------------------------------------- */
+
+function build_flipcards(selectorID, boxNumber = '1') {
+
+  file_id = '1wEfSb4Dnjz-eNEayaNiiws3ta1ZEueiQyG5-BTWSXag';
+  sheet = 'Cards2';
+  var where = 'SELECT * WHERE A=' + boxNumber + ' ORDER BY A, B';
+  var url = 'https://docs.google.com/spreadsheets/u/0/d/'
+    + file_id + '/gviz/tq?tqx=out:json&sheet=' + sheet +
+    '&headers=1&tq=' + escape(where);
+
+  $(selectorID).addClass('flipBoxContainer');
+
+  $(selectorID).html('<div class="flex-container"></div>');
+
+  fetchGoogleDataAll([url]).then((dataArrayx) => {
+    if (dataArrayx[1]) {  // if there was a status error of some kind
+    jQuery('#classList .gallery-items')
+      .html('<div class="errorMessage">Error fetching spreadsheet, status= ' + dataArrayx[1] + ' try refreshing page</div>');
+    return;
+    }
+    var cards = dataArrayx[0][0].table.rows;
+
+    var prevcard = '';
+    cards.forEach(function(item, key) {
+      var images = [];
+      var cardnumber = '';
+      var label = 'More Info';
+      var message = 'See more info';
+      var caption = 'VISIT';
+      var link = '#';
+      var background = 'rgb(102,102,102)';
+      var color = 'white';
+
+      if (item.c[1] != null) {cardnumber = item.c[1].v;}
+      if (item.c[2] != null) {caption = item.c[2].v;}
+      if (item.c[3] != null) {label = item.c[3].v;}
+      if (item.c[4] != null) {link = item.c[4].v;}
+      if (item.c[5] != null) {background = item.c[5].v;}
+      if (item.c[6] != null) {color = item.c[6].v;}
+      if (item.c[7] != null) {message = item.c[7].v;}
+      for (i = 8; i < 15; i++) {
+        if (item.c[i] != null) {
+          var src = item.c[i].v;
+          if (src.indexOf('images.squarespace-cdn.com')) {
+            var temp = src.split('?');
+            var src = temp[0] + '?format=300w';
+          }
+          images.push(src);
+        }
+      };
+      process_card_info(selectorID, link,images, caption, label, message);
+    })
+
+    $('div.front.face img:first-child')
+      .addClass("active");
+      $('')
+    //setTimeout(flip_carousel, 5000);
+    setTimeout(function() {flip_carousel(selectorID)}, 5000);
+
+    flipCardResize(selectorID);
+
+    $( window ).resize(function() {
+      flipCardResize(selectorID);
+    });
+
+  })
+}
+
+/*-------------------------------------------------------------*/
+/* Address/Hours/Admissions flex boxes                         */
+/*    04/10/2021 - initial                                     */
+/*    Updated 03/03/2022                                       */
+/*-------------------------------------------------------------*/
+
+function showAddressInfo(selectorID, museum = 'aahom') {
+
+    var file_id = '1eBU2TqbjAT0-PUkKVa0J9obsoyIBJ7ib_KJMQLNym8Y';
+    var sheet = 'Hours';
+
+    museum = museum.toLowerCase();
+    var qry = "SELECT *  WHERE A = '" + museum + "' ORDER BY A, B";
+    var url = 'https://docs.google.com/spreadsheets/u/0/d/'
+    + file_id + '/gviz/tq?tqx=out:json&sheet=' + sheet +
+    '&headers=1&tq=' + escape(qry);
+    // alert(url);
+    var colorClass = "museum" + museum.charAt(0).toUpperCase() + museum.slice(1);
+
+    $(selectorID).addClass(colorClass).addClass('hoursContainer');
+
+     // Fetch the spreadsheet data
+    fetchGoogleDataAll([url]).then((dataArrayx) => {
+        if (dataArrayx[1]) {  // if there was a status error of some kind
+            jQuery('#classList .gallery-items')
+            .html('<div class="errorMessage">Error fetching spreadsheet, status= ' + dataArrayx[1] + ' try refreshing page</div>');
+            return;
+        }
+        var adds = dataArrayx[0][0].table.rows;
+        var out = '<p>No data found</p>';
+        for (i = 0; i < adds.length; i++) {
+            if (adds[i] && adds[i].c[0] != null && adds[i].c[0].v == museum) {
+              if (adds[0]) {
+                var item = adds[0];
+                var namd = item.c[0].v;
+
+                var add1 = (item.c[1] != null) ? item.c[1].v : 'unknown';
+                var text1 = (item.c[2] != null) ? item.c[2].v : 'unknown';
+                var add2 = (item.c[3] != null) ? item.c[3].v : 'unknown';
+                var text2 = (item.c[4] != null) ? item.c[4].v : 'unknown';
+                var add3 = (item.c[5] != null) ? item.c[5].v : 'unknown';
+                var text3 = (item.c[6] != null) ? item.c[6].v : 'unknown';
+                out = '<div>\n<h3>' + add1 + '</h3>\n' + text1 + '</div>\n';
+                out = out + '<div>\n<h3>' + add2 + '</h3>\n' + text2 + '</div>\n';
+                out = out + '<div>\n<h3>' + add3 + '</h3>\n' + text3 + '</div>\n';
+              }
+              $(selectorID).html(out).css('display','flex');
+            }
+        }
+        return;
+    });
+}
+
+/*-------------------------------------------------------------*/
+/* Frequently Asked Questions, FAQS2                           */
+/*    04/11/2021 - initial                                     */
+/*    Updated 02/22/2022                                       */
+/*-------------------------------------------------------------*/
+
+function do_faqs2(theSelector, active = 1,
+  single = false, openfirst = true,
+  collapsable = false, collapsed = true,
+  title = "View Frequently Asked Questions") {
+
+    var listCol = 0;
+    var catCol = 1;
+    var questionCol = 3;
+    var answerCol = 4;
+    var tabLinks = '';
+    var out = '';
+    var activeli = 0;
+    var tabs = [];
+    active = (active == null) ? 1 : active;
+    single = (single == null) ? 1 : single;
+    collapsable = (collapsable == null) ? 1 : collapsable;
+    collapsed = (collapsed == null) ? 1 : collapsed;
+    // Check to see if a parameter was passed to
+    // specify which tab becomes active
+    var tabparam = getSearchParams("tab");
+    if (tabparam) {
+      active = tabparam;
+    }
+    // point to the FAQ's spreadsheet
+    file_id = '1f3G-ECzjt8p-czZNPyUQGXG8NND016Nue5QypQTf6PQ';
+    var sheet = 'FAQS';
+
+    var url = 'https://docs.google.com/spreadsheets/u/0/d/'
+    + file_id + '/gviz/tq?sheet=' + sheet + '&tqx=out:json&headers=1&tq=' +
+    escape("SELECT A, B, C, D, E WHERE C != 'Yes'");
+    var spreadSheetLink = 'https://docs.google.com/spreadsheets/d/' + file_id + '/edit';
+
+    // Set up the collapsed/expanded option
+    // valid values 0-4 or "none"
+    if (openfirst != true) {
+        activeli = 'none';
+    }
+
+    if ($(window).width() < 960) {
+      activeli = 'none';
+    }
+    var activeTab = active - 1;  // zero based tabs
+
+    fetchGoogleDataAll([url]).then((dataArrayx) => {
+      if (dataArrayx[1]) {  // if there was a status error of some kind
+        jQuery('#classList .gallery-items')
+          .html('<div class="errorMessage">Error fetching spreadsheet, status= ' + dataArrayx[1] + ' try refreshing page</div>');
+        return;
+      }
+      dataArray = dataArrayx[0][0].table.rows;
+
+      dataRows = [];
+      dataArray.forEach(function(item,key) {
+        if (item.c[0] != null) {
+          var ar = [];
+          for (i = 0; i < 5; i++) {
+            var val =  (item.c[i] != null) ? item.c[i].v : '';
+            ar.push(val);
+          }
+          dataRows.push(ar);
+        }
+      });
+
+      faqs = dataRows;
+
+      // Loop for each tab
+      theMuseumList.forEach(function(item, key) {
+          if (key) {  // ignore zero (all) for faqs
+            // camelcase css tag for background
+            var background = 'color' + item[0].charAt(0).toUpperCase() +
+              item[0].slice(1).toLowerCase();
+            val = item[1];
+            var tabnum = +(key+1);
+            var hideme = '';
+            if (single == true && key != active) {
+              hideme = ' hide';
+            }
+            tabLinks = tabLinks + '<li class="' + background + hideme + '"><a href="#tabs-' +
+              tabnum + '">' + val + '</a></li>\n';
+            var lookfor = item[0].toLowerCase();
+
+
+            // Loop for the questions/answers in each tab
+            out = out + '<div id="tabs-' + tabnum + '">\n<div class="accordian">\n';
+            faqs.forEach(function(item2, key2) {
+              if (item2[listCol] != null && item2[listCol].toLowerCase() == lookfor) {
+                out = out + '<h3 class="' + background + '">' + item2[questionCol] + '</h3><div>\n';
+                out = out + '<p>' + item2[answerCol] + '</p></div>\n';
+              }
+            });
+
+
+            out = out + '</div>\n</div>\n';
+          }
+
+        });
+
+        var toggle = "<div class=\"toggle\">" +
+          "<div class=\"openCloseList\"><i class=\"arrow down\"></i><a href=\"\">" + title + "</a></div>\n";
+        out = '<div id="tabs"><ul>' + tabLinks + '</ul>' + out + '</div></div>\n';
+
+        $(theSelector + ' div#tabs').show();
+        if (collapsable == true) { // hide if collapsable and collapsed
+          out = toggle + out + '</div>';
+          $(out).appendTo(theSelector);
+          if (collapsed == true) {
+            $(theSelector + ' div#tabs').hide();
+          }
+        }
+        else {
+          $(out).appendTo(theSelector);
+        }
+
+        $(theSelector).find('li.hide').hide();
+
+        $(theSelector + ' .toggle div.openCloseList a')
+          .click(function(e) {
+          e.preventDefault();
+          $(this).toggleClass("open");
+          $(theSelector + ' div#tabs')
+          .slideToggle('slow');
+          $(theSelector + ' .openCloseList i').toggleClass("down");
+        });
+
+        // Initialize the accordian styles
+        $( ".accordian" ).accordion({
+          collapsible: true, active : activeli,
+          heightStyle: "content"
+        });
+
+        // Display the faqs
+        $(theSelector).addClass('faq_container tabListContainer');
+        $( "#tabs" ).tabs({active: activeTab});
+    })
+
+}
