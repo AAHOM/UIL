@@ -52,40 +52,6 @@ function getSearchParams(k){
 }
 
 /* ----------------------------------------------------------- */
-/* Fetch one or more URL's from Google                         */
-/*    02/16/2022 - initial                                     */
-/* ----------------------------------------------------------- */
-
-async function fetchGoogleDataAll(urls) {
-  var promises = [];
-  //urls[1] = 'xx'; // to test errors
-  var status = "";
-  urls.map((x) => promises.push(
-    fetch(x)
-      .then((response) => {
-        if (response.status >= 200 && response.status <= 299) {
-          return response;
-        } else {
-          status = response.statusText;
-        }
-      })
-      .catch((error) => {
-        status = error;
-      })
-  ));
-  const promisResponse = await Promise.all(promises);
-  var i = 0;
-  var data3 = [];
-  if (!status) {
-    for (i = 0; i < promisResponse.length; i++) {
-      var temp = await promisResponse[i].text();
-      data3.push(JSON.parse(temp.substr(47).slice(0, -2)));
-    }
-  }
-  return [data3,status];
-}
-
-/* ----------------------------------------------------------- */
 /* Slideshow gallery                                           */
 /* ----------------------------------------------------------- */
 
