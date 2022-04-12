@@ -2481,8 +2481,8 @@ function theLocationsCallback(selectorID, json, attr) {
 
 // Callback for Faqs
 function theFaqsCallback(selectorID, json, attr) {
-  var data = {items: json['dataArray'][0]};
-  formatFaqsDisplay(selectorID,data, attr);
+  //var data = {items: json['dataArray'][0]};
+  //formatFaqsDisplay(selectorID,data, attr);
 }
 
 function formatFaqsDisplay(selectorID, data, attr) {
