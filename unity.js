@@ -299,6 +299,7 @@ function do_faqs3(theSelector, data, attr) {
 
     // find the faq reference data
     var thedata = {};
+    var i = 0;
     for (i = 0; i < data['items'].length; i++) {
       if (data['items'][i]['fullUrl'] == '/reference-data/faqs') {
         theMuseumList.forEach(function(item, key) {
@@ -2481,8 +2482,8 @@ function theLocationsCallback(selectorID, json, attr) {
 
 // Callback for Faqs
 function theFaqsCallback(selectorID, json, attr) {
-  //var data = {items: json['dataArray'][0]};
-  //formatFaqsDisplay(selectorID,data, attr);
+  var data = {items: json['dataArray'][0]};
+  formatFaqsDisplay(selectorID,data, attr);
 }
 
 function formatFaqsDisplay(selectorID, data, attr) {
