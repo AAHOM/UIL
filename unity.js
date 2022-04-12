@@ -1149,57 +1149,7 @@ function getData(theurl) {
     return result;
 }
 
-function createFilteredGallery(
-    selectorID,
-    json,
-    attr) {
 
-    var groups = ('groups' in attr) ? attr['groups'] : 'grades,outreach';
-    var findCats = ('findcats' in attr) ? attr['findcats'] : '';
-    var showCats = ('showcats' in attr) ? attr['showcats'] : false;
-    var showDots = ('dots' in attr) ? attr['dots'] : false;
-
-    var file_id='1qrUPQu2qs8eOOi-yZwvzOuGseDFjkvj5_mSnoz0tJVc';
-    var where = "SELECT A,B,C,D,E WHERE E != 'Yes' AND A IS NOT NULL ORDER BY A,B";
-    var url = 'https://docs.google.com/spreadsheets/u/0/d/'
-    + file_id + '/gviz/tq?tqx=out:json&sheet=Categories' +
-    '&headers=1&tq=' + escape(where);
-
-    var url2 = 'https://docs.google.com/spreadsheets/u/0/d/'
-    + file_id + '/gviz/tq?tqx=out:json&sheet=groups' +
-    '&headers=1&tq=';
-
-    // hide the squarespace summary block, we are going to
-    // build an entirly new flexbox list
-    $(selectorID).parent().parent().next().find('div.summary-item-list')
-      .css('display','none !important');
-
-    // Fetch the spreadsheet data
-    fetchGoogleDataAll([url,url2]).then((dataArrayx) => {
-        if (dataArrayx[1]) {
-            // if there was a status error of some kind
-            jQuery('#classList .gallery-items')
-            .html('<div class="errorMessage">Error fetching spreadsheet, status= ' + dataArrayx[1] + ' try refreshing page</div>');
-            return;
-        }
-        var cats = cleanUpArray(dataArrayx[0][0].table.rows,4);
-        var info = cleanUpArray(dataArrayx[0][1].table.rows,3);
-        allgroups = groups.split(',');
-        var dataArray = formatGalleryItems(selectorID, json);
-        var counter = '<div id="filterItemCount"></div>';
-        $('<div id="filterContainer"></div>' + counter).prependTo(selectorID);
-
-        makeFilterBoxes('#filterContainer',groups, cats, info, dataArray[0], dataArray[1]);
-
-        filterGalleryShowvals(selectorID, dataArray[0], dataArray[1]);
-        // Process selection when a radio or checkbox is changes
-        $('#filterContainer input[type=checkbox], ' +
-          '#filterContainer input[type=radio]')
-          .on('change', function(e) {
-            filterGalleryShowvals(selectorID, dataArray[0], dataArray[1]);
-        })
-     })
-  }
 
 function formatGalleryItems(selectorID, json, cats = []) {
 /*
