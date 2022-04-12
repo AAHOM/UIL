@@ -392,148 +392,7 @@ function showAddressInfo(selectorID, museum = 'aahom') {
     });
 }
 
-/*-------------------------------------------------------------*/
-/* Frequently Asked Questions, FAQS2                           */
-/*    04/11/2021 - initial                                     */
-/*    Updated 02/22/2022                                       */
-/*-------------------------------------------------------------*/
 
-function do_faqs2(theSelector, active = 1,
-  single = false, openfirst = true,
-  collapsable = false, collapsed = true,
-  title = "View Frequently Asked Questions") {
-
-    var listCol = 0;
-    var catCol = 1;
-    var questionCol = 3;
-    var answerCol = 4;
-    var tabLinks = '';
-    var out = '';
-    var activeli = 0;
-    var tabs = [];
-    active = (active == null) ? 1 : active;
-    single = (single == null) ? 1 : single;
-    collapsable = (collapsable == null) ? 1 : collapsable;
-    collapsed = (collapsed == null) ? 1 : collapsed;
-    // Check to see if a parameter was passed to
-    // specify which tab becomes active
-    var tabparam = getSearchParams("tab");
-    if (tabparam) {
-      active = tabparam;
-    }
-    // point to the FAQ's spreadsheet
-    file_id = '1f3G-ECzjt8p-czZNPyUQGXG8NND016Nue5QypQTf6PQ';
-    var sheet = 'FAQS';
-
-    var url = 'https://docs.google.com/spreadsheets/u/0/d/'
-    + file_id + '/gviz/tq?sheet=' + sheet + '&tqx=out:json&headers=1&tq=' +
-    escape("SELECT A, B, C, D, E WHERE C != 'Yes'");
-    var spreadSheetLink = 'https://docs.google.com/spreadsheets/d/' + file_id + '/edit';
-
-    // Set up the collapsed/expanded option
-    // valid values 0-4 or "none"
-    if (openfirst != true) {
-        activeli = 'none';
-    }
-
-    if ($(window).width() < 960) {
-      activeli = 'none';
-    }
-    var activeTab = active - 1;  // zero based tabs
-
-    fetchGoogleDataAll([url]).then((dataArrayx) => {
-      if (dataArrayx[1]) {  // if there was a status error of some kind
-        jQuery('#classList .gallery-items')
-          .html('<div class="errorMessage">Error fetching spreadsheet, status= ' + dataArrayx[1] + ' try refreshing page</div>');
-        return;
-      }
-      dataArray = dataArrayx[0][0].table.rows;
-
-      dataRows = [];
-      dataArray.forEach(function(item,key) {
-        if (item.c[0] != null) {
-          var ar = [];
-          for (i = 0; i < 5; i++) {
-            var val =  (item.c[i] != null) ? item.c[i].v : '';
-            ar.push(val);
-          }
-          dataRows.push(ar);
-        }
-      });
-
-      faqs = dataRows;
-
-      // Loop for each tab
-      theMuseumList.forEach(function(item, key) {
-          if (key) {  // ignore zero (all) for faqs
-            // camelcase css tag for background
-            var background = 'color' + item[0].charAt(0).toUpperCase() +
-              item[0].slice(1).toLowerCase();
-            val = item[1];
-            var tabnum = +(key+1);
-            var hideme = '';
-            if (single == true && key != active) {
-              hideme = ' hide';
-            }
-            tabLinks = tabLinks + '<li class="' + background + hideme + '"><a href="#tabs-' +
-              tabnum + '">' + val + '</a></li>\n';
-            var lookfor = item[0].toLowerCase();
-
-
-            // Loop for the questions/answers in each tab
-            out = out + '<div id="tabs-' + tabnum + '">\n<div class="accordian">\n';
-            faqs.forEach(function(item2, key2) {
-              if (item2[listCol] != null && item2[listCol].toLowerCase() == lookfor) {
-                out = out + '<h3 class="' + background + '">' + item2[questionCol] + '</h3><div>\n';
-                out = out + '<p>' + item2[answerCol] + '</p></div>\n';
-              }
-            });
-
-
-            out = out + '</div>\n</div>\n';
-          }
-
-        });
-
-        var toggle = "<div class=\"toggle\">" +
-          "<div class=\"openCloseList\"><i class=\"arrow down\"></i><a href=\"\">" + title + "</a></div>\n";
-        out = '<div id="tabs"><ul>' + tabLinks + '</ul>' + out + '</div></div>\n';
-
-        $(theSelector + ' div#tabs').show();
-        if (collapsable == true) { // hide if collapsable and collapsed
-          out = toggle + out + '</div>';
-          $(out).appendTo(theSelector);
-          if (collapsed == true) {
-            $(theSelector + ' div#tabs').hide();
-          }
-        }
-        else {
-          $(out).appendTo(theSelector);
-        }
-
-        $(theSelector).find('li.hide').hide();
-
-        $(theSelector + ' .toggle div.openCloseList a')
-          .click(function(e) {
-          e.preventDefault();
-          $(this).toggleClass("open");
-          $(theSelector + ' div#tabs')
-          .slideToggle('slow');
-          $(theSelector + ' .openCloseList i').toggleClass("down");
-        });
-
-        // Initialize the accordian styles
-        $( ".accordian" ).accordion({
-          collapsible: true, active : activeli,
-          heightStyle: "content"
-        });
-
-        // Display the faqs
-        $(theSelector).addClass('faq_container tabListContainer');
-        $( "#tabs" ).tabs({active: activeTab});
-    })
-
-}
 
 
 /* ----------------------------------------------------------- */
@@ -1398,5 +1257,139 @@ function do_faqs2(theSelector, active = 1,
         $(theSelector).addClass('faq_container tabListContainer');
         $( "#tabs" ).tabs({active: activeTab});
     })
+
+}
+
+/* ----------------------------------------------------------- */
+/* Show Team Members from Spreadsheet                          */
+/*    02/25/2022 - Updated                                     */
+/* ----------------------------------------------------------- */
+
+function do_team_members(selectorID) {
+
+    var firstCol = 0;
+    var lastCol = 1;
+    var orgCol = 2;
+    var unusedCol = 3; // Extra unused column
+    var titleCol = 4;
+    var hideCol = 5;
+    var imageCol = 6;
+    var bioCol = 7;
+    var linkCol = 8;
+
+    var file_id = '1hiPd3cJMf_JOr3Z4RnR3XA6-Z927OSJhxJJgYXix448';
+    var sheet = 'Members';
+
+    var url = 'https://docs.google.com/spreadsheets/u/0/d/'
+    + file_id + '/gviz/tq?sheet=' + sheet + '&tqx=out:json&headers=1&tq=' + escape("SELECT A, B, C, D, E, F, G, H, I WHERE F = 'No' ORDER BY B, A");
+
+    fetchGoogleDataAll([url]).then((dataArray) => {
+        if (dataArray[1]) {
+            // if there was a status error of some kind
+            jQuery('div#loading').hide();
+            jQuery('#classList .gallery-items')
+            var errorMsg = `<div class="errorMessage">
+                Error fetching spreadsheet, status=${dataArray[1]}
+                try refreshing page</div>`
+            .html(errorMsg);
+            return;
+        }
+
+        var teamlist = dataArray[0][0];
+        if (teamlist.length == 0) {
+            $(selectorID).append('<br>Ooops.. unable to read spreadsheet</br>');
+            return;
+        }
+        var out = '';
+        var teams = teamlist.table.rows;
+        var itemSrc = '';
+        $('<div id="teamDetail"></div>').insertBefore(selectorID)
+        teams.forEach(function(item, key) {
+            if (item.c[imageCol] != null) {itemSrc = item.c[imageCol].v;}
+            var teamName = '';
+            var teamTitle = '';
+            var itemName = '';
+            var itemTitle = '';
+            if (item.c[lastCol] != null && item.c[firstCol] != null) {
+                teamName = '<div class="memberName">' +
+                    item.c[firstCol].v + ' ' + item.c[lastCol].v + '</div>';
+                itemName = teamName;
+                if (item.c[titleCol] != null) {
+                    teamTitle = '<div class="memberTitle">' +
+                    item.c[titleCol].v + '</div>';
+                    itemTitle = item.c[titleCol].v;
+                }
+            }
+            var biotext = '<p>No bio</p>';
+            if (item.c[bioCol] != null) {biotext = item.c[bioCol].v;}
+            out = out +
+            `<div class="item_box">
+            <div class="item_front">
+                <img class="item_img" src="${itemSrc}">
+                <div class="item_name">
+                    <div class="item_title">
+                        <div class="memberName">${itemName}</div>
+                        <div class="memberTitle">${itemTitle}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="item_back">
+                <div class="item_bio">${biotext}
+                </div><button class="readMoreDetails">
+                    <i class="arrow"></i></button>
+            </div>
+        </div>`;
+        })
+        $(selectorID).append(out);
+        $(selectorID).addClass('team_container'); // for style statements
+        teamCardResize();
+        $(window).resize(function() {
+            teamCardResize();
+        });
+        $('#teamDetail').hide();
+        $(selectorID).show();
+        teamCardResize();
+
+        $('div.item_back').on('click', function() {
+            var content = $(this).find('.item_bio').html();
+            content = (content) ? content : '<p>No bio</p>'
+            var front = $(this).parent();
+            var img = front.find('img').attr('src');
+            //var name = front.find('.item_name').clone().children().remove().end().text();
+            var name = front.find('.item_title .memberName .memberName').text();
+            var title = front.find('.item_title .memberTitle').text();
+            var modalContent = `<!-- Modal content -->
+            <div id="teamDetail" class="modal-content" style="display: block;">
+            <div class="teamName">${name}</div>
+            <div class="teamTitle">${title}</div>
+            <div class="teamContent">
+                <img class="item_img" src="${img}">${content}
+            </div>
+            <div style="clear:both;"></div>
+            <div class="topClose close"><a href="#">X</a></div>
+            <div class="bottomClose close"><a href="#">Close</div></a>
+            </div>`;
+
+            $('#myModal').html(modalContent);
+
+            // When the user clicks on close buttons
+            $('#myModal div.topClose, #myModal div.bottomClose')
+                .on('click', function(e) {
+                e.preventDefault();
+                $('#myModal').css('display', 'none');
+            })
+            // When the user clicks anywhere outside of the modal, close it
+            window.onclick = function(event) {
+                if (event.target.id == 'myModal') {
+                    $('#myModal').css('display', 'none');
+                }
+            }
+            $('#myModal').show();
+            $('#myModal').scrollTop(0);
+        });
+
+        addMyModal();
+
+    });
 
 }
