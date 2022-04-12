@@ -1939,3 +1939,145 @@ function createFilteredGallery(
      })
   }
 
+/*-------------------------------------------------------------*/
+/* Frequently Asked Questions, FAQS2                           */
+/*    04/11/2021 - initial                                     */
+/*    Updated 02/22/2022                                       */
+/*-------------------------------------------------------------*/
+
+function do_faqs2(theSelector, active = 1,
+  single = false, openfirst = true,
+  collapsable = false, collapsed = true,
+  title = "View Frequently Asked Questions") {
+
+    var listCol = 0;
+    var catCol = 1;
+    var questionCol = 3;
+    var answerCol = 4;
+    var tabLinks = '';
+    var out = '';
+    var activeli = 0;
+    var tabs = [];
+    active = (active == null) ? 1 : active;
+    single = (single == null) ? 1 : single;
+    collapsable = (collapsable == null) ? 1 : collapsable;
+    collapsed = (collapsed == null) ? 1 : collapsed;
+    // Check to see if a parameter was passed to
+    // specify which tab becomes active
+    var tabparam = getSearchParams("tab");
+    if (tabparam) {
+      active = tabparam;
+    }
+    // point to the FAQ's spreadsheet
+    file_id = '1f3G-ECzjt8p-czZNPyUQGXG8NND016Nue5QypQTf6PQ';
+    var sheet = 'FAQS';
+
+    var url = 'https://docs.google.com/spreadsheets/u/0/d/'
+    + file_id + '/gviz/tq?sheet=' + sheet + '&tqx=out:json&headers=1&tq=' +
+    escape("SELECT A, B, C, D, E WHERE C != 'Yes'");
+    var spreadSheetLink = 'https://docs.google.com/spreadsheets/d/' + file_id + '/edit';
+
+    // Set up the collapsed/expanded option
+    // valid values 0-4 or "none"
+    if (openfirst != true) {
+        activeli = 'none';
+    }
+
+    if ($(window).width() < 960) {
+      activeli = 'none';
+    }
+    var activeTab = active - 1;  // zero based tabs
+
+    fetchGoogleDataAll([url]).then((dataArrayx) => {
+      if (dataArrayx[1]) {  // if there was a status error of some kind
+        jQuery('#classList .gallery-items')
+          .html('<div class="errorMessage">Error fetching spreadsheet, status= ' + dataArrayx[1] + ' try refreshing page</div>');
+        return;
+      }
+      dataArray = dataArrayx[0][0].table.rows;
+
+      dataRows = [];
+      dataArray.forEach(function(item,key) {
+        if (item.c[0] != null) {
+          var ar = [];
+          for (i = 0; i < 5; i++) {
+            var val =  (item.c[i] != null) ? item.c[i].v : '';
+            ar.push(val);
+          }
+          dataRows.push(ar);
+        }
+      });
+
+      faqs = dataRows;
+
+      // Loop for each tab
+      theMuseumList.forEach(function(item, key) {
+          if (key) {  // ignore zero (all) for faqs
+            // camelcase css tag for background
+            var background = 'color' + item[0].charAt(0).toUpperCase() +
+              item[0].slice(1).toLowerCase();
+            val = item[1];
+            var tabnum = +(key+1);
+            var hideme = '';
+            if (single == true && key != active) {
+              hideme = ' hide';
+            }
+            tabLinks = tabLinks + '<li class="' + background + hideme + '"><a href="#tabs-' +
+              tabnum + '">' + val + '</a></li>\n';
+            var lookfor = item[0].toLowerCase();
+
+
+            // Loop for the questions/answers in each tab
+            out = out + '<div id="tabs-' + tabnum + '">\n<div class="accordian">\n';
+            faqs.forEach(function(item2, key2) {
+              if (item2[listCol] != null && item2[listCol].toLowerCase() == lookfor) {
+                out = out + '<h3 class="' + background + '">' + item2[questionCol] + '</h3><div>\n';
+                out = out + '<p>' + item2[answerCol] + '</p></div>\n';
+              }
+            });
+
+
+            out = out + '</div>\n</div>\n';
+          }
+
+        });
+
+        var toggle = "<div class=\"toggle\">" +
+          "<div class=\"openCloseList\"><i class=\"arrow down\"></i><a href=\"\">" + title + "</a></div>\n";
+        out = '<div id="tabs"><ul>' + tabLinks + '</ul>' + out + '</div></div>\n';
+
+        $(theSelector + ' div#tabs').show();
+        if (collapsable == true) { // hide if collapsable and collapsed
+          out = toggle + out + '</div>';
+          $(out).appendTo(theSelector);
+          if (collapsed == true) {
+            $(theSelector + ' div#tabs').hide();
+          }
+        }
+        else {
+          $(out).appendTo(theSelector);
+        }
+
+        $(theSelector).find('li.hide').hide();
+
+        $(theSelector + ' .toggle div.openCloseList a')
+          .click(function(e) {
+          e.preventDefault();
+          $(this).toggleClass("open");
+          $(theSelector + ' div#tabs')
+          .slideToggle('slow');
+          $(theSelector + ' .openCloseList i').toggleClass("down");
+        });
+
+        // Initialize the accordian styles
+        $( ".accordian" ).accordion({
+          collapsible: true, active : activeli,
+          heightStyle: "content"
+        });
+
+        // Display the faqs
+        $(theSelector).addClass('faq_container tabListContainer');
+        $( "#tabs" ).tabs({active: activeTab});
+    })
+
+}
