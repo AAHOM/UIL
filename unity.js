@@ -2498,17 +2498,24 @@ function recursiveAjaxCall2(
   callback,
   items=[],
   attr,
-  theCount=0) {
+  nocache = false,
+  theCount=0 ) {
 
   var upcoming = true;
   var past     = false;
   upcoming     = ("upcoming" in attr) ? attr["upcoming"] : upcoming;
   past         = ("past" in attr) ? attr["past"] : past;
 
+  var marktime = '';
+  console.log('nocache=' + nocache);
+  if (nocache === true) {marktime = new Date().getTime().toString();}
+  console.log('marktime=' + marktime);
+
   $.ajax({
     url: theCollections[theCount],
     data: {offset: offset,
-    format: "json"},
+    format: "json",
+    t: marktime},
     async:   true
   })
   .done(function (data) {
@@ -2532,13 +2539,13 @@ function recursiveAjaxCall2(
       if ("pagination" in j && "nextPageOffset" in j["pagination"]) {
         var off = j["pagination"]["nextPageOffset"];
         recursiveAjaxCall2(theCollections, off, selectorID,
-          callback, items, attr,theCount);
+          callback, items, attr, nocache,theCount);
       }
       else {
           theCount = theCount + 1;
           if (theCollections.length > theCount) {
             recursiveAjaxCall2(theCollections, off, selectorID,
-              callback, items, attr, theCount);
+              callback, items, attr, nocache, theCount);
           }
           else {
             var dataArray = [];
@@ -2695,6 +2702,14 @@ function collectionControl(
     var theCollections = ['reference-data'];
     recursiveAjaxCall2(theCollections,'',selectorID,theSubMenuCallback, [], attr);
   }
+  else if (type == 'validate') {
+    $(selectorID).html('<div>Loading...</div>');
+    var theCollections = ['announcements','distance-learning-1',
+    'outreach-1','field-trips-1','site-features','public-education',
+    'promotions','jobs-list','team-members','flex-boxes',
+    'giving-opportunities','reference-data'];
+    recursiveAjaxCall2(theCollections,'',selectorID,theValidateCallback, [], attr, true);
+  }
   else {
     msg = 'Error: Unknown type="' + type + '"'
     msg = '<div class="errorMsg">Error: ' + msg + '</div>';
@@ -2759,6 +2774,78 @@ function theCalendarsCallback(selectorID, json, attr) {
 function theDonorCallback(selectorID,json, attr) {
 var data = {items: json['dataArray'][0]};
   do_donor_wall2(selectorID, data, attr);
+}
+
+// Callback for validate categories
+function theValidateCallback(selectorID,json, attr) {
+  //var data = {items: json['dataArray'][0]};
+  console.log(json);
+  //createGridGallery(selectorID, json, attr);
+  var fullUrl = '';
+  var validcats = [];
+  var categories = [];
+  var allcats = [];
+  var catlook = [];
+  var cats = [];
+  $.each(json['items'],function(index, item) {
+    fullUrl = item['fullUrl'];
+    title = item['title'];
+
+    var temp = fullUrl.split("/");
+    if (temp[1] === 'reference-data' && temp[2] ==='categories') {
+
+      cats = getCvsData(json, 'categories',3);
+        console.log(cats);
+        $.each(cats,function(index2, cat) {
+          catname = cat[1].toLowerCase().replaceAll(' ', '+')
+            .replaceAll('%20', '+')
+            .replaceAll('&','%26');
+          validcats.push(catname);
+        })
+    }
+    else {
+      if ('categories' in item) {
+        categories = item['categories'];
+        if (categories.length) {
+          $.each(categories,function(index3, cat) {
+            catname = cat.toLowerCase().replaceAll(' ', '+')
+                .replaceAll('%20', '+')
+                .replaceAll('&','%26');
+            allcats.push([catname,cat,temp[1],temp[2], title]);
+            catlook.push(catname);
+          })
+        }
+      }
+    }
+  })
+
+  var out = `<table class="basicTable"><thead><tr><th>Category</th>
+  <th>Blog Slug</th><th>Entry Title</th></tr></thead>
+  <tbody>`;
+  $.each(catlook,function(index, value) {
+    var x = validcats.indexOf(value);
+    if (x === -1) {
+      out += `<tr><td>${allcats[index][1]}</td>
+      <td>${allcats[index][2]}</td><td>${allcats[index][4]}</td></tr>`;
+
+    }
+  })
+  out += '</tbody></table>';
+  out += `<div class="sqs-block-content">
+  <hr>
+  <p>
+  <h4 style="text-align:center;white-space:pre-wrap;">Valid Category List</h4>
+  <p class="" style="white-space:pre-wrap;">
+  The following table shows the list of all valid categories found in the standard list. </p>
+  </div>`;
+  out += '<table class="basicTable"><thead><tr><th>Group</th><th>Category</th><th>Hidden</th></tr></thead>';
+  out += '<tbody>';
+  $.each(cats,function(index, value){
+    out += `<tr><td>${value[0]}</td><td>${value[1]}</td><td>${value[2]}</td></tr>`;
+  })
+  out += '</tbody></table>';
+  $(selectorID).html(out);
+
 }
 
 // Callback for Sub Menu
