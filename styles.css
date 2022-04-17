@@ -1646,6 +1646,30 @@ div.donorWall p {
   display: block;
 }
 
+#donorAccordion div.donor.showme {
+  color: red;
+}
+#donorAccordion h3 span.found {
+  color: green;
+  font-weight: bold;
+  margin-left: 10px;
+}
+#donorAccordion h3.ui-state-active span.found {
+  color: white;
+}
+
+#donorInfo input#search {
+  max-width: 200px;
+}
+
+#donorAccordion {
+  border: 1px solid black;
+}
+#donorInfo span.total {
+  margin-left: 10px;
+  color: green;
+}
+
 /* ------------------------------------------------ */
 /* Arrows for summary carousel                      */
 /* Change previous/next icons                       */

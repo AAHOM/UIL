@@ -2647,6 +2647,58 @@ function getCvsData(jsonData,slugname, mincols = 5) {
   return retdata;
 }
 
+function pluralizeWord(singularWord, pluralWord, count) {
+    return count > 1 ? pluralWord : singularWord;
+}
+
+function doDonorSearch(selectorID, xchar = false) {
+  var thevalue = jQuery('#search').val();
+  thevalue = thevalue.trim();
+  $('div.donor').removeClass('showme');
+
+  var x = 0;
+  var str = '';
+  var aval = thevalue.split(" ");
+  aval.forEach(function(item,index) {
+    if (item) {
+      str = str + '[data-name*="' + item + '" i]';
+    }
+  })
+  var good_to_go = jQuery(str).addClass('showme');
+
+
+  var c = $('div.donor.showme');
+  var f = $('div.donor');
+  $('#found span.count').text('Found: ' + c.length);
+
+  if (c.length != f.length) {
+    $('#resetValues').addClass('show');
+  } else {
+    $('#resetValues').removeClass('show');
+  }
+
+  $('h3 span.found').text('');
+  $('#donorInfo span.total').text('');
+  if (xchar) {
+    $(".ui-accordion-content").hide();
+  }
+  if (str) {
+    x = $("div.donor.showme").length;
+    $('#donorInfo span.total').text('(' + x + ')');
+    $("#donorAccordion > div.ui-accordion-content").each(function(index, item) {
+      console.log('index=' + index);
+      x = $(item).find("div.donor.showme");
+      console.log('x=' + x.length);
+      if (x.length) {
+        var temp = pluralizeWord(" donor", " donors", x.length);
+        $(item).prev().find('span.found').text(' Found: ' + x.length + temp);
+        $(item).show();
+      }
+    })
+  }
+
+}
+
 function do_donor_wall2(selectorID, jsonData, attr) {
 
   var collapsable = ('collapsable' in attr) ? attr['collapsable'] : true;
@@ -2674,6 +2726,8 @@ function do_donor_wall2(selectorID, jsonData, attr) {
   // Get the donor CVS data from reference-data/donorwall
   var donors = getCvsData(jsonData, 'donorwall',5);
 
+  $(selectorID).html('<div id="donorInfo"></div><div id="donorAccordion"></div>');
+
   donors.forEach(function(item, key) {
       if (item[colMin] && item[colDonor]) {
           item[colMin] = parseInt(item[colMin].toString().replace(/[^0-9.-]+/g,""));
@@ -2683,17 +2737,18 @@ function do_donor_wall2(selectorID, jsonData, attr) {
             // new group
             if (prevMin) {
               maxval = ' - ' + formatter.format(prevMin - 1);
+              data += "</div>";
             }
             var heading = formatter.format(minval);
-            data = data + '<div class="heading">' + heading + maxval + '</div>\n';
+            data += `<h3>${heading}${maxval}<span class="found">test</span></h3><div>\n`;
             prevMin = minval;
           }
           if (donorname == 'Anonymous') {
             if (item[colDonors]) {
-              donorcount = '<span class="donorCount">(' + item[colDonors] + ')</span>';
+              donorcount = `<span class="donorCount">(${item[colDonors]})</span>\n`;
             }
             else {
-              donorcount = '<span class="donorCount">(1)</span>';
+              donorcount = `<span class="donorCount">(1)</span>\n`;
             }
           }
           else {
@@ -2707,16 +2762,30 @@ function do_donor_wall2(selectorID, jsonData, attr) {
             foot = '';
           }
           if (item[colMin]) {
-            data  = data + '<div class="donor">' + donorname + donorcount + foot + '</div>';
+            data += `<div class="donor" data-name="${donorname}">${donorname}${donorcount}${foot}</div>\n`;
           }
           else {
-            notes  = notes + '<div class="note">' + donorname + '</div>';
+            notes += `<div class="note">${donorname}</div>\n`;
           }
 
       }
   })
+  data += "</div>";
+  var searchbox = `<div class="searchBox">
+    Search: <input type="text" id="search">
+    <span class="total"></span></div>`;
   $(selectorID).addClass('donorWall');
-  $(selectorID).append(footone).append(notes).append(data);
+  $(selectorID + " #donorInfo").append(searchbox).append(footone).append(notes);
+  $(selectorID + " #donorAccordion").html(data)
+
+  $('#search').on('keyup', function (event) {
+      doDonorSearch(selectorID, true);
+    });
+  doDonorSearch(selectorID);
+  $( selectorID + " #donorAccordion").accordion({
+      heightStyle: "content",
+      collapsible: true
+    });
 }
 
 //https://stackoverflow.com/questions/8493195/how-can-i-parse-a-csv-string-with-javascript-which-contains-comma-in-data
@@ -2737,22 +2806,4 @@ function do_donor_wall2(selectorID, jsonData, attr) {
     ret.map((element) => element.trim());
     return ret;
   };
-
-/*function parseCSV(lines) {
-  let elements = [];
-
-  xlines = ["name,age,location",
-    '"john,doe",36,chicago',
-    "pierre,31,paris",
-    "james,27,newcastle"];
-
-  let headers = lines.splice(0, 1)[0].split(",");
-  let valuesRegExp = /(?:\"([^\"]*(?:\"\"[^\"]*)*)\")|([^\",]+)/g;
-
-  for (let i = 0; i < lines.length; i++) {
-      element = csvToArray(lines[i]);
-      elements.push(element);
-  }
-  return elements;
-}*/
 
