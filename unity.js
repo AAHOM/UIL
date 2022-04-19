@@ -2701,11 +2701,10 @@ function doDonorSearch(selectorID, xchar = false) {
 breakpoint.  */
 function findTheBreakpoint(val, breakpoints) {
   var i = 0;
-  var ret = 0;
+  var ret = 1;
   for (i=1; i < breakpoints.length; i++) {
-    if (parseInt(val) <= breakpoints[i]) {
-      ret = breakpoints[i - 1];
-      i = breakpoints.length;
+    if (parseInt(val) >= parseInt(breakpoints[i])) {
+      ret = breakpoints[i];
     }
   }
   return ret;
