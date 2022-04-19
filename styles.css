@@ -1658,6 +1658,10 @@ div.donorWall p {
   color: white;
 }
 
+#donorInfo.searchBox {
+  margin-bottom:  10px;
+}
+
 #donorInfo input#search {
   max-width: 200px;
 }
@@ -1668,6 +1672,100 @@ div.donorWall p {
 #donorInfo span.total {
   margin-left: 10px;
   color: green;
+  font-weight:  bold;
+}
+
+.donorWallDiv {
+}
+
+.donorWallDiv #donorData {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  flex-direction: row;
+  gap: 10px
+}
+
+.donorWallDiv .item {
+  width: calc(50% - 5px);
+}
+
+.donorWallDiv #donorInfo {
+  padding: 0 15px;
+}
+
+#donorAccordion div.donor.showme {
+  color: red;
+}
+#donorAccordion h3 span.found {
+  color: green;
+  font-weight: bold;
+  margin-left: 10px;
+}
+#donorAccordion h3.ui-state-active span.found {
+  color: white;
+}
+
+.donorWallDiv div.searchBox {
+  margin-bottom:  10px;
+}
+
+.donorWallDiv .searchBox input#search {
+  width: calc((100% / 2) * .6);
+}
+
+#donorAccordion {
+  border: 1px solid black;
+}
+
+.donorWallDiv span.total {
+  margin-left: 10px;
+  color: green;
+  font-weight:  bold;
+  display: none;
+}
+
+.donorWallDiv span.total.active {
+  display: inline-block;
+}
+
+.donorWallDiv input {
+    display: inline-block;
+}
+
+.donorWallDiv label {
+    display: block;
+}
+
+.donorWallDiv #sponsors {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  flex-direction: row;
+  gap: 10px;
+
+}
+.donorWallDiv #sponsors img.logo {
+  width:  150px;
+  border:  1px solid gray;
+  border-radius:  10px;
+}
+
+@media (max-width: 640px) {
+  .donorWallDiv .item {
+    width: 100%;
+  }
+  .donorWallDiv .searchBox input#search {
+    width: 60%;
+  }
+
+  .donorWallDiv #sponsors img.logo {
+    width: 100%;
+  }
+  .donorWallDiv #donorInfo {
+    padding: 0;
+    margin-top: 10px
+  }
 }
 
 /* ------------------------------------------------ */

@@ -2682,13 +2682,12 @@ function doDonorSearch(selectorID, xchar = false) {
   if (xchar) {
     $(".ui-accordion-content").hide();
   }
+  $('.donorWallDiv span.total').text('').removeClass("active");
   if (str) {
     x = $("div.donor.showme").length;
-    $('#donorInfo span.total').text('(' + x + ')');
+    $('.donorWallDiv span.total').text('(' + x + ')').addClass("active");
     $("#donorAccordion > div.ui-accordion-content").each(function(index, item) {
-      console.log('index=' + index);
       x = $(item).find("div.donor.showme");
-      console.log('x=' + x.length);
       if (x.length) {
         var temp = pluralizeWord(" donor", " donors", x.length);
         $(item).prev().find('span.found').text(' Found: ' + x.length + temp);
@@ -2697,6 +2696,19 @@ function doDonorSearch(selectorID, xchar = false) {
     })
   }
 
+}
+/* Round the passed in value down to the nearest lower
+breakpoint.  */
+function findTheBreakpoint(val, breakpoints) {
+  var i = 0;
+  var ret = 0;
+  for (i=1; i < breakpoints.length; i++) {
+    if (parseInt(val) <= breakpoints[i]) {
+      ret = breakpoints[i - 1];
+      i = breakpoints.length;
+    }
+  }
+  return ret;
 }
 
 function do_donor_wall2(selectorID, jsonData, attr) {
@@ -2723,16 +2735,56 @@ function do_donor_wall2(selectorID, jsonData, attr) {
   var prevMin = '';
   var maxval = ' & Above';
 
+  var breakpoints = [
+    1,1000,5000, 10000, 25000,
+    50000, 100000, 250000, 500000, 1000000
+    ];
+
   // Get the donor CVS data from reference-data/donorwall
   var donors = getCvsData(jsonData, 'donorwall',5);
 
-  $(selectorID).html('<div id="donorInfo"></div><div id="donorAccordion"></div>');
+  var a = jsonData;
+  var images = [];
+  var fullUrl = '';
+  var temp = [];
+  $.each(jsonData['items'], function(index, item) {
+    if ('fullUrl' in item) {
+      fullUrl = item['fullUrl'];
+      temp = fullUrl.split("/");
+      if (temp[1] === 'reference-data' && temp[2] ==='donorwall') {
+        var tempimg = $(item['body']).find('div.sqs-gallery div.slide');
+        $.each(tempimg, function(index2, item2) {
+          src = $(item2).find('img').data('image');
+          images.push(src);
+        })
+      }
+    }
+  })
 
+  var layout = `
+  <label for="search">Search:</label>
+    <div class="searchBox">
+      <input type="text" id="search">
+      <span class="total"></span>
+    </div>
+  <div id="donorData">
+    <div class="item">
+      <div id="donorAccordion"></div>
+    </div>
+    <div class="item">
+      <div id="donorInfo"></div>
+    </div>
+  </div>`;
+  $(selectorID).html(layout);
+  $(selectorID).addClass('donorWallDiv');
+  donors.sort(function(a, b){
+    return parseInt(b) - parseInt(a)
+    }); // --> 3, 12, 23
   donors.forEach(function(item, key) {
       if (item[colMin] && item[colDonor]) {
           item[colMin] = parseInt(item[colMin].toString().replace(/[^0-9.-]+/g,""));
           donorname = item[colDonor];
-          minval = item[colMin];
+          minval = findTheBreakpoint(item[colMin], breakpoints);
           if (prevMin != minval && minval) {
             // new group
             if (prevMin) {
@@ -2771,12 +2823,20 @@ function do_donor_wall2(selectorID, jsonData, attr) {
       }
   })
   data += "</div>";
-  var searchbox = `<div class="searchBox">
-    Search: <input type="text" id="search">
-    <span class="total"></span></div>`;
+
+  // Add the sponsors images from the refrence data gallery in donorswall
+  var other = `
+  <p>We are grateful to the following museum, arts, and culture-based associations for their generous support over the years.</p>
+  <div id="sponsors">`;
+    $.each(images,function(index,img) {
+    other += `<img src="${img}?format=300w" class="logo">`;
+    })
+    other += "</div>";
+
   $(selectorID).addClass('donorWall');
-  $(selectorID + " #donorInfo").append(searchbox).append(footone).append(notes);
-  $(selectorID + " #donorAccordion").html(data)
+  //$(selectorID).prepend(searchbox);
+  $(selectorID + " #donorAccordion").html(data);
+  $(selectorID + " #donorInfo").append(footone).append(notes).append(other);
 
   $('#search').on('keyup', function (event) {
       doDonorSearch(selectorID, true);
