@@ -1071,6 +1071,10 @@ function formatGalleryItems(selectorID, json, cats = []) {
       }
     }
 
+    var href = a[i]['fullUrl'];
+    var source = a[i]['sourceUrl'];
+    href = (source) ? source : href;
+
     var temp = json;
     var a = temp['items'];
     var testout = '';
@@ -1145,7 +1149,7 @@ function formatGalleryItems(selectorID, json, cats = []) {
       testout +=
             `<div class="itemFilter" data-itemid="${index}">
                   <div class="itemFilterImage">
-                      <a href="${a[i]['fullUrl']}">
+                      <a href="${href}">
                       <img src="${img}/?format=300w"${focalpoint}>
                       </a>
                   </div>
@@ -1154,7 +1158,7 @@ function formatGalleryItems(selectorID, json, cats = []) {
                           ${a[i]['title']}</a>
                           <p class="message">${excerpt}</p>
 
-                      <a href="${a[i]['fullUrl']}" class="summary-read-more-link">
+                      <a href="${href}" class="summary-read-more-link">
                           Read More →
                       </a>
                       <div class="itemFilterCats">
@@ -2359,6 +2363,8 @@ function formatSlickCarousel(selectorID, json, attr) {
       var img = a[i]['assetUrl'];
       var href = a[i]['fullUrl'];
       var title = a[i]['title'];
+      var source = a[i]['sourceUrl'];
+      href = (source) ? source : href;
 
       // Process categories and filter if requested
       var categories = a[i]['categories'].sort();
@@ -2777,7 +2783,7 @@ function do_donor_wall2(selectorID, jsonData, attr) {
   $(selectorID).html(layout);
   $(selectorID).addClass('donorWallDiv');
   donors.sort(function(a, b){
-    return parseInt(b) - parseInt(a)
+    return parseInt(b[0]) - parseInt(a[0])
     }); // --> 3, 12, 23
   donors.forEach(function(item, key) {
       if (item[colMin] && item[colDonor]) {
