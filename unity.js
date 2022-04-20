@@ -1047,8 +1047,6 @@ function getData(theurl) {
     return result;
 }
 
-
-
 function formatGalleryItems(selectorID, json, cats = []) {
 /*
    var cats = [
@@ -1071,12 +1069,15 @@ function formatGalleryItems(selectorID, json, cats = []) {
       }
     }
 
+
+
+    var temp = json;
+    var a = temp['items'];
+
     var href = a[i]['fullUrl'];
     var source = a[i]['sourceUrl'];
     href = (source) ? source : href;
 
-    var temp = json;
-    var a = temp['items'];
     var testout = '';
     var mycats = []; // unique list of categories found
     var mycatsids = [];
