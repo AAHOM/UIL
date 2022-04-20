@@ -2707,7 +2707,7 @@ function doDonorSearch(selectorID, xchar = false) {
 breakpoint.  */
 function findTheBreakpoint(val, breakpoints) {
   var i = 0;
-  var ret = 1;
+  var ret = breakpoints[0];
   for (i=1; i < breakpoints.length; i++) {
     if (parseInt(val) >= parseInt(breakpoints[i])) {
       ret = breakpoints[i];
@@ -2740,10 +2740,18 @@ function do_donor_wall2(selectorID, jsonData, attr) {
   var prevMin = '';
   var maxval = ' & Above';
 
-  var breakpoints = [
+  var defaultbreakpoints = [
     1,1000,5000, 10000, 25000,
     50000, 100000, 250000, 500000, 1000000
     ];
+
+   var breakpoints = ('breakpoints' in attr) ? attr['breakpoints'] : defaultbreakpoints;
+   $.each(breakpoints, function(index, v) {
+    breakpoints[index] = parseInt(breakpoints[index]);
+   })
+   breakpoints.sort(function(a, b){
+    return parseInt(b[0]) - parseInt(a[0])
+    }); // --> 3, 12, 23
 
   // Get the donor CVS data from reference-data/donorwall
   var donors = getCvsData(jsonData, 'donorwall',5);
@@ -2786,7 +2794,8 @@ function do_donor_wall2(selectorID, jsonData, attr) {
     return parseInt(b[0]) - parseInt(a[0])
     }); // --> 3, 12, 23
   donors.forEach(function(item, key) {
-      if (item[colMin] && item[colDonor]) {
+      if (item[colMin] && item[colDonor] &&
+          (parseInt(item[colMin]) >= parseInt(breakpoints[0])) ) {
           item[colMin] = parseInt(item[colMin].toString().replace(/[^0-9.-]+/g,""));
           donorname = item[colDonor];
           minval = findTheBreakpoint(item[colMin], breakpoints);
