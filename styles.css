@@ -1992,8 +1992,8 @@ div.theCarousel div.item .itemFilterCats.active {
   color: black;
 }
 
-div.faq_container .toggle div.openCloseList,
-div.tabListContainer .toggle div.openCloseList {
+div.toggle div.openCloseList,
+div.toggle div.openCloseList {
   text-align: center;
   font-weight: 500;
   font-size: 1.2em;
