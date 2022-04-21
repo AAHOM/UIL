@@ -2717,11 +2717,15 @@ function findTheBreakpoint(val, breakpoints) {
   return ret;
 }
 
-function do_donor_wall2(selectorID, jsonData, attr) {
+unction do_donor_wall2(selectorID, jsonData, attr) {
 
-  var collapsable = ('collapsable' in attr) ? attr['collapsable'] : true;
+  var collapsable = ('collapsable' in attr) ? attr['collapsable'] : false;
   var collapsed = ('collapsed' in attr) ? attr['collapsed'] : false;
-  var title = ('title' in attr) ? attr['title'] : 'View Location Maps';
+  var title = ('title' in attr) ? attr['title'] : 'View Supporters';
+  var openfirst = ('openfirst' in attr) ? attr['openfirst'] : true;
+
+  collapsable = (collapsable == null) ? true : collapsable;
+  collapsed = (collapsed == null) ? false : collapsed;
 
   var colMin = 0;
   var colDonor = 1;
@@ -2740,6 +2744,8 @@ function do_donor_wall2(selectorID, jsonData, attr) {
   var heading = '';
   var prevMin = '';
   var maxval = ' & Above';
+  var activeli = 0;
+  activeli = (openfirst != true) ? 'none' : activeli;
 
   var defaultbreakpoints = [
     1,1000,5000, 10000, 25000,
@@ -2775,21 +2781,42 @@ function do_donor_wall2(selectorID, jsonData, attr) {
     }
   })
 
-  var layout = `
-  <label for="search">Search:</label>
-    <div class="searchBox">
-      <input type="text" id="search">
-      <span class="total"></span>
-    </div>
-  <div id="donorData">
-    <div class="item">
-      <div id="donorAccordion"></div>
-    </div>
-    <div class="item">
-      <div id="donorInfo"></div>
+  var layout = '';
+  if (collapsable == true) {
+  layout = `
+    <div class="toggle">
+      <div class="openCloseList">
+      <i class="arrow down"></i>
+        <a href="">${title}</a>
+      </div>
+    </div>`;
+  }
+  layout += `<div class="theDonorContainer">
+    <label for="search">Search:</label>
+      <div class="searchBox">
+        <input type="text" id="search">
+        <span class="total"></span>
+      </div>
+    <div id="donorData">
+      <div class="item">
+        <div id="donorAccordion"></div>
+      </div>
+      <div class="item">
+        <div id="donorInfo"></div>
+      </div>
     </div>
   </div>`;
+
   $(selectorID).html(layout);
+
+  $(selectorID + ' .toggle div.openCloseList a')
+    .click(function(e) {
+    e.preventDefault();
+    $(selectorID + ' .theDonorContainer')
+    .slideToggle('slow');
+    $(selectorID + ' .openCloseList i').toggleClass("down");
+  });
+
   $(selectorID).addClass('donorWallDiv');
   donors.sort(function(a, b){
     return parseInt(b[0]) - parseInt(a[0])
@@ -2859,7 +2886,7 @@ function do_donor_wall2(selectorID, jsonData, attr) {
   doDonorSearch(selectorID);
   $( selectorID + " #donorAccordion").accordion({
       heightStyle: "content",
-      collapsible: true
+      collapsible: true, active: activeli
     });
 }
 
