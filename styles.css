@@ -928,6 +928,32 @@ div.hoursContainer div > ul {
 }
 
 /*-------------------------------------------------------------*/
+/* Open/Close container                                        */
+/*    04/21/2022 - initial                                     */
+/*-------------------------------------------------------------*/
+
+div.toggle div.openClose {
+  text-align: center;
+  font-weight: 500;
+  font-size: 1.2em;
+}
+
+div.toggle div.openClose a {
+  border-bottom: 1px solid black;
+}
+
+div.toggle div.openClose a:before {
+  font-family: 'squarespace-ui-font';
+  font-style: normal;
+  font-weight: normal;
+  -webkit-font-smoothing: antialiased;
+  display: inline-block;
+  vertical-align: middle;
+  speak: none;
+  content: "\e015";
+}
+
+/*-------------------------------------------------------------*/
 /* Frequently Asked Questions FAQS2                            */
 /*    04/11/2021 - initial                                     */
 /*-------------------------------------------------------------*/
@@ -938,32 +964,13 @@ div.hoursContainer div > ul {
   margin: 0 auto;
 }
 
-div.faq_container .toggle div.openClose {
-  text-align: center;
-  font-weight: 500;
-  font-size: 1.2em;
-}
-
 div.faq_container div#tabs {
   margin-top:  20px;
 }
 
-div.faq_container .toggle div.openClose a {
-  border-bottom: 1px solid black;
-}
 div.faq_container li:not(.ui-state-active) a {
   background-color: white;
   color: black;
-}
-div.faq_container .toggle div.openClose a:before {
-  font-family: 'squarespace-ui-font';
-  font-style: normal;
-  font-weight: normal;
-  -webkit-font-smoothing: antialiased;
-  display: inline-block;
-  vertical-align: middle;
-  speak: none;
-  content: "\e015";
 }
 
 @media (max-width: 640px) {
