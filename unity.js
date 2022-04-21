@@ -2717,7 +2717,7 @@ function findTheBreakpoint(val, breakpoints) {
   return ret;
 }
 
-unction do_donor_wall2(selectorID, jsonData, attr) {
+function do_donor_wall2(selectorID, jsonData, attr) {
 
   var collapsable = ('collapsable' in attr) ? attr['collapsable'] : false;
   var collapsed = ('collapsed' in attr) ? attr['collapsed'] : false;
