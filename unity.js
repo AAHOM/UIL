@@ -2662,6 +2662,7 @@ function doDonorSearch(selectorID, xchar = false) {
   var thevalue = jQuery('#search').val();
   thevalue = thevalue.trim();
   $('div.donor').removeClass('showme');
+  $('div.donor').show();
 
   var x = 0;
   var str = '';
@@ -2672,6 +2673,9 @@ function doDonorSearch(selectorID, xchar = false) {
     }
   })
   var good_to_go = jQuery(str).addClass('showme');
+  if (str) {
+    $('div.donor').not('.showme').hide();
+  }
 
 
   var c = $('div.donor.showme');
@@ -2704,18 +2708,6 @@ function doDonorSearch(selectorID, xchar = false) {
   }
 
 }
-/* Round the passed in value down to the nearest lower
-breakpoint.  */
-function findTheBreakpoint(val, breakpoints) {
-  var i = 0;
-  var ret = breakpoints[0];
-  for (i=1; i < breakpoints.length; i++) {
-    if (parseInt(val) >= parseInt(breakpoints[i])) {
-      ret = breakpoints[i];
-    }
-  }
-  return ret;
-}
 
 function do_donor_wall2(selectorID, jsonData, attr) {
 
@@ -2729,9 +2721,10 @@ function do_donor_wall2(selectorID, jsonData, attr) {
 
   var colMin = 0;
   var colDonor = 1;
-  var colDonors = 2;
+  var colDonors = 5;
+  var colStaff = 2;
   var colEndowment = 3;
-  var colRecent = 4;
+  var colTrustee = 4;
   var footone = '';
   var foottwo = '';
   var notes = '';
@@ -2748,8 +2741,8 @@ function do_donor_wall2(selectorID, jsonData, attr) {
   activeli = (openfirst != true) ? 'none' : activeli;
 
   var defaultbreakpoints = [
-    1,1000,5000, 10000, 25000,
-    50000, 100000, 250000, 500000, 1000000
+     1, 500, 1000, 2500, 5000, 10000, 25000,
+     50000, 100000, 250000, 500000, 1000000, 2000000
     ];
 
    var breakpoints = ('breakpoints' in attr) ? attr['breakpoints'] : defaultbreakpoints;
@@ -2761,7 +2754,7 @@ function do_donor_wall2(selectorID, jsonData, attr) {
     }); // --> 3, 12, 23
 
   // Get the donor CVS data from reference-data/donorwall
-  var donors = getCvsData(jsonData, 'donorwall',5);
+  var donors = getCvsData(jsonData, 'donorwall',6);
 
   var a = jsonData;
   var images = [];
@@ -2818,15 +2811,47 @@ function do_donor_wall2(selectorID, jsonData, attr) {
   });
 
   $(selectorID).addClass('donorWallDiv');
-  donors.sort(function(a, b){
-    return parseInt(b[0]) - parseInt(a[0])
-    }); // --> 3, 12, 23
+  const count = {};
+  var temp = [];
+  $.each(donors,function(index, value) {
+    donors[index].shift();  // remove person id
+    donors[index][0] = findTheBreakpoint(donors[index][0], breakpoints);
+    if (value[1].toLowerCase() === 'anonymous') {
+      temp = value.join(',');
+      count[temp] = (count[temp] || 0) + 1;
+      donors[index][0] = ""; // ignore this row
+    }
+  });
+
+  $.each(count, function(index, value) {
+    temp = index.split(',');
+    console.log(temp);
+    temp[colDonors] = value;
+    donors.push(temp);
+  })
+
+  donors.sort(function(a, b) {
+    var g1 = parseInt(a[0]);
+    var g2 = parseInt(b[0]);
+    var name1 = a[1];
+    var name2 = b[1];
+    if (g1 == g2) {
+      return (name1 < name2) ? -1 : (name1 > name2) ? 1 : 0;
+    }
+    else {
+      return (g1 > g2) ? -1 : 1;
+    }
+  })
+
+
+
   donors.forEach(function(item, key) {
       if (item[colMin] && item[colDonor] &&
           (parseInt(item[colMin]) >= parseInt(breakpoints[0])) ) {
           item[colMin] = parseInt(item[colMin].toString().replace(/[^0-9.-]+/g,""));
           donorname = item[colDonor];
           minval = findTheBreakpoint(item[colMin], breakpoints);
+          //minval = item[colMin];
           if (prevMin != minval && minval) {
             // new group
             if (prevMin) {
@@ -2848,12 +2873,15 @@ function do_donor_wall2(selectorID, jsonData, attr) {
           else {
             donorcount = '';
           }
-          if (item[colEndowment] == 'Yes') {
-            foot = '<sup>E</sup>';
-            footone = '<div class="footnote"><sup>E</sup>&nbsp;Endowment contributor</div>\n';
+          foot = '';
+          if (item[colEndowment] == 'E') {
+            foot += '<sup>E</sup>';
           }
-          else {
-            foot = '';
+          if (item[colStaff] == 'S') {
+            foot += '<sup>S</sup>';
+          }
+          if (item[colTrustee] == 'T') {
+            foot += '<sup>T</sup>';
           }
           if (item[colMin]) {
             data += `<div class="donor" data-name="${donorname}">${donorname}${donorcount}${foot}</div>\n`;
@@ -2874,6 +2902,12 @@ function do_donor_wall2(selectorID, jsonData, attr) {
     other += `<img src="${img}?format=300w" class="logo">`;
     })
     other += "</div>";
+
+  footone = `<div class="footnote">
+    <sup>E</sup>&nbsp;Endowment Contributor<br>
+    <sup>S</sup>&nbsp;Staff<br>
+    <sup>T</sup>&nbsp;Trustee
+    </div>`;
 
   $(selectorID).addClass('donorWall');
   //$(selectorID).prepend(searchbox);
