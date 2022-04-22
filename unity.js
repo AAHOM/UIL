@@ -1859,6 +1859,16 @@ function formatflexBoxesDisplay(selectorID,json, attr) {
 
   var a = json['items'];
   var testout = '';
+  var findCats = ('findcats' in attr) ? attr['findcats'] : '';
+  var categories = [];
+  var myflag = false;
+
+  // Set up an array with requested categories
+  var findCatsArray = [];
+  if (findCats.trim() != '') {
+    findCatsArray = findCats.toLowerCase().split(',');
+  }
+
   $(selectorID).append('<div class="flipBoxContainer"><div class="flex-container"></div></div>');
 
   for (i=0; i < a.length; i++) {
@@ -1867,23 +1877,40 @@ function formatflexBoxesDisplay(selectorID,json, attr) {
     var href = a[i]['fullUrl'];
     var title = a[i]['title'];
     var tags = a[i]['tags'];
-    var itemtitle = (tags.length > 0) ? tags[0] : '';
-    var source = a[i]['sourceUrl'];
-    var images = [];
-    var tempimg = $(a[i]['body']).find('div.sqs-gallery div.slide');
-    for (x=0; x < tempimg.length; x++) {
-      var src = $(tempimg[x]).find('img').data('image');
-      images.push(src);
+    categories = a[i]['categories'].sort();
+    $.each(categories,function(index, value) {
+      categories[index] = categories[index].toLowerCase();
+    })
 
+    // If we have a list of required categories, then
+    // look through the categories and verify
+    myflag = true;
+    if (findCatsArray.length) {
+      myflag = false;
+      $.each(findCatsArray,function(index, value) {
+        if (categories.indexOf(value) != -1) { myflag = true;}
+      })
     }
-    if (tempimg.length == 0) {
-      images.push(img);
+
+    if (myflag == true) {
+      var itemtitle = (tags.length > 0) ? tags[0] : '';
+      var source = a[i]['sourceUrl'];
+      var images = [];
+      var tempimg = $(a[i]['body']).find('div.sqs-gallery div.slide');
+      for (x=0; x < tempimg.length; x++) {
+        var src = $(tempimg[x]).find('img').data('image');
+        images.push(src);
+
+      }
+      if (tempimg.length == 0) {
+        images.push(img);
+      }
+      var temp = $(a[i]['body']).find('div.sqs-block-html div.sqs-block-content');
+      var bio = $(temp).html();
+      var excerpt = a[i]['excerpt'];
+      excerpt = excerpt.replace(/(<([^>]+)>)/gi, "");
+      process_card_info(selectorID, source, images, title, title, excerpt);
     }
-    var temp = $(a[i]['body']).find('div.sqs-block-html div.sqs-block-content');
-    var bio = $(temp).html();
-    var excerpt = a[i]['excerpt'];
-    excerpt = excerpt.replace(/(<([^>]+)>)/gi, "");
-    process_card_info(selectorID, source, images, title, title, excerpt);
   }
 
   $('div.front.face img:first-child')
