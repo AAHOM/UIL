@@ -2709,6 +2709,19 @@ function doDonorSearch(selectorID, xchar = false) {
 
 }
 
+/* Round the passed in value down to the nearest lower
+breakpoint.  */
+function findTheBreakpoint(val, breakpoints) {
+  var i = 0;
+  var ret = breakpoints[0];
+  for (i=1; i < breakpoints.length; i++) {
+    if (parseInt(val) >= parseInt(breakpoints[i])) {
+      ret = breakpoints[i];
+    }
+  }
+  return ret;
+}
+
 function do_donor_wall2(selectorID, jsonData, attr) {
 
   var collapsable = ('collapsable' in attr) ? attr['collapsable'] : false;
