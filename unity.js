@@ -193,7 +193,7 @@ function flipCardResize(selectorID) {
 
 function flip_carousel(selectorID) {
   var i;
-  var columnIndex = 1;
+  //var columnIndex = 1;
   var numColumns = $(selectorID + ' .newColumn').length;
   if (columnIndex > numColumns) { columnIndex = 1;}
   var background = $(selectorID + ' .newColumn:nth-child(' + +columnIndex + ') .flip-card-front');
