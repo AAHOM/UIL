@@ -534,7 +534,7 @@ div.flipBoxContainer div.flex-container {
     text-align: center;
     justify-content: space-between;
     flex-wrap: wrap;
-    /*row-gap: 20px;*/
+    row-gap: 20px;
 }
 
 div.flipBoxContainer div.flex-container div.newColumn:only-child {
