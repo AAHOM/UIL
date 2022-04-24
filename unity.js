@@ -193,9 +193,9 @@ function flipCardResize(selectorID) {
 
 function flip_carousel(selectorID) {
   var i;
-  var numColumns = $('.newColumn').length;
+  var numColumns = $(selectorID + ' .newColumn').length;
   if (columnIndex > numColumns) { columnIndex = 1;}
-  var background = $('.newColumn:nth-child(' + +columnIndex + ') .flip-card-front');
+  var background = $(selectorID + ' .newColumn:nth-child(' + +columnIndex + ') .flip-card-front');
   columnIndex++;
   var t = background.find('img.active').index();
   myIndex =  t + 1;
@@ -2725,6 +2725,8 @@ function doDonorSearch(selectorID, xchar = false) {
     x = $("div.donor.showme").length;
     $('.donorWallDiv span.total').text('(' + x + ')').addClass("active");
     $("#donorAccordion > div.ui-accordion-content").each(function(index, item) {
+      var num = $(item).find('div.donor').length;
+      console.log('num=' + num);
       x = $(item).find("div.donor.showme");
       if (x.length) {
         var temp = pluralizeWord(" donor", " donors", x.length);
@@ -2830,12 +2832,12 @@ function do_donor_wall2(selectorID, jsonData, attr) {
         <input type="text" id="search">
         <span class="total"></span>
       </div>
-    <div id="donorData">
+    <div id="donorData" class="donorData">
       <div class="item">
-        <div id="donorAccordion"></div>
+        <div id="donorAccordion" class="donorAccordion"></div>
       </div>
       <div class="item">
-        <div id="donorInfo"></div>
+        <div id="donorInfo" class="donorInfo"></div>
       </div>
     </div>
   </div>`;
@@ -2883,8 +2885,6 @@ function do_donor_wall2(selectorID, jsonData, attr) {
     }
   })
 
-
-
   donors.forEach(function(item, key) {
       if (item[colMin] && item[colDonor] &&
           (parseInt(item[colMin]) >= parseInt(breakpoints[0])) ) {
@@ -2899,7 +2899,10 @@ function do_donor_wall2(selectorID, jsonData, attr) {
               data += "</div>";
             }
             var heading = formatter.format(minval);
-            data += `<h3>${heading}${maxval}<span class="found">test</span></h3><div>\n`;
+            data += `<h3>${heading}${maxval}
+              <span class="found">test</span>
+              <span class="numItems"></span>
+              </h3><div>\n`;
             prevMin = minval;
           }
           if (donorname == 'Anonymous') {
@@ -2937,7 +2940,7 @@ function do_donor_wall2(selectorID, jsonData, attr) {
   // Add the sponsors images from the refrence data gallery in donorswall
   var other = `
   <p>We are grateful to the following museum, arts, and culture-based associations for their generous support over the years.</p>
-  <div id="sponsors">`;
+  <div id="sponsors" class="donorWallSponsors">`;
     $.each(images,function(index,img) {
     other += `<img src="${img}?format=300w" class="logo">`;
     })
@@ -2951,17 +2954,24 @@ function do_donor_wall2(selectorID, jsonData, attr) {
 
   $(selectorID).addClass('donorWall');
   //$(selectorID).prepend(searchbox);
-  $(selectorID + " #donorAccordion").html(data);
-  $(selectorID + " #donorInfo").append(footone).append(notes).append(other);
+  $(selectorID + " .donorAccordion").html(data);
+  $(selectorID + " .donorInfo").append(footone).append(notes).append(other);
 
-  $('#search').on('keyup', function (event) {
+
+
+  $(selectorID + " #search").on('keyup', function (event) {
       doDonorSearch(selectorID, true);
     });
   doDonorSearch(selectorID);
-  $( selectorID + " #donorAccordion").accordion({
+  $( selectorID + " .donorAccordion").accordion({
       heightStyle: "content",
       collapsible: true, active: activeli
     });
+  $(selectorID + " .donorAccordion > div.ui-accordion-content").each(function(index, item) {
+    var num = $(item).find('div.donor').length;
+    console.log('num=' + num);
+    $(item).prev().find('span.numItems').text(' (' + num + ')' );
+  });
 }
 
 //https://stackoverflow.com/questions/8493195/how-can-i-parse-a-csv-string-with-javascript-which-contains-comma-in-data
