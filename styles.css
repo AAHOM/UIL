@@ -537,6 +537,17 @@ div.flipBoxContainer div.flex-container {
     row-gap: 20px;
 }
 
+div.flipBoxContainer.layout2 div.flex-container {
+  display: flex;
+  flex-direction: row;
+  font-size: 1em;
+  text-align: center;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+  row-gap: 20px;
+}
+
+
 div.flipBoxContainer div.flex-container div.newColumn:only-child {
   margin: 0 auto;
 }
@@ -549,6 +560,17 @@ div.flipBoxContainer div.flex-container div.newColumn {
     padding-top: clamp(200px,30%,300px);
     max-width: unset;
     position: relative;
+}
+
+div.flipBoxContainer.layout2 div.flex-container div.newColumn {
+  width: 400px;
+  height: unset;
+  padding-top: 300px;
+  max-width: unset;
+  position: relative;
+  padding-left: 5px;
+  padding-right: 5px;
+  padding-bottom: 0;
 }
 
 div.flipBoxContainer div.flex-container div.newColumn .flip-card {

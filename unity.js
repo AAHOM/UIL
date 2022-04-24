@@ -1888,7 +1888,7 @@ function formatflexBoxesDisplay(selectorID,json, attr) {
     if (findCatsArray.length) {
       myflag = false;
       $.each(findCatsArray,function(index, value) {
-        if (categories.indexOf(value) != -1) { myflag = true;}
+        if (categories.indexOf(value.trim()) != -1) { myflag = true;}
       })
     }
 
