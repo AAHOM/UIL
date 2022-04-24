@@ -1879,7 +1879,7 @@ function formatflexBoxesDisplay(selectorID,json, attr) {
     var tags = a[i]['tags'];
     categories = a[i]['categories'].sort();
     $.each(categories,function(index, value) {
-      categories[index] = categories[index].toLowerCase();
+      categories[index] = categories[index].toLowerCase().trim();
     })
 
     // If we have a list of required categories, then
