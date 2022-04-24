@@ -193,6 +193,7 @@ function flipCardResize(selectorID) {
 
 function flip_carousel(selectorID) {
   var i;
+  var columnIndex = 1;
   var numColumns = $(selectorID + ' .newColumn').length;
   if (columnIndex > numColumns) { columnIndex = 1;}
   var background = $(selectorID + ' .newColumn:nth-child(' + +columnIndex + ') .flip-card-front');
@@ -1861,6 +1862,7 @@ function formatflexBoxesDisplay(selectorID,json, attr) {
   var testout = '';
   var findCats = ('findcats' in attr) ? attr['findcats'] : '';
   var categories = [];
+  var tags = [];
   var myflag = false;
 
   // Set up an array with requested categories
@@ -1876,8 +1878,8 @@ function formatflexBoxesDisplay(selectorID,json, attr) {
     var img = a[i]['assetUrl'];
     var href = a[i]['fullUrl'];
     var title = a[i]['title'];
-    var tags = a[i]['tags'];
-    categories = a[i]['categories'].sort();
+    tags = ('tags' in a[i]) ? a[i]['tags'] : [];
+    categories = ('categories' in a[i]) ? a[i]['categories'].sort() : [];
     $.each(categories,function(index, value) {
       categories[index] = categories[index].toLowerCase().trim();
     })
