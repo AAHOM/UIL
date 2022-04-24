@@ -215,13 +215,17 @@ function process_card_info(selectorID, link,images, caption, label, message) {
        <div class="f1_container flip-card">
         <div class="f1_card flip-card-inner" class="shadow">
          <div class="front face flip-card-front">`;
+    var target = '';
     images.forEach(function(img, key) {
       str = str + `<img src="${img}"/>`;
     })
+
+    link = (typeof link != 'undefined') ? link : "#";
+    target = (link.startsWith("http")) ? ' target="_blank"' : target;
     str = str + `<div class="labelText">${caption}</div>
          </div>
          <div class="back face center flip-card-back">
-          <a href="${link}">
+          <a href="${link}"${target}>
             <div class=centerBack>
               <div class="topBox">
                  <div class="labelText">${caption}</div>
