@@ -193,7 +193,6 @@ function flipCardResize(selectorID) {
 
 function flip_carousel(selectorID) {
   var i;
-  //var columnIndex = 1;
   var numColumns = $(selectorID + ' .newColumn').length;
   if (columnIndex > numColumns) { columnIndex = 1;}
   var background = $(selectorID + ' .newColumn:nth-child(' + +columnIndex + ') .flip-card-front');
@@ -1866,7 +1865,6 @@ function formatflexBoxesDisplay(selectorID,json, attr) {
   var testout = '';
   var findCats = ('findcats' in attr) ? attr['findcats'] : '';
   var categories = [];
-  var tags = [];
   var myflag = false;
 
   // Set up an array with requested categories
@@ -1882,8 +1880,9 @@ function formatflexBoxesDisplay(selectorID,json, attr) {
     var img = a[i]['assetUrl'];
     var href = a[i]['fullUrl'];
     var title = a[i]['title'];
-    tags = ('tags' in a[i]) ? a[i]['tags'] : [];
+    var tags = ('tags' in a[i]) ? a[i]['tags'] : [];
     categories = ('categories' in a[i]) ? a[i]['categories'].sort() : [];
+    //categories = a[i]['categories'].sort();
     $.each(categories,function(index, value) {
       categories[index] = categories[index].toLowerCase().trim();
     })
@@ -1900,7 +1899,7 @@ function formatflexBoxesDisplay(selectorID,json, attr) {
 
     if (myflag == true) {
       var itemtitle = (tags.length > 0) ? tags[0] : '';
-      var source = a[i]['sourceUrl'];
+      var source = (a[i]['sourceUrl']) ? a[i]['sourceUrl'] : href;
       var images = [];
       var tempimg = $(a[i]['body']).find('div.sqs-gallery div.slide');
       for (x=0; x < tempimg.length; x++) {
@@ -2954,8 +2953,8 @@ function do_donor_wall2(selectorID, jsonData, attr) {
 
   footone = `<div class="footnote">
     <sup>E</sup>&nbsp;Endowment Contributor<br>
-    <sup>S</sup>&nbsp;Staff<br>
-    <sup>T</sup>&nbsp;Trustee
+    <sup>S</sup>&nbsp;Current or Former Staff<br>
+    <sup>T</sup>&nbsp;Current or Former Board of Trustees
     </div>`;
 
   $(selectorID).addClass('donorWall');
