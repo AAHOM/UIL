@@ -1783,6 +1783,14 @@ div.donorWall p {
   border-radius:  10px;
 }
 
+.donorWallDiv div.searchBox #resetValues {
+  display: none;
+  margin-left:  10px;
+}
+.donorWallDiv div.searchBox #resetValues.show {
+  display:  inline-block;
+}
+
 @media (max-width: 640px) {
   .donorWallDiv .item {
     width: 100%;

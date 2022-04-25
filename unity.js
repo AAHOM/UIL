@@ -2700,10 +2700,16 @@ function doDonorSearch(selectorID, xchar = false) {
   var str = '';
   var aval = thevalue.split(" ");
   aval.forEach(function(item,index) {
-    if (item) {
+    if (item.startsWith("*")) {
+      if (item != "*") {
+        str = str + '[data-codes*="' + item.substr(1) + '" i]';
+      }
+    }
+    else if (item) {
       str = str + '[data-name*="' + item + '" i]';
     }
   })
+
   var good_to_go = jQuery(str).addClass('showme');
   if (str) {
     $('div.donor').not('.showme').hide();
@@ -2739,6 +2745,10 @@ function doDonorSearch(selectorID, xchar = false) {
         $(item).show();
       }
     })
+    jQuery(selectorID + ' #resetValues').addClass('show');
+  }
+  else {
+    jQuery(selectorID + ' #resetValues').removeClass('show');
   }
 
 }
@@ -2785,6 +2795,8 @@ function do_donor_wall2(selectorID, jsonData, attr) {
   var prevMin = '';
   var maxval = ' & Above';
   var activeli = 0;
+  var donorcodes = [];
+  var donorcodesstr = '';
   activeli = (openfirst != true) ? 'none' : activeli;
 
   var defaultbreakpoints = [
@@ -2836,6 +2848,7 @@ function do_donor_wall2(selectorID, jsonData, attr) {
       <div class="searchBox">
         <input type="text" id="search">
         <span class="total"></span>
+        <a href="#" id="resetValues">(Clear)</a>
       </div>
     <div id="donorData" class="donorData">
       <div class="item">
@@ -2891,6 +2904,7 @@ function do_donor_wall2(selectorID, jsonData, attr) {
   })
 
   donors.forEach(function(item, key) {
+      donorcodes = [];
       if (item[colMin] && item[colDonor] &&
           (parseInt(item[colMin]) >= parseInt(breakpoints[0])) ) {
           item[colMin] = parseInt(item[colMin].toString().replace(/[^0-9.-]+/g,""));
@@ -2923,16 +2937,20 @@ function do_donor_wall2(selectorID, jsonData, attr) {
           }
           foot = '';
           if (item[colEndowment] == 'E') {
+            donorcodes.push('E');
             foot += '<sup>E</sup>';
           }
           if (item[colStaff] == 'S') {
+            donorcodes.push('S');
             foot += '<sup>S</sup>';
           }
           if (item[colTrustee] == 'T') {
+            donorcodes.push('T');
             foot += '<sup>T</sup>';
           }
+          donorcodesstr = donorcodes.join(" ");
           if (item[colMin]) {
-            data += `<div class="donor" data-name="${donorname}">${donorname}${donorcount}${foot}</div>\n`;
+            data += `<div class="donor" data-codes="${donorcodesstr}" data-name="${donorname}">${donorname}${donorcount}${foot}</div>\n`;
           }
           else {
             notes += `<div class="note">${donorname}</div>\n`;
@@ -2967,6 +2985,12 @@ function do_donor_wall2(selectorID, jsonData, attr) {
   $(selectorID + " #search").on('keyup', function (event) {
       doDonorSearch(selectorID, true);
     });
+  $(selectorID + ' #resetValues').on('click',function(event) {
+      event.preventDefault();
+      $(selectorID + ' #search').val('');
+      doDonorSearch(selectorID, true);
+    })
+
   doDonorSearch(selectorID);
   $( selectorID + " .donorAccordion").accordion({
       heightStyle: "content",
