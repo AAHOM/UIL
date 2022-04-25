@@ -2895,8 +2895,10 @@ function do_donor_wall2(selectorID, jsonData, attr) {
     var g2 = parseInt(b[0]);
     var name1 = a[1];
     var name2 = b[1];
+    var n = 0;
     if (g1 == g2) {
-      return (name1 < name2) ? -1 : (name1 > name2) ? 1 : 0;
+    return name1.localeCompare(name2);
+        //return (name1 < name2) ? -1 : (name1 > name2) ? 1 : 0;
     }
     else {
       return (g1 > g2) ? -1 : 1;
