@@ -812,8 +812,10 @@ div.flipBoxContainer .centerBack div.backLink span{
     div.flipBoxContainer.layout2 div.flex-container {
       justify-content: center;
     }
+}
 
 @media (max-width: 640px) {
+
     div.flipBoxContainer div.flex-container div.newColumn {
         width: 100%;
     }
