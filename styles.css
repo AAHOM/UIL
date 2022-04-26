@@ -809,7 +809,7 @@ div.flipBoxContainer .centerBack div.backLink span{
     div.flipBoxContainer div.flex-container div.newColumn {
         width: calc(50% - 5px);
     }
-    div.flipBoxContainer.layout2 div.flex-container {
+    div.flipBoxContainer div.flex-container {
       justify-content: center;
     }
 }
