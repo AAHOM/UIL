@@ -785,7 +785,8 @@ div.flipBoxContainer .centerBack div.backContent div {
     top: 0;
     top: 50%;
     transform: translateY(-50%);
-    font-size: 1.2em;
+    font-size: 1rem;
+    font-style: italic;
 }
 
 div.flipBoxContainer .centerBack div.backContent p {
