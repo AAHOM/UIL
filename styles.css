@@ -544,7 +544,8 @@ div.flipBoxContainer.layout2 div.flex-container {
   text-align: center;
   justify-content: space-evenly;
   flex-wrap: wrap;
-  row-gap: 20px;
+  /*row-gap: 20px;*/
+  gap:  10px;
 }
 
 
@@ -803,33 +804,14 @@ div.flipBoxContainer .centerBack div.backLink span{
     top: 50%;
     transform: translateY(-50%);
 }
-/*
-@media (max-width: 1100px) {
-  div.flipBoxContainer div.flex-container {
-      justify-content: space-around;
-  }
-
-  }
-*/
-/*
-@media (max-width: 800px) {
-    .flex-container {
-        flex-direction: column;
-    }
-
-    div.flipBoxContainer div.flex-container div.newColumn { 
-        width: 100%;
-        margin-bottom: 20px;
-    }  
-    
-}
-*/
 
 @media (max-width: 800px) {
     div.flipBoxContainer div.flex-container div.newColumn {
         width: calc(50% - 5px);
     }
-}
+    div.flipBoxContainer.layout2 div.flex-container {
+      justify-content: center;
+    }
 
 @media (max-width: 640px) {
     div.flipBoxContainer div.flex-container div.newColumn {
