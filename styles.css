@@ -811,6 +811,7 @@ div.flipBoxContainer .centerBack div.backLink span{
 
   }
 */
+/*
 @media (max-width: 800px) {
     .flex-container {
         flex-direction: column;
@@ -821,6 +822,19 @@ div.flipBoxContainer .centerBack div.backLink span{
         margin-bottom: 20px;
     }  
     
+}
+*/
+
+@media (max-width: 800px) {
+    div.flipBoxContainer div.flex-container div.newColumn {
+        width: calc(50% - 5px);
+    }
+}
+
+@media (max-width: 640px) {
+    div.flipBoxContainer div.flex-container div.newColumn {
+        width: 100%;
+    }
 }
 
 /*-------------------------------------------------------------*/
