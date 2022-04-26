@@ -809,6 +809,7 @@ div.flipBoxContainer .centerBack div.backLink span{
 @media (max-width: 800px) {
     div.flipBoxContainer div.flex-container div.newColumn {
         width: calc(50% - 5px);
+        padding-top: clamp(200px,calc(50% - 5px),300px);
     }
     div.flipBoxContainer div.flex-container {
       justify-content: center;
