@@ -809,9 +809,9 @@ div.flipBoxContainer .centerBack div.backLink span{
 }
 
 @media (max-width: 640px) {
-
     div.flipBoxContainer div.flex-container div.newColumn {
         width: 100%;
+        padding-top: 100%;
     }
 }
 
