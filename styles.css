@@ -716,7 +716,6 @@ div.flipBoxContainer .flip-card-front .labelText {
 
 div.flipBoxContainer .flip-card-back div.centerBack  .labelText {
     color: black;
-    background:  wheat;
 }
 
 div.flipBoxContainer .centerBack {
@@ -728,6 +727,7 @@ div.flipBoxContainer .centerBack {
 div.flipBoxContainer .centerBack div.topBox {
   flex-basis: 20%;
   position: relative;
+  background:  wheat;
 }
 
 div.flipBoxContainer .centerBack div.backContent {
