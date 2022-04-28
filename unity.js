@@ -2508,7 +2508,7 @@ function formatCalendars(theSelector, data, attr) {
   var openfirst = ('openfirst' in attr) ? attr['openfirst'] : true;
   var collapsable = ('collapsable' in attr) ? attr['collapsable'] : true;
   var collapsed = ('collapsed' in attr) ? attr['collapsed'] : false;
-  var title = ('title' in attr) ? attr['title'] : 'View Location Maps';
+  var title = ('title' in attr) ? attr['title'] : 'View Calendars';
 
   // Make sure null parameters are handled
   active = (active == null) ? 1 : active;
@@ -2567,7 +2567,7 @@ function formatCalendars(theSelector, data, attr) {
       <div class="toggle">
         <div class="openCloseList">
         <i class="arrow down"></i>
-          <a href="">View Calendars</a>
+          <a href="">${title}</a>
         </div>
       </div>`;
     }
