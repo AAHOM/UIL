@@ -725,18 +725,18 @@ div.flipBoxContainer .centerBack {
 }
 
 div.flipBoxContainer .centerBack div.topBox {
-  flex-basis: 20%;
+  flex-basis: 15%;
   position: relative;
   background:  wheat;
 }
 
 div.flipBoxContainer .centerBack div.backContent {
-  flex-basis: 60%;
+  flex-basis: 70%;
   position: relative;
 }
 
 div.flipBoxContainer .centerBack div.backLink {
-  flex-basis: 20%;
+  flex-basis: 15%;
   position: relative;
 }
 
