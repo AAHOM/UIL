@@ -2587,7 +2587,7 @@ function formatCalendars(theSelector, data, attr) {
       var museum = item[0];
       $.each(theMuseumList, function(index, value) {
         if (museum == value[0] && value[2] != true) {
-          name = value[1];
+          name = (museum === 'unity') ? "All Locations" : value[1];
         }
       })
 
