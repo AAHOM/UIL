@@ -793,7 +793,7 @@ div.flipBoxContainer .centerBack div.backLink span{
     right: 0;
     text-decoration: underline;
     font-style: italic;
-    font-size: 1.2em;
+    font-size: 1rem;
     top: 50%;
     transform: translateY(-50%);
 }
