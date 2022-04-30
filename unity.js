@@ -2637,7 +2637,7 @@ function formatCalendars(theSelector, data, attr) {
       var large = item[1];
       var small = large.toString().replace(/mode=MONTH/gi,'mode=AGENDA');
       if (item[2] != '') {
-        after = `For more information visit <a href="${item[2]}">${item[3]}</a>`;
+        after = `For hours, pricing and more visit the <a href="${item[2]}">${item[3]}</a>`;
       }
       var colorClass = "color" + museum.charAt(0).toUpperCase() + museum.slice(1);
       var ar = [large,small];
