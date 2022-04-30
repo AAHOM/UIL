@@ -2363,6 +2363,8 @@ function formatSlickCarousel(selectorID, json, attr) {
     var showCats = ('showcats' in attr) ? attr['showcats'] : false;
     var showDots = ('dots' in attr) ? attr['dots'] : false;
     var showCount = ('showcount' in attr) ? attr['showcount'] : false;
+    var showSlides = ('showslides' in attr) ? parseInt(attr['showslides']) : 3;
+
 
     var theclass = (showCount==true) ? ' active' : '';
     var counter = `<div class="filterItemCount${theclass}"></div>`;
@@ -2467,8 +2469,8 @@ function formatSlickCarousel(selectorID, json, attr) {
         dots: showDots,
         adaptiveHeight: true,
         infinite: true,
-        slidesToShow: 3,
-        slidesToScroll: 3,
+        slidesToShow: showSlides,
+        slidesToScroll: showSlides,
         arrows: true,
         prevArrow: $(selectorID + ' .prev'),
         nextArrow: $(selectorID + ' .next'),
