@@ -2011,6 +2011,12 @@ div.theCarousel div.item .itemFilterCats.active {
 /*    02/23/2022 - Added openCloseList                         */
 /*-------------------------------------------------------------*/
 
+
+.theCalendarContainer a {
+    color: #00f;
+    text-decoration: underline;
+}
+
 .theCalendarContainer  li:not(.ui-state-active) a,
 .faq_container  li:not(.ui-state-active) a {
   background-color: white;

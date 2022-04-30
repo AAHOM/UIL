@@ -2504,11 +2504,33 @@ function formatSlickCarousel(selectorID, json, attr) {
 function formatCalendars(theSelector, data, attr) {
 
   var active = ('activetab' in attr) ? attr['activetab'] : 0;
-  var single = ('singe' in attr) ? attr['single'] : false;
+  var single = ('single' in attr) ? (attr['single'] === true)?"1":"0" : false;
   var openfirst = ('openfirst' in attr) ? attr['openfirst'] : true;
   var collapsable = ('collapsable' in attr) ? attr['collapsable'] : true;
   var collapsed = ('collapsed' in attr) ? attr['collapsed'] : false;
   var title = ('title' in attr) ? attr['title'] : 'View Calendars';
+  var showprint = ('showprint' in attr) ? (attr['showprint'] === true)?"1":"0" : '0';
+  var showtabs = ('showtabs' in attr) ? (attr['showtabs'] === true)?"1":"0" : '0';
+  var showtitle = ('showtitle' in attr) ? (attr['showtitle'] === true)?"1":"0" : '0';
+  var showname = ('showname' in attr) ? (attr['showname'] === true)?"1":"0" : "0";
+  var shownav = ('shownav' in attr) ? (attr['shownav'] === true)?"1":"0" : '1';
+  var showdate = ('showdate' in attr) ? (attr['showdate'] === true)?"1":"0" : '1';
+  var showtz = ('showtz' in attr) ? (attr['showtz'] === true)?"1":"0" : '1';
+  var showcalendars = ('showcalendars' in attr) ?
+    (attr['showcalendars'] === true)?"1":"0" : '0';
+  var mode = ('mode' in attr) ? attr['mode'].toUpperCase() : 'MONTH';
+  var ctz = ('ctz' in attr) ? attr['ctz'] : 'America%2FNew_York';
+
+  var before = "";
+  var after = "";
+  var newdata = [];
+  var base = "https://calendar.google.com/calendar/embed";
+  var iframe = '';
+  var ar = [];
+  var tab = 1;
+  var tabs = '';
+  var tabsdata = '';
+  var iframes = [];
 
   // Make sure null parameters are handled
   active = (active == null) ? 1 : active;
@@ -2519,48 +2541,58 @@ function formatCalendars(theSelector, data, attr) {
   // check url paramaters to see if we need to
   // default to a particular calendar
   var tabparam = getSearchParams("tab");
-    if (tabparam) {
-      active = tabparam;
-    }
+  if (tabparam) {
+    active = tabparam;
+  }
 
-    theMuseumList = getMuseumList(data);
+  // Get the official list of museums
+  theMuseumList = getMuseumList(data);
 
-  // find the faq reference data
-    var thedata = {};
-    var i = 0;
-    for (i = 0; i < data['items'].length; i++) {
-      if (data['items'][i]['fullUrl'] == '/reference-data/calendars') {
-        theMuseumList.forEach(function(item, key) {
-          if (item[2] != true) { // not hiding this museum
-            data2 = parseData(data['items'][i]['body'], '#' + item[0]);
-            thedata[item[0]] = data2;
-          }
-        })
-      }
-    }
+  // Get the calendar CVS data from reference-data/donorwall
+  var caldata = getCvsData(data, 'calendars',6);
+  caldata.unshift(["unity","",""]);  // add all locations
 
-    var newdata = [];
-    $.each(thedata, function( index, value ) {
-      var before = '';
-      var iframe = '';
-      var after = '';
-      var ar = [];
-      $.each(value,function(index2, value2) {
-        if (value2.length > 1) {
-          var temp = value2[0].toLowerCase().trim();
-          before = (temp == 'before') ? value2[1] : before;
-          iframe = (temp == 'iframe') ? value2[1] : iframe;
-          after = (temp == 'after') ? value2[1] : after;
-          ar = [index, null, null, iframe, after];
+  // Now fill the array "newdata" with the full iframe html
+  // for each museum
+  newdata = [];
+  $.each(caldata, function( index, value ) {
+    before = '';
+    iframe = '';
+    after = '';
+    ar = [];
+
+    var p = new URLSearchParams("");
+    if (value[0] === 'unity') {
+      console.log('index=' + index + ' value[0]=' + value[0] + '/');
+      $.each(caldata, function(index2, value2) {
+        if (value2[0] !== 'unity') {
+          console.log('append=' + value2[1]);
+          p.append("src",value2[1]);
         }
-
       })
-      if (ar.length > 0) {
-        newdata.push(ar);
+    }
+    else {
+      p.set("src",value[1]);
       }
+    p.set("showPrint", showprint);
+    p.set("showTabs", showtabs);
+    p.set("showTitle", showtitle);
+    p.set("showNav", shownav);
+    p.set("showDate", showdate);
+    p.set("showTz", showtz);
+    p.set("mode", mode);
+    p.set("showCalendars", showcalendars);
+    p.set("ctz", ctz);
+
+    var newi = `<iframe data-preserve-html-node="true" src="${base}?${p}" `
+      + `scrolling="no" width="800" height="600" frameborder="0"></iframe>`;
+      console.log(newi);
+      ar = [value[0], newi, value[2]];
+      newdata.push(ar);
 
     });
 
+    // if the calendars are collapsable, then add the link to collapse
     var temp = '';
     if (collapsable == true) {
     temp = `
@@ -2574,56 +2606,67 @@ function formatCalendars(theSelector, data, attr) {
     temp = temp + `<div class="theCalendarContainer"></div>`;
     $(theSelector).html(temp);
 
-    dataRows = newdata;
+    // We want the data to be in the official order
+    // and weed out any that are marked as hidden
+    dataRows = [];
+    theMuseumList.forEach(function(item, key) {
+      if (item[2] != true) { // not hiding this museum
+        $.each(newdata,function(index, value) {
+          if (value[0] === item[0]) {
+            value.push(item[1]);  // put the full name
+            dataRows.push(value);
+          }
+        })
+      }
+    })
 
-    var tab = 1;
-    var tabs = '';
-    var tabsdata = '';
-    var iframes = [];
+    tab = 1;
+    tabs = '';
+    tabsdata = '';
+    iframes = [];
 
     var name = 'Unknown';
     var title = name;
     dataRows.forEach(function(item, key) {
       var museum = item[0];
-      $.each(theMuseumList, function(index, value) {
-        if (museum == value[0] && value[2] != true) {
-          name = (museum === 'unity') ? "All Locations" : value[1];
-        }
-      })
+      name = item[3];
+      after = '';
+      if (museum === 'unity') {name = 'All Locations';}
 
-      if (name != '') {
-        var before = (item[2]) ? item[2] : '';
-        title = name;
-        var large = item[3];
-        var small = large.toString().replace(/mode=MONTH/gi,'mode=AGENDA');
-        var after = item[4];
-        var colorClass = "color" + museum.charAt(0).toUpperCase() + museum.slice(1);
-        var ar = [large,small];
-        iframes.push(ar);
-        if ((tab - 1) != active) {
-          large = '';
-          small = '';
-        }
-
-        var hideme = '';
-        if (single == true && key != active) {
-          hideme = 'hide';
-        }
-
-        tabs = tabs +
-          '<li class="' + hideme + '"><a href="#tabs-' + tab + '" data-tab="' + tab + '" class="' + colorClass + '">' +
-          name + '</a></li>\n';
-          tabsdata = tabsdata +
-          '<div id="tabs-' + tab + '">\n' +
-          '<p><strong>' + name + '</strong>\n' + before +
-          '<div class="calendarLarge">' + large + '</div>\n' +
-          '<div class="calendarSmall">' + small + '</div>\n' +
-          '</p>' +
-          after +
-          '</div>\n';
-        tab = tab + 1;
+      title = (showname === "1") ? name : "";
+      var large = item[1];
+      var small = large.toString().replace(/mode=MONTH/gi,'mode=AGENDA');
+      if (item[2] != '') {
+        after = `For more information visit <a href="${item[2]}">${item[3]}</a>`;
       }
+      var colorClass = "color" + museum.charAt(0).toUpperCase() + museum.slice(1);
+      var ar = [large,small];
+      iframes.push(ar);
+      if ((tab - 1) != active) {
+        large = '';
+        small = '';
+      }
+
+      var hideme = '';
+      if (single == true && key != active) {
+        hideme = 'hide';
+      }
+
+      tabs = tabs +
+        '<li class="' + hideme + '"><a href="#tabs-' + tab + '" data-tab="' + tab + '" class="' + colorClass + '">' +
+        name + '</a></li>\n';
+        tabsdata = tabsdata +
+        '<div id="tabs-' + tab + '">\n' +
+        '<p><strong>' + title + '</strong>\n' + before +
+        '<div class="calendarLarge">' + large + '</div>\n' +
+        '<div class="calendarSmall">' + small + '</div>\n' +
+        '</p>' +
+        after +
+        '</div>\n';
+      tab = tab + 1;
+
     })
+
     tabs = '<div id="tabs"><ul>' + tabs + '</ul></div>\n';
     $(tabs).appendTo(theSelector + ' .theCalendarContainer');
     $(tabsdata).appendTo('#tabs');
