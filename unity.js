@@ -2240,7 +2240,28 @@ function formatSlickCarousel(selectorID, json, attr) {
     var showDots = ('dots' in attr) ? attr['dots'] : false;
     var showCount = ('showcount' in attr) ? attr['showcount'] : false;
     var showSlides = ('showslides' in attr) ? parseInt(attr['showslides']) : 3;
-
+    var responsive = [{
+            breakpoint: 500,
+            settings: {
+                slidesToShow: 1,
+                slidesToScroll: 1,
+            }},
+            {
+            breakpoint: 800,
+            settings: {
+                slidesToShow: 2,
+                slidesToScroll: 1,
+            }
+        }];
+    if (showSlides > 4) {
+      responsive.push({
+            breakpoint: 1200,
+            settings: {
+                slidesToShow: 4,
+                slidesToScroll: 4,
+            }});
+    }
+    console.log(responsive);
 
     var theclass = (showCount==true) ? ' active' : '';
     var counter = `<div class="filterItemCount${theclass}"></div>`;
@@ -2350,19 +2371,7 @@ function formatSlickCarousel(selectorID, json, attr) {
         arrows: true,
         prevArrow: $(selectorID + ' .prev'),
         nextArrow: $(selectorID + ' .next'),
-        responsive: [{
-            breakpoint: 500,
-            settings: {
-                slidesToShow: 1,
-                slidesToScroll: 1,
-            }},
-            {
-            breakpoint: 800,
-            settings: {
-                slidesToShow: 2,
-                slidesToScroll: 1,
-            }
-        }]
+        responsive: responsive
       });
 
     // adjust the image aspect ratio based on width
