@@ -451,19 +451,19 @@ var formatter = new Intl.NumberFormat('en-US', {
 /* Resize carousel images with screen size to keep aspect ratio right */
 
 
-function adjustSlickImageHeight() {
-  var aspect_ratio_box2 = 0.6
-  var box2 = jQuery("div.slick-list div.slick-track div.item img");
+function adjustSlickImageHeight(selectorID = 'TEST') {
+  var aspect_ratio_box2 = 0.6;
+  var box2 = jQuery(selectorID +" div.slick-list div.slick-track div.item img");
   var w = box2.width();
   var h = w * aspect_ratio_box2;
   var topval = (h / 2) - 25;
-  jQuery('button.slick-arrow').css('top',topval + 'px');
+  jQuery(selectorID + ' button.slick-arrow').css('top',topval + 'px');
   box2.height(h);
 }
 
-jQuery(window).resize(function() {
-  adjustSlickImageHeight();
-});
+//jQuery(window).resize(function() {
+//  adjustSlickImageHeight();
+//});
 
 /* ----------------------------------------------------------- */
 /* Sub Menu Bar                                                */
@@ -1187,130 +1187,6 @@ function formatGalleryItems(selectorID, json, cats = []) {
    // });
     return [mycats,mycatsids];
 
-  }
-
-/* ------------------------------------------------------- */
-/* New Slick Carousel Code                                 */
-/*     Initial 03/25/22                                    */
-/* ------------------------------------------------------- */
-
-function formatSlickCarousel(selectorID, json, findCats = '', showCats = false) {
-
-    var a = json['items'];
-    var testout = '';
-    var allowedExtensions =  /(\.jpg|\.jpeg|\.png|\.gif)$/i;
-    var regexp = /<img[^>]+src\s*=\s*['"]([^'"]+)['"][^>]*>/;
-
-    // Set up an array with requested categories
-    var findCatsArray = [];
-    if (findCats.trim() != '') {
-      findCatsArray = findCats.split(',');
-    }
-    for (n=0; n < findCatsArray.length; n++) {
-         findCatsArray[n] = findCatsArray[n].trim()
-         .toLowerCase().replaceAll(' ', '+').replaceAll('%20', '+');
-    }
-
-    // Set up active class if we are showing categories
-    showcats = '';
-    if (showCats) {
-      showcats = ' active';
-    }
-
-    var testout = `<div class="slickButtons">
-        <button class="prev slick-arrow"> < </button>
-        <button class="next slick-arrow"> > </button>
-        </div>
-        <div class="theCarousel">`;
-    for (i=0; i < a.length; i++) {
-      var index = i;
-      var img = a[i]['assetUrl'];
-      var href = a[i]['fullUrl'];
-      var title = a[i]['title'];
-
-      // Process categories and filter if requested
-      var categories = a[i]['categories'].sort();
-      var x = mycats.findIndex((element) => {  // compare lower case
-              return element.toLowerCase().replaceAll(' ', '+').replaceAll('%20', '+') === lookup.toLowerCase();
-            })
-      var cats = '';
-      var sep = '';
-      var found = false;
-      for (n=0; n < categories.length; n++) {
-        var classNames = 'newCats';
-        var temp = categories[n].toLowerCase().replaceAll(' ', '+').replaceAll('%20', '+');
-        var x = findCatsArray.indexOf(temp);
-        if (x != -1) {
-          found = true;
-          classNames += ' active';
-        }
-        cats += `${sep}<span class="${classNames}" data-itemid="${i}" data-catname="${temp}">${categories[n]}</span>`;
-        sep = ', ';
-      }
-      if (findCatsArray.length == 0 ) { found = true;}
-
-      // Get the excerpt and remove html tags
-      var excerpt = a[i]['excerpt'];
-      excerpt = excerpt.replace(/(<([^>]+)>)/gi, "");
-
-      // If the image URL looks good then use it,
-      // otherwise look for first image in body
-      if (!allowedExtensions.exec(img)) {
-        // doesn't look like an image url, look inside the body
-        var temp = $(a[i]['body']).find('img').eq(0);
-        var imgtmp = $(temp).data('src');
-        if (imgtmp) {img = imgtmp;}
-      }
-
-      // output this item unless it is not included in filter
-      if (found == true) {
-        testout +=
-            `<div class="item">
-              <img src="${img}">
-              <div class="title"><a href="${href}">${title}</a></div>
-              <div class="classcontent">${excerpt}</div>
-              <div class="readmore"><a href="${href}">Read More →</a></div>
-              <div class="itemFilterCats${showcats}">${cats}</div>
-              </div>`;
-      }
-
-    }
-    testout += '</div>';
-
-    // Ok, now wait for the page and finish up
-    $(document).ready(function() {
-      var temp =
-      $(selectorID).html(testout);
-      var theCarousel = $(selectorID).find('.theCarousel');
-      $(theCarousel).slick({
-        dots: true,
-        adaptiveHeight: true,
-        infinite: true,
-        slidesToShow: 3,
-        slidesToScroll: 3,
-        arrows: true,
-        prevArrow: $(selectorID + ' .prev'),
-        nextArrow: $(selectorID + ' .next'),
-        responsive: [{
-            breakpoint: 500,
-            settings: {
-                slidesToShow: 1,
-                slidesToScroll: 1,
-            }},
-            {
-            breakpoint: 800,
-            settings: {
-                slidesToShow: 2,
-                slidesToScroll: 1,
-            }
-        }]
-    });
-
-    // adjust the image aspect ratio based on width
-    adjustSlickImageHeight();
-
-    });
-    return;
   }
 
 // Added 3/28/22 -----------------------------------------
@@ -2490,7 +2366,11 @@ function formatSlickCarousel(selectorID, json, attr) {
       });
 
     // adjust the image aspect ratio based on width
-    adjustSlickImageHeight();
+    adjustSlickImageHeight(selectorID);
+    // Set up a resize event for this carousel
+    jQuery(window).resize(function() {
+      adjustSlickImageHeight(selectorID);
+    });
 
     //});
     return;
