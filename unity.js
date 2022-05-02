@@ -1548,7 +1548,7 @@ function collectionControl(
   else if (type == 'validate') {
     $(selectorID).html('<div>Loading...</div>');
     var theCollections = ['announcements','distance-learning-1',
-    'outreach-1','field-trips-1','site-features','public-education',
+    'outreach-1','field-trip-options','site-features','public-education',
     'promotions','jobs-list','team-members','flex-boxes',
     'giving-opportunities','reference-data'];
     recursiveAjaxCall2(theCollections,'',selectorID,theValidateCallback, [], attr, true);
