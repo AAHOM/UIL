@@ -1351,6 +1351,7 @@ function recursiveAjaxCall2(
 
   var marktime = '';
   if (nocache === true) {marktime = new Date().getTime().toString();}
+  var collectionInfo = [];
 
   $.ajax({
     url: theCollections[theCount],
@@ -1383,6 +1384,13 @@ function recursiveAjaxCall2(
           callback, items, attr, nocache,theCount);
       }
       else {
+        collectionInfo = ('collectionInfo' in attr) ?
+          attr['collectionInfo'] : [];
+        title = data["collection"]["title"];
+        urlId = data["collection"]["urlId"];
+        type = data["collection"]["type"];
+        collectionInfo.push({title: title, urlId: urlId, type: type});
+        attr['collectionInfo'] = collectionInfo;
           theCount = theCount + 1;
           if (theCollections.length > theCount) {
             recursiveAjaxCall2(theCollections, off, selectorID,
