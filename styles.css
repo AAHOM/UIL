@@ -38,6 +38,9 @@ a {
 a:hover {
     color: rgb(var(--global-color-links));
 }
+a.linkColor{
+    color: rgb(var(--global-color-links));
+}
 
 .sqs-block-image .design-layout-collage .image-title a, 
 .sqs-block-image .design-layout-collage .image-subtitle a {
