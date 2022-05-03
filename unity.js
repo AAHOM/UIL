@@ -1499,6 +1499,8 @@ function collectionControl(
     return;
   }
 
+  //console.log('collectionControl ' + selectorID + ' collection=' + collection);
+
   /* process the requested type, call Ajax to read the
   requested collection data and possibly reference data as well,
   then call the specified callback function to process. */
@@ -1543,14 +1545,10 @@ function collectionControl(
   }
   else if (type == 'validate') {
     $(selectorID).html('<div>Loading...</div>');
-    var theCollections = [];
-    if ('collections' in attr) {
-      var temp = attr['collections'];
-      temp.replace(/[ \n\r]/gm, "")
-      theCollections = temp.split(",");
-    }
-    if (theCollections.length === 0) {
-      msg = "Error: Missing attribute list of collections.";
+    var theCollections = ('collections' in attr) ? attr["collections"] : [];
+    console.log(typeof theCollections);
+    if (theCollections.length === 0 || typeof theCollections != "object") {
+      msg = "Error: Missing or invalid attribute list of collections.";
       msg = '<div class="errorMsg">Error: ' + msg + '</div>';
       $(selectorID).eq(0).html(msg);
       return;
