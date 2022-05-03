@@ -1350,9 +1350,7 @@ function recursiveAjaxCall2(
   past         = ("past" in attr) ? attr["past"] : past;
 
   var marktime = '';
-  console.log('nocache=' + nocache);
   if (nocache === true) {marktime = new Date().getTime().toString();}
-  console.log('marktime=' + marktime);
 
   $.ajax({
     url: theCollections[theCount],
@@ -1501,8 +1499,6 @@ function collectionControl(
     return;
   }
 
-  //console.log('collectionControl ' + selectorID + ' collection=' + collection);
-
   /* process the requested type, call Ajax to read the
   requested collection data and possibly reference data as well,
   then call the specified callback function to process. */
@@ -1547,10 +1543,18 @@ function collectionControl(
   }
   else if (type == 'validate') {
     $(selectorID).html('<div>Loading...</div>');
-    var theCollections = ['announcements','distance-learning-1',
-    'outreach-1','field-trip-options','site-features','public-education',
-    'promotions','jobs-list','team-members','flex-boxes',
-    'giving-opportunities','reference-data'];
+    var theCollections = [];
+    if ('collections' in attr) {
+      var temp = attr['collections'];
+      temp.replace(/[ \n\r]/gm, "")
+      theCollections = temp.split(",");
+    }
+    if (theCollections.length === 0) {
+      msg = "Error: Missing attribute list of collections.";
+      msg = '<div class="errorMsg">Error: ' + msg + '</div>';
+      $(selectorID).eq(0).html(msg);
+      return;
+    }
     recursiveAjaxCall2(theCollections,'',selectorID,theValidateCallback, [], attr, true);
   }
   else {
@@ -1621,9 +1625,7 @@ var data = {items: json['dataArray'][0]};
 
 // Callback for validate categories
 function theValidateCallback(selectorID,json, attr) {
-  //var data = {items: json['dataArray'][0]};
-  console.log(json);
-  //createGridGallery(selectorID, json, attr);
+
   var fullUrl = '';
   var validcats = [];
   var categories = [];
@@ -1636,9 +1638,7 @@ function theValidateCallback(selectorID,json, attr) {
 
     var temp = fullUrl.split("/");
     if (temp[1] === 'reference-data' && temp[2] ==='categories') {
-
       cats = getCvsData(json, 'categories',3);
-        console.log(cats);
         $.each(cats,function(index2, cat) {
           catname = cat[1].toLowerCase().replaceAll(' ', '+')
             .replaceAll('%20', '+')
@@ -2261,7 +2261,6 @@ function formatSlickCarousel(selectorID, json, attr) {
                 slidesToScroll: 4,
             }});
     }
-    console.log(responsive);
 
     var theclass = (showCount==true) ? ' active' : '';
     var counter = `<div class="filterItemCount${theclass}"></div>`;
@@ -2454,10 +2453,8 @@ function formatCalendars(theSelector, data, attr) {
 
     var p = new URLSearchParams("");
     if (value[0] === 'unity') {
-      console.log('index=' + index + ' value[0]=' + value[0] + '/');
       $.each(caldata, function(index2, value2) {
         if (value2[0] !== 'unity') {
-          console.log('append=' + value2[1]);
           p.append("src",value2[1]);
         }
       })
@@ -2477,7 +2474,6 @@ function formatCalendars(theSelector, data, attr) {
 
     var newi = `<iframe data-preserve-html-node="true" src="${base}?${p}" `
       + `scrolling="no" width="800" height="600" frameborder="0"></iframe>`;
-      console.log(newi);
       ar = [value[0], newi, value[2]];
       newdata.push(ar);
 
@@ -2671,7 +2667,6 @@ function doDonorSearch(selectorID, xchar = false) {
     $('.donorWallDiv span.total').text('(' + x + ')').addClass("active");
     $("#donorAccordion > div.ui-accordion-content").each(function(index, item) {
       var num = $(item).find('div.donor').length;
-      console.log('num=' + num);
       x = $(item).find("div.donor.showme");
       if (x.length) {
         var temp = pluralizeWord(" donor", " donors", x.length);
@@ -2819,7 +2814,6 @@ function do_donor_wall2(selectorID, jsonData, attr) {
 
   $.each(count, function(index, value) {
     temp = index.split(',');
-    console.log(temp);
     temp[colDonors] = value;
     donors.push(temp);
   })
@@ -2934,7 +2928,6 @@ function do_donor_wall2(selectorID, jsonData, attr) {
     });
   $(selectorID + " .donorAccordion > div.ui-accordion-content").each(function(index, item) {
     var num = $(item).find('div.donor').length;
-    console.log('num=' + num);
     $(item).prev().find('span.numItems').text(' (' + num + ')' );
   });
 }
