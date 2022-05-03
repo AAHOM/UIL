@@ -1671,15 +1671,34 @@ function theValidateCallback(selectorID,json, attr) {
   var out = `<table class="basicTable"><thead><tr><th>Category</th>
   <th>Blog Slug</th><th>Entry Title</th></tr></thead>
   <tbody>`;
+  var found = 0;
   $.each(catlook,function(index, value) {
     var x = validcats.indexOf(value);
     if (x === -1) {
       out += `<tr><td>${allcats[index][1]}</td>
       <td>${allcats[index][2]}</td><td>${allcats[index][4]}</td></tr>`;
-
+      found++;
     }
   })
   out += '</tbody></table>';
+  if (found === 0) {
+    out += '<div>No invalid categories found.</div>';
+  }
+  out += `<div class="sqs-block-content">
+  <hr>
+  <p>
+  <h4 style="text-align:center;white-space:pre-wrap;">Blogs Examined</h4>
+  <p class="" style="white-space:pre-wrap;">
+  The following table shows the list of blogs examined. </p>
+  </div>`;
+  out += '<table class="basicTable"><thead><tr><th>Title</th><th>Slug</th><th>Type</th></tr></thead>';
+  out += '<tbody>';
+  var blogs = ('collectionInfo' in attr) ? attr['collectionInfo']:[];
+  $.each(blogs,function(index, value){
+    out += `<tr><td>${value['title']}</td><td>${value['urlId']}</td><td>${value['type']}</td></tr>`;
+  })
+  out += '</tbody></table>';
+
   out += `<div class="sqs-block-content">
   <hr>
   <p>
