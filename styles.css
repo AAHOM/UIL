@@ -696,10 +696,10 @@ div.flipBoxContainer .flip-card-back {
 }
 
 div.flipBoxContainer .labelText {
-    position: absolute;
+   /* position: absolute;
     left: 50%;
     top: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%); */
     color: white;
     font-style: italic;
     font-size: 1.5em;
@@ -749,9 +749,9 @@ div.flipBoxContainer .centerBack .labelText {
 }
 
 div.flipBoxContainer div.centerBack .labelText {
-    left: unset;
+   /* left: unset;
     top: unset;
-    transform: unset;
+    transform: unset;*/
 }
 /*
 div.flipBoxContainer div.centerBack .labelText {
