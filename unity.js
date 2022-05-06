@@ -2976,3 +2976,27 @@ function do_donor_wall2(selectorID, jsonData, attr) {
     return ret;
   };
 
+function doPopupHelp(
+  selectorID = 'div.sqs-block-content p') {
+  $(selectorID).tooltip({
+    content: function () {
+        return $(this).prop('title');
+    }
+  });
+  var temp = $(selectorID);
+  $.each(temp,function(index, value) {
+    var myval = $(value).html();
+    if (myval.indexOf('&lt;popup') != -1) {
+      myval = myval
+      .replaceAll('”','"')
+      .replaceAll('&lt;','<')
+      .replaceAll('&gt;','>')
+      .replaceAll('<popup','<a class="popupHelp" ')
+      .replaceAll('</popup>','</a>')
+      $(value).html(myval);
+    }
+  })
+  $(selectorID + " a.popupHelp").click(function(event){
+    event.preventDefault();
+  });
+}
