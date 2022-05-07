@@ -369,7 +369,6 @@ function do_faqs3(theSelector, data, attr) {
 
 }
 
-
 /* ----------------------------------------------------------- */
 /* Open modal window for calassmate details                    */
 /* ----------------------------------------------------------- */
@@ -442,14 +441,11 @@ var formatter = new Intl.NumberFormat('en-US', {
   currency: 'USD',
 });
 
-
-
 /* ------------------------------------------------------------------- */
 /* slick.js carousel                                                   */
 /* ------------------------------------------------------------------- */
 
 /* Resize carousel images with screen size to keep aspect ratio right */
-
 
 function adjustSlickImageHeight(selectorID = 'TEST') {
   var aspect_ratio_box2 = 0.6;
@@ -460,53 +456,6 @@ function adjustSlickImageHeight(selectorID = 'TEST') {
   jQuery(selectorID + ' button.slick-arrow').css('top',topval + 'px');
   box2.height(h);
 }
-
-//jQuery(window).resize(function() {
-//  adjustSlickImageHeight();
-//});
-
-/* ----------------------------------------------------------- */
-/* Sub Menu Bar                                                */
-/*    05/18/2021 - initial                                     */
-/* ----------------------------------------------------------- */
-
-function subMenuBar(selectorID = '#subMenu', act = '') {
-
-  var menu =
-  '<div class="subMenuBar">\n' +
-  '<nav>\n' +
-  '   <a href="#" class="headerName">For Families and Indiviuals</a>\n' +
-  '   <a name="adventure" href="choose-your-adventure">Choose Adventure</a>\n' +
-  '   <a name="birthdays" href="/birthday-parties">Birthdays Parties</a>\n' +
-  '   <a name="camp" href="/camps">Pick your Camp</a>\n' +
-  '</nav>\n' +
-  '<nav>\n' +
-  '   <a href="#" class="headerName">For Schools and Organizations</a>\n' +
-  '   <a name="outreach" href="/outreach">Outreach</a>\n' +
-  '   <a name="field" href="/field-trips">Field Trips</a>\n' +
-  '   <a name="distance" href="/distance-learning">Distance Learning</a>\n' +
-  '</nav>\n' +
-'</div>\n';
-
-//var path = window.location.pathname;
-//slug = path.split("/").pop();
-
-  act = act.toLowerCase();
-  // add the menu code
-  $(menu).appendTo(selectorID);
-  // Set the appropriate active
-  $(selectorID).find('.subMenuBar a[name="' + act + '"]').addClass('active');
-  var temp = '<div class="learnMenuButton">' +
-    '<div class="toggle">' +
-    '<a href=""></i>- More Opportunities -</a></div></div>';
-  $(temp).insertBefore(selectorID);
-  $('.learnMenuButton .toggle a').click(function(e) {
-    e.preventDefault();
-    $(selectorID + " .subMenuBar").toggleClass("open")
-  })
-return menu;
-}
-
 
 /*-------------------------------------------------------------*/
 /* Add filter radio/checkboxes                                 */
@@ -526,34 +475,6 @@ var mygroups = [];   // Groups
 var mygroupids = []; // Nested array of blog item index ids
 var mycats = [];     // List of found categories
 var mycatsids = [];  // Nested array list of found items by category
-
-function filter_values (selector = '#filterContainer') {
-
-    // Find all of the categories in this section
-    var catsel = $(selector).parent().parent().next().find(catloc);
-    $(selector).closest('section').addClass('filterValuesSection');
-
-    // tag them all
-    $(catsel).addClass('filterCat');
-
-    // initialize based on current checkboxes
-    filter_showvals();
-
-    // Process selection when a radio or checkbox is changes
-    $(selector + ' input[type=checkbox], ' +
-      selector + ' input[type=radio]')
-      .on('change', function(e) {
-        filter_showvals(selector);
-    })
-}
-
-/* here we find the intersection of two arrays */
-function intersection(first, second)
-{
-    first = new Set(first);
-    second = new Set(second);
-    return [...first].filter((item) => second.has(item));
-}
 
 function filter_showvals(selector='#filterContainer') {
 
