@@ -837,6 +837,15 @@ div.flipBoxContainer.layout2 .centerBack div.backLink span {
   color: black;
 }
 
+div.flipBoxContainer .centerBack div.backLink span {
+  background: wheat;
+  text-decoration: none;
+  color: black;
+  border-radius: 10px;
+  padding: 0 10px;
+}
+
+
 @media (max-width: 800px) {
     div.flipBoxContainer div.flex-container div.newColumn {
         width: calc(50% - 5px);
