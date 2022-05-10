@@ -2981,6 +2981,32 @@ function doPopupHelp(
   $(selectorID).tooltip({
     content: function () {
         return $(this).prop('title');
+    },
+    open: function (event, ui) { // simulating the show option (that needs to be null to stop the popup closing and reopening when user mouses from popup back to source
+        var el = $(event.originalEvent.target);
+        if( !el.data('tooltip') ) { // only put open delay if SAME popup not already open
+            ui.tooltip.hide(); // stop popup opening immediately
+            ttWait = setTimeout(function() { // show popup after delay
+                el.data("tooltip", true); // acknowledge popup open
+                ui.tooltip.fadeIn("400");
+            }, 250);
+        }
+    },
+    close: function (event, ui) {
+        var el =  $(event.originalEvent.target);
+        el.data("tooltip", false); // acknowledge popup closed (might be over-ridden below)
+        clearTimeout(ttWait); // stop tooltip delay function
+        ui.tooltip.hover(
+            function () {
+                $(this).stop(true).fadeTo(400, 1);
+                el.data("tooltip", true); // acknowledge popup still open
+            },
+
+            function () {
+                $(this).fadeOut("400", function () {
+                    $(this).remove();
+                });
+            });
     }
   });
   var temp = $(selectorID);
