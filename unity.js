@@ -2732,10 +2732,11 @@ function do_donor_wall2(selectorID, jsonData, attr) {
 
   var colMin = 0;
   var colDonor = 1;
-  var colDonors = 5;
-  var colStaff = 2;
+  var colDonors = 6;
+
   var colEndowment = 3;
-  var colTrustee = 4;
+  var colBoard = 4;
+  var colStaff = 5;
   var footone = '';
   var foottwo = '';
   var notes = '';
@@ -2767,7 +2768,7 @@ function do_donor_wall2(selectorID, jsonData, attr) {
     }); // --> 3, 12, 23
 
   // Get the donor CVS data from reference-data/donorwall
-  var donors = getCvsData(jsonData, 'donorwall',6);
+  var donors = getCvsData(jsonData, 'donorwall',7);
 
   var a = jsonData;
   var images = [];
@@ -2827,6 +2828,7 @@ function do_donor_wall2(selectorID, jsonData, attr) {
   $(selectorID).addClass('donorWallDiv');
   const count = {};
   var temp = [];
+  var donor2 = [];
   $.each(donors,function(index, value) {
     donors[index].shift();  // remove person id
     donors[index][0] = findTheBreakpoint(donors[index][0], breakpoints);
@@ -2835,23 +2837,29 @@ function do_donor_wall2(selectorID, jsonData, attr) {
       count[temp] = (count[temp] || 0) + 1;
       donors[index][0] = ""; // ignore this row
     }
+    else {
+      donor2.push(donors[index]);
+    }
   });
+
+  donors = donor2.map((x) => x);
 
   $.each(count, function(index, value) {
     temp = index.split(',');
     temp[colDonors] = value;
     donors.push(temp);
+
   })
 
-  donors.sort(function(a, b) {
+  donors = donors.sort(function(a, b) {
     var g1 = parseInt(a[0]);
     var g2 = parseInt(b[0]);
+
     var name1 = a[1];
     var name2 = b[1];
     var n = 0;
-    if (g1 == g2) {
-    return name1.localeCompare(name2);
-        //return (name1 < name2) ? -1 : (name1 > name2) ? 1 : 0;
+    if (g1 === g2) {
+      return name1.localeCompare(name2);
     }
     else {
       return (g1 > g2) ? -1 : 1;
@@ -2865,7 +2873,7 @@ function do_donor_wall2(selectorID, jsonData, attr) {
           item[colMin] = parseInt(item[colMin].toString().replace(/[^0-9.-]+/g,""));
           donorname = item[colDonor];
           minval = findTheBreakpoint(item[colMin], breakpoints);
-          //minval = item[colMin];
+
           if (prevMin != minval && minval) {
             // new group
             if (prevMin) {
@@ -2899,7 +2907,7 @@ function do_donor_wall2(selectorID, jsonData, attr) {
             donorcodes.push('S');
             foot += '<sup>S</sup>';
           }
-          if (item[colTrustee] == 'T') {
+          if (item[colBoard] == 'B') {
             donorcodes.push('T');
             foot += '<sup>T</sup>';
           }
