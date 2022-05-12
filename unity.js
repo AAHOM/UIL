@@ -667,7 +667,7 @@ function do_maps(theSelector, data, attr) {
   var collapsable = ('collapsable' in attr) ? attr['collapsable'] : true;
   var collapsed = ('collapsed' in attr) ? attr['collapsed'] : false;
   var title = ('title' in attr) ? attr['title'] : 'View Location Maps';
-  var hidname = ('hidename' in attr) ? attr['hidename'] : true;
+  var hidename = ('hidename' in attr) ? attr['hidename'] : true;
 
   var thename = "";
 
