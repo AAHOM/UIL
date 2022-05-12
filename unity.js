@@ -667,6 +667,9 @@ function do_maps(theSelector, data, attr) {
   var collapsable = ('collapsable' in attr) ? attr['collapsable'] : true;
   var collapsed = ('collapsed' in attr) ? attr['collapsed'] : false;
   var title = ('title' in attr) ? attr['title'] : 'View Location Maps';
+  var hidname = ('hidename' in attr) ? attr['hidename'] : true;
+
+  var thename = "";
 
   // Point to calendars spreadsheet
   file_id = '1Xrz1gJ0to5c01jiDyMvl38486s_J94lHhERtTHEBw5E';
@@ -762,12 +765,16 @@ function do_maps(theSelector, data, attr) {
         hideme = 'hide';
       }
 
+      thename = '<strong class="museumName">' + name + '</strong>\n';
+      if (hidename != true) {
+        thename = "";
+      }
       tabs = tabs +
         '<li class="' + hideme + '"><a href="#tabsMaps-' + tab + '" data-tab="' + tab + '" class="' + colorClass + '">' +
         name + '</a></li>\n';
         tabsdata = tabsdata +
         '<div id="tabsMaps-' + tab + '">\n' +
-        '<p><strong>' + name + '</strong>\n' + before +
+        '<p>' + thename + before +
         '<div class="calendarLarge">' + iframe + '</div>\n' + after +
         '</div>';
       tab = tab + 1;
