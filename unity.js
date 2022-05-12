@@ -766,7 +766,7 @@ function do_maps(theSelector, data, attr) {
       }
 
       thename = '<strong class="museumName">' + name + '</strong>\n';
-      if (hidename != true) {
+      if (hidename === true) {
         thename = "";
       }
       tabs = tabs +
