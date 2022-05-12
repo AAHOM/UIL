@@ -83,11 +83,11 @@ a.popupHelp:hover {
 /*-------------------------------------------------------------*/
 
 /* --------- Unity Colors --------- */
-div.faq_container .colorUnity.ui-state-active,
+#page div.faq_container .colorUnity.ui-state-active,
 .museumSectionBreak.colorUnity,
 .colorUnity,
 #accordion .ui-state-active,
-.subMenuBar nav a {
+#page .subMenuBar nav a {
   background: rgb(var(--global-color-submenu));
   color: white;
 }
