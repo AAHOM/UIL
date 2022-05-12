@@ -27,10 +27,10 @@ div.summary-content a.summary-read-more-link {
 
 /* ----- All links except title ----- */
 #page a {
-    /*color: rgb(var(--global-color-links));*/
+    color: rgb(var(--global-color-links));
 }
 #page a:hover {
-    /* color: rgb(var(--global-color-links)); */
+    color: rgb(var(--global-color-links));
 }
 
 a {
