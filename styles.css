@@ -68,7 +68,7 @@ a.popupHelp:hover {
    background-color: rgba(var(--global-color-section),.05) !important;
 }
 
-div.faq_container .ui-state-active a {
+#page div.faq_container .ui-state-active a {
   color: white;
 }
 
