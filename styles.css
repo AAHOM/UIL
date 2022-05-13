@@ -1638,9 +1638,9 @@ div.summaryFilterContainer .theCats {
       display: none;
 }
 
-div.summaryFilterContainer .itemFilter a.itemTitle,
-div.summaryFilterContainer .itemFilter a.itemTitle:visited,
-div.summaryFilterContainer .itemFilter a.itemTitle:hover {
+#page div.summaryFilterContainer .itemFilter a.itemTitle,
+#page div.summaryFilterContainer .itemFilter a.itemTitle:visited,
+#page div.summaryFilterContainer .itemFilter a.itemTitle:hover {
   color: green; 
   font-size: 16px;
   line-height: 19.2px;
