@@ -26,10 +26,10 @@ div.summary-content a.summary-read-more-link {
 }
 
 /* ----- All links except title ----- */
-a {
+#page a {
     color: rgb(var(--global-color-links));
 }
-a:hover {
+#page a:hover {
     color: rgb(var(--global-color-links));
 }
 
