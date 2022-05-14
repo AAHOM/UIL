@@ -1035,7 +1035,9 @@ div.faq_container li:not(.ui-state-active) a {
   color: black;
 }
 
-div#tabsFaqs div.ui-accordion-content > ul {
+div#tabsFaqs div.ui-accordion-content > ul,
+div#tabsMaps div.ui-tabs-panel > ul,
+div#tabsMaps div.calendarLarge > ul  {
   list-style: none;
   padding: 0;
 }

@@ -696,12 +696,15 @@ function do_maps(theSelector, data, attr) {
   // find the faq reference data
     var thedata = {};
     var i = 0;
+    var data3 = [];
     for (i = 0; i < data['items'].length; i++) {
       if (data['items'][i]['fullUrl'] == '/reference-data/location-maps') {
         theMuseumList.forEach(function(item, key) {
           if (item[2] != true) { // not hiding this museum
-            data2 = parseData(data['items'][i]['body'], '#' + item[0]);
-            thedata[item[0]] = data2;
+            //data2 = parseData(data['items'][i]['body'], '#' + item[0]);
+            //thedata[item[0]] = data2;
+            data3 = parseData2(data['items'][i]['body'], '#' + item[0]);
+            thedata[item[0]] = data3;
           }
         })
       }
