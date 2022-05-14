@@ -1035,6 +1035,14 @@ div.faq_container li:not(.ui-state-active) a {
   color: black;
 }
 
+div#tabsFaqs div.ui-accordion-content > ul {
+  list-style: none;
+  padding: 0;
+}
+div#tabsFaqs div.ui-accordion-content > ul > li {
+  margin-bottom: 10px;
+}
+
 @media (max-width: 640px) {
 
   div.faq_container .ui-tabs .ui-tabs-nav li {

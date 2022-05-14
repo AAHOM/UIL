@@ -274,7 +274,8 @@ function do_faqs3(theSelector, data, attr) {
       if (data['items'][i]['fullUrl'] == '/reference-data/faqs') {
         theMuseumList.forEach(function(item, key) {
           if (item[2] != true) { // not hiding this museum
-            data2 = parseData(data['items'][i]['body'], '#' + item[0]);
+            var look = "div.sqs-block-content h3#" + item[0];
+            data2 = parseData2(data['items'][i]['body'], '#' + item[0]);
             thedata[item[0]] = data2;
           }
         })
@@ -1439,6 +1440,42 @@ function recursiveAjaxCall2(
     console.log("Error from recursiveAjaxCall2: " + msg);
     $(selectorID).html(msg);
   });
+}
+
+/* Search body for first level list item that matches "lookfor" value
+and return array of second and third level values */
+
+function parseData2(body, lookfor) {
+  var temp1 = $(body)
+              .find("div.sqs-block-content h3" + lookfor)
+              .next('ul')
+              .find('> li');
+  var data = [];
+  var text1 = "";
+  var x = "";
+  var val1 = "";
+  var level1 = "";
+  var level2 = "";
+  $.each(temp1,function(key, value) {
+    text1 = $(value).html();
+    x = text1.indexOf('<ul>');
+    val1 = $(temp1[i]).text();
+    level1 = '';
+    level2 = "";
+    if (x != -1) {
+      var text1html = text1.substr(x);
+      var val1 = text1.substr(0,x);
+      level1 = val1;
+      level2 = text1.substr(x);
+      level2 = level2.replaceAll(/\\n/g, '');
+      level2 = level2.replaceAll(/<li><\/li>/g, '<li>&nbsp;</li>');
+    }
+    else {
+      level1 = val1;
+    }
+    data.push([level1,level2]);
+  })
+  return data;
 }
 
 /*Look through the body and collection the list data found
