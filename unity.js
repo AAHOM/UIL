@@ -1535,7 +1535,7 @@ function collectionControl(
   type = 'carousel',
   attr = {}) {
 
-  toLowerKeys(attr); // make sure the keys re lowercase
+  attr = toLowerKeys(attr); // make sure the keys re lowercase
   var msg = '';
 
   /* Validate the selector id, make sure it exists
