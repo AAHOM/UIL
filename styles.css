@@ -440,30 +440,30 @@ article:first-of-type section:first-of-type div.content-wrapper div.content {
 */
 
 #iconBar,
-#iconBarFoot { 
+#iconBarFoot {
   background: #eee;
   position: relative;
-  height: 100px;
-  width: 100%;
+  height: auto;
+  width: calc(100% - 6vw);
+  margin: 0 auto;
   clear: both;
 }
 
 #iconBar.sticky,
-#iconBarFoot.sticky  {
+#iconBarFoot.sticky {
   background: #eee;
-  position: absolute;
-  bottom: 0;
-  height: 100px;
-  width: 100%;
+  position: relative;
+  height: auto;
   clear: both;
+  width: calc(100% - 6vw);
+  margin: 0 auto;
 }
 
 #iconBar .iconBarFlex,
 #iconBarFoot .iconBarFlex {
-  /* We first create a flex layout context */
   display: flex;
   flex-flow: wrap;
-  padding: 10px;
+  padding: 0;
   margin: 0;
   list-style: none;
   justify-content: space-around;
@@ -471,16 +471,17 @@ article:first-of-type section:first-of-type div.content-wrapper div.content {
 
 #iconBar .iconBarFlex .flex-item,
 #iconBarFoot .iconBarFlex .flex-item {
-  padding: 5px;
+  padding: 0;
   height: auto;
   line-height: 1em;
   font-size: 1em;
+  width: calc(100% / 4);
 }
 
 #iconBar .iconBarFlex .flex-item img,
 #iconBarFoot .iconBarFlex .flex-item img {
-  width: 200px;
-  object-fit:cover;
+  width: 100%;
+  object-fit: cover;
 }
 
 #iconBar img#banner,
@@ -498,16 +499,14 @@ article:first-of-type section:first-of-type div.content-wrapper div.content {
 @media (max-width: 800px) {
   #iconBar .iconBarFlex .flex-item img,
   #iconBarFoot .iconBarFlex .flex-item img {
-      width: auto;
-      height: 35px;
+    width: 100%;
+    height: 100%;
   }
-
-  #iconBar .iconBarFlex .flex-item,
-  #iconBarFoot .iconBarFlex .flex-item {
-    padding: unset;
-    height: auto;
-    line-height: unset;
-    font-size: 1em;
+}
+@media only screen and (max-width: 780px) {
+  #iconBar ul.iconBarFlex li.flex-item.logoChallenger img,
+  #iconBarFoot ul.iconBarFlex li.flex-item.logoChallenger img {
+    width: 100%;
   }
 }
 
@@ -607,12 +606,12 @@ div.flipBoxContainer div.flex-container .flip-card {
 }
 
 div.flipBoxContainer div.flex-container .flip-card-inner {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    text-align: center;
-    transition: transform 0.8s;
-    transform-style: preserve-3d;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 2s;
+  transform-style: preserve-3d;
 }
 
 div.flipBoxContainer .flip-card-front, 
@@ -1951,14 +1950,14 @@ div.slickButtons {
     width: 100%;
 }
 button.slick-arrow {
-    display: inline-block;
-    position: absolute;
-    top: 90px;
-    background: white;
-    z-index: 1;
-    padding: 5px;
-    font-size: 1.5em;
-    border-radius: 10px;
+  display: inline-block;
+  position: absolute;
+  top: 90px;
+  background: rgba(256,256,256,.75);
+  z-index: 1;
+  padding: 30px 15px;
+  font-size: 2rem;
+  border-radius: 10px;
 }
 button.prev.slick-arrow {
     left: 2%;
@@ -1970,21 +1969,22 @@ button.next.slick-arrow {
 }
 
 div.theCarousel div.item div.title {
-    font-weight: 500;
-    font-size: 1em;
-    line-height: 1.2em;
-    padding: 5px 0;
+  font-weight: 500;
+  font-size: unset;
+  line-height: unset;
+  padding: 5px 0;
+  color: black;
 }
 
 .theCarousel div.item div.classcontent {
-    font-style: italic;
-    line-height: 20px;
-    font-weight: unset;
-    font-size: 14px;
+  font-style: italic;
+  line-height: unset;
+  font-weight: unset;
+  font-size: unset;
 }
 .theCarousel div.readmore {
-    font-size: 14px;
-    font-style: italic;
+  font-size: unset;
+  font-style: italic;
 }
 .theCarousel div.classcontent p:first-child {
   margin-top: 0;
@@ -1997,14 +1997,16 @@ div.theCarousel div.slick-list .itemFilterCats {
 }
 div.theCarousel div.slick-list div.classcontent {
   margin-bottom: 10px;
+  color: black;
 }
 div.theCarousel div.slick-list div.readmore {
   margin: 0 0 10px 0;
-  font-size: 14px;
+  font-size: unset;
   line-height: 20px;
   text-align: left;
   display: block;
 }
+
 div.theCarousel ul.slick-dots {
   bottom: unset;
 }

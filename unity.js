@@ -133,12 +133,19 @@ function doGalleryShow() {
 // https://images.squarespace-cdn.com/content/v1/5f73ca8db43a982332ef42a7/1614786000565-L6LRAQGSOU2RCTJO0GMR/ke17ZwdGBToddI8pDm48kPxxGCBoMQSgw3nyp-BaIiZZw-zPPgdn4jUwVcJE1ZvWhcwhEtWJXoshNdA9f1qD7baX_VdYN7eZTOScYEC6H_pLV4CKJoqyvEGc-h-owCr40lNeO9O4GGfQSgSHrTD7DA/Logo_mainHeader.png
 var iconsFor = ['aahom','leslie','yankee','Challenger'];
 /* updated 6/3/21 with Ari's new image */
+
 var icons = [
-'https://images.squarespace-cdn.com/content/v1/5f73ca8db43a982332ef42a7/e7aeba34-467f-40cf-8056-3fba38fd490a/ke17ZwdGBToddI8pDm48kBkSiM__EzOQIDgmzlPq1lAUqsxRUqqbr1mOJYKfIPR7LoDQ9mXPOjoJoqy81S2I8N_N4V1vUb5AoIIIbLZhVYxCRW4BPu10St3TBAUQYVKcHu3Ya3GWyjn2T6Pyc7Qz5bVN2MLWeLldKxJgMp5MiZ5EAsHAx8kgg2xyUEBRqgnS/AAHOM+1200+x+480+Transparency.png?format=300w',
-'https://images.squarespace-cdn.com/content/v1/5f73ca8db43a982332ef42a7/2c40ddd6-3359-4061-a531-43ff65632a6c/ke17ZwdGBToddI8pDm48kBkSiM__EzOQIDgmzlPq1lAUqsxRUqqbr1mOJYKfIPR7LoDQ9mXPOjoJoqy81S2I8N_N4V1vUb5AoIIIbLZhVYxCRW4BPu10St3TBAUQYVKcHu3Ya3GWyjn2T6Pyc7Qz5bVN2MLWeLldKxJgMp5MiZ5EAsHAx8kgg2xyUEBRqgnS/LSNC+1200+x+480+Transparency.png?format=300w',
-'https://images.squarespace-cdn.com/content/v1/5f73ca8db43a982332ef42a7/20c32031-135c-435b-a9b0-4c45bc0acbf0/ke17ZwdGBToddI8pDm48kBkSiM__EzOQIDgmzlPq1lAUqsxRUqqbr1mOJYKfIPR7LoDQ9mXPOjoJoqy81S2I8N_N4V1vUb5AoIIIbLZhVYxCRW4BPu10St3TBAUQYVKcHu3Ya3GWyjn2T6Pyc7Qz5bVN2MLWeLldKxJgMp5MiZ5EAsHAx8kgg2xyUEBRqgnS/YAM+1200+x+480+Transparency.png?format=300w',
-'https://images.squarespace-cdn.com/content/v1/5f73ca8db43a982332ef42a7/3419d464-2d84-4a93-bd05-d877700324df/ke17ZwdGBToddI8pDm48kBkSiM__EzOQIDgmzlPq1lAUqsxRUqqbr1mOJYKfIPR7LoDQ9mXPOjoJoqy81S2I8N_N4V1vUb5AoIIIbLZhVYxCRW4BPu10St3TBAUQYVKcHu3Ya3GWyjn2T6Pyc7Qz5bVN2MLWeLldKxJgMp5MiZ5EAsHAx8kgg2xyUEBRqgnS/Challenger+1200+x+480+Transparency.png?format=300w'
+'https://images.squarespace-cdn.com/content/v1/5f73ca8db43a982332ef42a7/e7aeba34-467f-40cf-8056-3fba38fd490a/ke17ZwdGBToddI8pDm48kBkSiM__EzOQIDgmzlPq1lAUqsxRUqqbr1mOJYKfIPR7LoDQ9mXPOjoJoqy81S2I8N_N4V1vUb5AoIIIbLZhVYxCRW4BPu10St3TBAUQYVKcHu3Ya3GWyjn2T6Pyc7Qz5bVN2MLWeLldKxJgMp5MiZ5EAsHAx8kgg2xyUEBRqgnS/AAHOM+1200+x+480+Transparency.png?format=1500w',
+'https://images.squarespace-cdn.com/content/v1/5f73ca8db43a982332ef42a7/2c40ddd6-3359-4061-a531-43ff65632a6c/ke17ZwdGBToddI8pDm48kBkSiM__EzOQIDgmzlPq1lAUqsxRUqqbr1mOJYKfIPR7LoDQ9mXPOjoJoqy81S2I8N_N4V1vUb5AoIIIbLZhVYxCRW4BPu10St3TBAUQYVKcHu3Ya3GWyjn2T6Pyc7Qz5bVN2MLWeLldKxJgMp5MiZ5EAsHAx8kgg2xyUEBRqgnS/LSNC+1200+x+480+Transparency.png?format=1500w',
+'https://images.squarespace-cdn.com/content/v1/5f73ca8db43a982332ef42a7/20c32031-135c-435b-a9b0-4c45bc0acbf0/ke17ZwdGBToddI8pDm48kBkSiM__EzOQIDgmzlPq1lAUqsxRUqqbr1mOJYKfIPR7LoDQ9mXPOjoJoqy81S2I8N_N4V1vUb5AoIIIbLZhVYxCRW4BPu10St3TBAUQYVKcHu3Ya3GWyjn2T6Pyc7Qz5bVN2MLWeLldKxJgMp5MiZ5EAsHAx8kgg2xyUEBRqgnS/YAM+1200+x+480+Transparency.png?format=1500w',
+'https://images.squarespace-cdn.com/content/v1/5f73ca8db43a982332ef42a7/3419d464-2d84-4a93-bd05-d877700324df/ke17ZwdGBToddI8pDm48kBkSiM__EzOQIDgmzlPq1lAUqsxRUqqbr1mOJYKfIPR7LoDQ9mXPOjoJoqy81S2I8N_N4V1vUb5AoIIIbLZhVYxCRW4BPu10St3TBAUQYVKcHu3Ya3GWyjn2T6Pyc7Qz5bVN2MLWeLldKxJgMp5MiZ5EAsHAx8kgg2xyUEBRqgnS/Challenger+1200+x+480+Transparency.png?format=1500w'
 ];
+
+var iconLinks = [
+  '/aahom','/leslie-center',
+  '/yankee-air-museum',
+  '/challenger-center'];
+
 // 'Experience',
 // 'https://images.squarespace-cdn.com/content/5f73ca8db43a982332ef42a7/3bace990-2ca4-4963-a409-06cb861b15b4/experience_logo.png',
 
@@ -151,25 +158,27 @@ function addIconBar(where = 'header') {
   where = where.toUpperCase();
   var temp = '<ul class="iconBarFlex">';
   icons.forEach(function(item,key) {
-    temp += '<li class="flex-item ' + 'logo' + iconsFor[key] + '"><img src="' + item + '"></li>\n';
+    temp += `<li class="flex-item">
+      <a href="${iconLinks[key]}"><img src="${item}">
+      </a></li>\n`;
   })
   temp += '</ul>\n';
 
   if (where == 'HEADER') { // stick to header
-    var s = $('article:first-of-type section:first-of-type div.content-wrapper div.content');
-    var h = s.height();
-    h = parseInt(h) + 100;
-    s.height(h + 'px');
-    temp = '<div id="iconBar" class="sticky">' + temp + '</div>';
-    $(temp).appendTo('#page article:first-of-type section:first-of-type div.section-background');
-        $('div.mySlides div.slideCaption').css('bottom','100px');
+    temp = `<div id="iconBar" class="sticky">${temp}</div>\n`;
+    $(temp).insertAfter('#page article:first-of-type section:first-of-type');
+    $('div.mySlides div.slideCaption').css('bottom','0px');
   }
   else if (where == 'FOOTER') { // stick to footer
-    temp = '<div id="iconBarFoot">' + temp + '</div>';
+    temp = `<div id="iconBarFoot">${temp}</div>\n`;
     $(temp).prependTo('footer:first-of-type');
   }
   else {
     // do nothing.
+  }
+  if (icons.length != 4) {
+    $("#iconBar .iconBarFlex .flex-item, #iconBarFoot .iconBarFlex .flex-item")
+      .css("width","calc(100% / " + icons.length);
   }
 }
 
@@ -457,14 +466,11 @@ function adjustSlickImageHeight(selectorID = 'TEST') {
   var box2 = jQuery(selectorID +" div.slick-list div.slick-track div.item img");
   var w = box2.width();
   var h = w * aspect_ratio_box2;
-  var topval = (h / 2) - 25;
+  var buttonh = jQuery(selectorID + ' button.slick-arrow').eq(0).outerHeight();
+  var topval = (h / 2) - (buttonh / 2);
   jQuery(selectorID + ' button.slick-arrow').css('top',topval + 'px');
   box2.height(h);
 }
-
-//jQuery(window).resize(function() {
-//  adjustSlickImageHeight();
-//});
 
 /* ----------------------------------------------------------- */
 /* Sub Menu Bar                                                */
@@ -1808,10 +1814,11 @@ function theSubMenuCallback(selectorID,json, attr) {
 }
 
 function formatflexBoxesDisplay(selectorID,json, attr) {
-
+  attr = toLowerKeys(attr); // make sure the keys re lowercase
   var a = json['items'];
   var testout = '';
   var findCats = ('findcats' in attr) ? attr['findcats'] : '';
+  var flipSpeed = ('flipspeed' in attr) ? parseFloat(attr['flipspeed']) : '';
   var categories = [];
   var myflag = false;
 
@@ -1864,6 +1871,12 @@ function formatflexBoxesDisplay(selectorID,json, attr) {
       excerpt = excerpt.replace(/(<([^>]+)>)/gi, "");
       process_card_info(selectorID, source, images, title, title, excerpt);
     }
+  }
+
+  // see if a specific flip speed is requested.  Default is 2s
+  if (flipSpeed != "") {
+    $(selectorID + " div.flipBoxContainer div.flex-container .flip-card-inner")
+      .css('transition', 'transform ' + flipSpeed + 's');
   }
 
   $('div.front.face img:first-child')
@@ -2409,8 +2422,8 @@ function formatSlickCarousel(selectorID, json, attr) {
       if (found == true) {
         testout +=
             `<div class="item" data-itemid="${i}">
-              <img src="${img}">
-              <div class="title" data-itemid="${i}><a href="${href}">${title}</a></div>
+              <a href="${href}"><img src="${img}">
+              <div class="title" data-itemid="${i}">${title}</div></a>
               <div class="classcontent">${excerpt}</div>
               <div class="readmore"><a href="${href}">Read More →</a></div>
               <div class="itemFilterCats${showcats}">${cats}</div>
