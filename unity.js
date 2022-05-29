@@ -1631,32 +1631,37 @@ function theGridCallback(selectorID,json, attr) {
 
 // Callback for Carousel
 function theCarouselCallback(selectorID, json, attr) {
-  var data = {items: json['dataArray'][0]};
+  //var data = {items: json['dataArray'][0]};
+  var data = {items: json['items']};
   formatSlickCarousel(selectorID,data, attr);
 }
 
 // Callback for Team
 function theTeamCallback(selectorID, json, attr) {
-  var data = {items: json['dataArray'][0]};
+  //var data = {items: json['dataArray'][0]};
+  var data = {items: json['items']};
   formatTeamDisplay(selectorID,data, attr);
 }
 
 // Callback for Flex Boxes
 function theflexBoxesCallback(selectorID, json, attr) {
-  var data = {items: json['dataArray'][0]};
+  //var data = {items: json['dataArray'][0]};
+  var data = {items: json['items']};
   formatflexBoxesDisplay(selectorID,data, attr);
 }
 
 
 // Callback for Locations
 function theLocationsCallback(selectorID, json, attr) {
-  var data = {items: json['dataArray'][0]};
+  //var data = {items: json['dataArray'][0]};
+  var data = {items: json['items']};
   formatLocationsDisplay(selectorID,data, attr);
 }
 
 // Callback for Faqs
 function theFaqsCallback(selectorID, json, attr) {
-  var data = {items: json['dataArray'][0]};
+  //var data = {items: json['dataArray'][0]};
+  var data = {items: json['items']};
   formatFaqsDisplay(selectorID,data, attr);
 }
 
@@ -1666,19 +1671,22 @@ function formatFaqsDisplay(selectorID, data, attr) {
 
 // Callback for Address
 function theAddressCallback(selectorID, json, attr) {
-  var data = {items: json['dataArray'][0]};
+  //var data = {items: json['dataArray'][0]};
+  var data = {items: json['items']};
   formatAddressDisplay(selectorID,data, attr);
 }
 
 // Callback for Locations
 function theCalendarsCallback(selectorID, json, attr) {
-  var data = {items: json['dataArray'][0]};
+  //var data = {items: json['dataArray'][0]};
+  var data = {items: json['items']};
   formatCalendars(selectorID,data, attr);
 }
 
 // Callback for Grid
 function theDonorCallback(selectorID,json, attr) {
-var data = {items: json['dataArray'][0]};
+//var data = {items: json['dataArray'][0]};
+var data = {items: json['items']};
   do_donor_wall2(selectorID, data, attr);
 }
 
@@ -2120,7 +2128,8 @@ function createGridGallery(
 
     // Updated 4/4/22
 
-    var data = {items: json['dataArray'][0]};
+    //var data = {items: json['dataArray'][0]};
+    var data = {items: json['items']};
     var catdata = json['dataArray'][1];
 
     /* Process the parameters passed in the object array attr */
