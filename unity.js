@@ -108,19 +108,18 @@ function doGalleryShow() {
     galleryCarousel();
 }
 
-  var myGalIndex = 0;
-  function galleryCarousel() {
-    var i;
-    var background = $('#page article:first-child section:first-child div.section-background');
-    var x = background.find('.mySlides');
-    if (myGalIndex >= x.length) {
-      myGalIndex = 0
-    }
-    x.removeClass("opaque");
-    background.find('div.mySlides').eq(myGalIndex).addClass("opaque");
-    myGalIndex++;
-    setTimeout(galleryCarousel, 8000);
+function galleryCarousel(myGalIndex = 0) {
+  var i;
+  var background = $('#page article:first-child section:first-child div.section-background');
+  var x = background.find('.mySlides');
+  if (myGalIndex >= x.length) {
+    myGalIndex = 0
   }
+  x.removeClass("opaque");
+  background.find('div.mySlides').eq(myGalIndex).addClass("opaque");
+  myGalIndex++;
+  setTimeout(galleryCarousel, 8000, myGalIndex);
+}
 
 /*-------------------------------------------------------------*/
 /* Icon Bar                                                    */
@@ -188,8 +187,6 @@ function addIconBar(where = 'header') {
 /*    Updated 03/02/2022                                       */
 /* ----------------------------------------------------------- */
 
-var columnIndex = 1;
-
 function flipCardResize(selectorID) {
   var fontsize = parseInt($(selectorID + ' .backContent div').css('font-size'));
   var height = parseInt($(selectorID + ' .backContent').css('height'));
@@ -200,7 +197,7 @@ function flipCardResize(selectorID) {
   $(selectorID + ' .backContent div').css("line-height", lineheight + 'px');
 }
 
-function flip_carousel(selectorID) {
+function flip_carousel(selectorID, columnIndex=1) {
   var i;
   var numColumns = $(selectorID + ' .newColumn').length;
   if (columnIndex > numColumns) { columnIndex = 1;}
@@ -215,7 +212,7 @@ function flip_carousel(selectorID) {
   x.removeClass("active");
   background.find('img').eq(myIndex).addClass("active");
   myIndex++;
-  setTimeout(function() {flip_carousel(selectorID)}, 5000);
+  setTimeout(function() {flip_carousel(selectorID,columnIndex)}, 5000);
 }
 
 function process_card_info(selectorID, link,images, caption, label, message) {
