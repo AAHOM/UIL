@@ -1411,7 +1411,25 @@ function recursiveAjaxCall2(
               callback, items, attr, nocache, theCount);
           }
           else {
-            callback(selectorID, {items: items}, attr);
+            var dataArray = [];
+            for (i = 0; i < theCollections.length; i++) {
+              dataArray.push([]);
+            }
+            for (i = 0; i < items.length; i++) {
+              if (typeof items[i] != "undefined") {
+                var temp = items[i]["fullUrl"].split("/");
+
+                var x = theCollections.indexOf(temp[1]);
+                if (x != -1) {
+                  dataArray[x].push(items[i]);
+                }
+              }
+              else {
+                items.splice(i,1);
+                i = i - 1;
+              }
+            }
+            callback(selectorID, {items: items, dataArray: dataArray}, attr);
           }
       }
   })
