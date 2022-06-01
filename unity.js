@@ -122,45 +122,29 @@ function galleryCarousel(myGalIndex = 0) {
 }
 
 /*-------------------------------------------------------------*/
-/* Icon Bar                                                    */
-/*    04/17/2021 - initial                                     */
-/*-------------------------------------------------------------*/
-
-// unity
-// 'https://static1.squarespace.com/static/5f73ca8db43a982332ef42a7/60316dbd7dd52d12ad920e7f/605f48578926120327029e3f/1616857176069/uil.png',
-// Challenger
-// https://images.squarespace-cdn.com/content/v1/5f73ca8db43a982332ef42a7/1614786000565-L6LRAQGSOU2RCTJO0GMR/ke17ZwdGBToddI8pDm48kPxxGCBoMQSgw3nyp-BaIiZZw-zPPgdn4jUwVcJE1ZvWhcwhEtWJXoshNdA9f1qD7baX_VdYN7eZTOScYEC6H_pLV4CKJoqyvEGc-h-owCr40lNeO9O4GGfQSgSHrTD7DA/Logo_mainHeader.png
-var iconsFor = ['aahom','leslie','yankee','Challenger'];
-/* updated 6/3/21 with Ari's new image */
-
-var icons = [
-'https://images.squarespace-cdn.com/content/v1/5f73ca8db43a982332ef42a7/e7aeba34-467f-40cf-8056-3fba38fd490a/ke17ZwdGBToddI8pDm48kBkSiM__EzOQIDgmzlPq1lAUqsxRUqqbr1mOJYKfIPR7LoDQ9mXPOjoJoqy81S2I8N_N4V1vUb5AoIIIbLZhVYxCRW4BPu10St3TBAUQYVKcHu3Ya3GWyjn2T6Pyc7Qz5bVN2MLWeLldKxJgMp5MiZ5EAsHAx8kgg2xyUEBRqgnS/AAHOM+1200+x+480+Transparency.png?format=1500w',
-'https://images.squarespace-cdn.com/content/v1/5f73ca8db43a982332ef42a7/2c40ddd6-3359-4061-a531-43ff65632a6c/ke17ZwdGBToddI8pDm48kBkSiM__EzOQIDgmzlPq1lAUqsxRUqqbr1mOJYKfIPR7LoDQ9mXPOjoJoqy81S2I8N_N4V1vUb5AoIIIbLZhVYxCRW4BPu10St3TBAUQYVKcHu3Ya3GWyjn2T6Pyc7Qz5bVN2MLWeLldKxJgMp5MiZ5EAsHAx8kgg2xyUEBRqgnS/LSNC+1200+x+480+Transparency.png?format=1500w',
-'https://images.squarespace-cdn.com/content/v1/5f73ca8db43a982332ef42a7/20c32031-135c-435b-a9b0-4c45bc0acbf0/ke17ZwdGBToddI8pDm48kBkSiM__EzOQIDgmzlPq1lAUqsxRUqqbr1mOJYKfIPR7LoDQ9mXPOjoJoqy81S2I8N_N4V1vUb5AoIIIbLZhVYxCRW4BPu10St3TBAUQYVKcHu3Ya3GWyjn2T6Pyc7Qz5bVN2MLWeLldKxJgMp5MiZ5EAsHAx8kgg2xyUEBRqgnS/YAM+1200+x+480+Transparency.png?format=1500w',
-'https://images.squarespace-cdn.com/content/v1/5f73ca8db43a982332ef42a7/3419d464-2d84-4a93-bd05-d877700324df/ke17ZwdGBToddI8pDm48kBkSiM__EzOQIDgmzlPq1lAUqsxRUqqbr1mOJYKfIPR7LoDQ9mXPOjoJoqy81S2I8N_N4V1vUb5AoIIIbLZhVYxCRW4BPu10St3TBAUQYVKcHu3Ya3GWyjn2T6Pyc7Qz5bVN2MLWeLldKxJgMp5MiZ5EAsHAx8kgg2xyUEBRqgnS/Challenger+1200+x+480+Transparency.png?format=1500w'
-];
-
-var iconLinks = [
-  '/aahom','/leslie-center',
-  '/yankee-air-museum',
-  '/challenger-center'];
-
-// 'Experience',
-// 'https://images.squarespace-cdn.com/content/5f73ca8db43a982332ef42a7/3bace990-2ca4-4963-a409-06cb861b15b4/experience_logo.png',
-
-/*-------------------------------------------------------------*/
 /* Icon Bar - new version.                                     */
 /*    03/14/2022 - initial                                     */
 /*-------------------------------------------------------------*/
 
 function addIconBar(where = 'header') {
+  var theCollections = ['reference-data/icon-bar'];
+  var attr = {where: where};
+  recursiveAjaxCall2(theCollections,'','',theIconBarCallback, [], attr);
+}
+
+function theIconBarCallback (selectorID, json, attr) {
+  where = ('where' in attr) ? attr['where'] : 'HEADER';
   where = where.toUpperCase();
+  var data = {items: json['items'][0]}['items'];
   var temp = '<ul class="iconBarFlex">';
-  icons.forEach(function(item,key) {
+  var tempimg = $(data['body']).find('div.slide');
+  for (x=0; x < tempimg.length; x++) {
+    var src = $(tempimg[x]).find('img').data('image');
+    var link = $(tempimg[x]).find("a.image-slide-anchor").attr('href');
     temp += `<li class="flex-item">
-      <a href="${iconLinks[key]}"><img src="${item}">
+      <a href="${link}"><img src="${src}?format=1500w">
       </a></li>\n`;
-  })
+  }
   temp += '</ul>\n';
 
   if (where == 'HEADER') { // stick to header
@@ -175,10 +159,11 @@ function addIconBar(where = 'header') {
   else {
     // do nothing.
   }
-  if (icons.length != 4) {
+  if (tempimg.length != 4) {
     $("#iconBar .iconBarFlex .flex-item, #iconBarFoot .iconBarFlex .flex-item")
-      .css("width","calc(100% / " + icons.length);
+      .css("width","calc(100% / " + tempimg.length);
   }
+
 }
 
 /* ----------------------------------------------------------- */
