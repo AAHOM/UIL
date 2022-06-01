@@ -2108,12 +2108,26 @@ function createGridGallery(
     json,
     attr) {
 
-    // Updated 4/4/22
+    // Updated 6/1/22
 
-    //var data = {items: json['dataArray'][0]};
-    var data = {items: json['items']};
-    //var catdata = json['dataArray'][1];
-    var catdata = data['items'];
+    /* Separate out the retrieved collections into those from
+    blog items and those from reference-data blog items */
+
+    var data = [];
+    var catdata = [];
+    var theurl = "";
+    var alldata = {items: json['items']};
+    $.each(alldata['items'], function(key, value) {
+      theurl = value['fullUrl'];
+      if (theurl.startsWith("/reference-data/")) {
+        catdata.push(value);
+      }
+      else {
+        data.push(value);
+      }
+    });
+
+    data = {items: data};
 
     /* Process the parameters passed in the object array attr */
 
@@ -2146,6 +2160,8 @@ function createGridGallery(
       collectFilterInfo(selectorID, groups, 'grid', catdata);
     }
   }
+
+
 function collectFilterInfo(selectorID, groups = 'grades,outreach', displayType, catdata) {
 
     // Updated 4/9/22
