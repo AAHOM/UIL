@@ -2127,7 +2127,8 @@ function createGridGallery(
 
     //var data = {items: json['dataArray'][0]};
     var data = {items: json['items']};
-    var catdata = json['dataArray'][1];
+    //var catdata = json['dataArray'][1];
+    var catdata = data['items'];
 
     /* Process the parameters passed in the object array attr */
 
