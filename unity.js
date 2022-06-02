@@ -1396,25 +1396,7 @@ function recursiveAjaxCall2(
               callback, items, attr, nocache, theCount);
           }
           else {
-            var dataArray = [];
-            for (i = 0; i < theCollections.length; i++) {
-              dataArray.push([]);
-            }
-            for (i = 0; i < items.length; i++) {
-              if (typeof items[i] != "undefined") {
-                var temp = items[i]["fullUrl"].split("/");
-
-                var x = theCollections.indexOf(temp[1]);
-                if (x != -1) {
-                  dataArray[x].push(items[i]);
-                }
-              }
-              else {
-                items.splice(i,1);
-                i = i - 1;
-              }
-            }
-            callback(selectorID, {items: items, dataArray: dataArray}, attr);
+            callback(selectorID, {items: items}, attr);
           }
       }
   })
@@ -1613,21 +1595,18 @@ function theGridCallback(selectorID,json, attr) {
 
 // Callback for Carousel
 function theCarouselCallback(selectorID, json, attr) {
-  //var data = {items: json['dataArray'][0]};
   var data = {items: json['items']};
   formatSlickCarousel(selectorID,data, attr);
 }
 
 // Callback for Team
 function theTeamCallback(selectorID, json, attr) {
-  //var data = {items: json['dataArray'][0]};
   var data = {items: json['items']};
   formatTeamDisplay(selectorID,data, attr);
 }
 
 // Callback for Flex Boxes
 function theflexBoxesCallback(selectorID, json, attr) {
-  //var data = {items: json['dataArray'][0]};
   var data = {items: json['items']};
   formatflexBoxesDisplay(selectorID,data, attr);
 }
@@ -1635,14 +1614,12 @@ function theflexBoxesCallback(selectorID, json, attr) {
 
 // Callback for Locations
 function theLocationsCallback(selectorID, json, attr) {
-  //var data = {items: json['dataArray'][0]};
   var data = {items: json['items']};
   formatLocationsDisplay(selectorID,data, attr);
 }
 
 // Callback for Faqs
 function theFaqsCallback(selectorID, json, attr) {
-  //var data = {items: json['dataArray'][0]};
   var data = {items: json['items']};
   formatFaqsDisplay(selectorID,data, attr);
 }
@@ -1653,21 +1630,18 @@ function formatFaqsDisplay(selectorID, data, attr) {
 
 // Callback for Address
 function theAddressCallback(selectorID, json, attr) {
-  //var data = {items: json['dataArray'][0]};
   var data = {items: json['items']};
   formatAddressDisplay(selectorID,data, attr);
 }
 
 // Callback for Locations
 function theCalendarsCallback(selectorID, json, attr) {
-  //var data = {items: json['dataArray'][0]};
   var data = {items: json['items']};
   formatCalendars(selectorID,data, attr);
 }
 
 // Callback for Grid
 function theDonorCallback(selectorID,json, attr) {
-//var data = {items: json['dataArray'][0]};
 var data = {items: json['items']};
   do_donor_wall2(selectorID, data, attr);
 }
