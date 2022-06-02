@@ -1432,7 +1432,7 @@ function parseData2(body, lookfor) {
   $.each(temp1,function(key, value) {
     text1 = $(value).html();
     x = text1.indexOf('<ul>');
-    val1 = $(temp1[i]).text();
+    val1 = $(temp1[key]).text();
     level1 = '';
     level2 = "";
     if (x != -1) {
