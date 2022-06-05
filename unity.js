@@ -1515,17 +1515,19 @@ function collectionControl(
   /* Validate the selector id, make sure it exists
   and it is the only one found on the page */
   var sel = $(selectorID);
-  if (sel.length == 0) {
-    msg = 'Error: Selector "' + selectorID + '" not found.';
-    msg = '<div class="errorMsg">Error: ' + msg + '</div>';
-    $('#page').find('article').eq(0).find('div.content').eq(0).prepend(msg);
-    return;
-  }
-  else if (sel.length > 1) {
-    msg = 'Error: Found more than one selector "' + selectorID + '"';
-    msg = '<div class="errorMsg">Error: ' + msg + '</div>';
-    $(selectorID).eq(0).html(msg);
-    return;
+  if (selectorID != "") {
+    if (sel.length == 0) {
+      msg = 'Error: Selector "' + selectorID + '" not found.';
+      msg = '<div class="errorMsg">Error: ' + msg + '</div>';
+      $('#page').find('article').eq(0).find('div.content').eq(0).prepend(msg);
+      return;
+    }
+    else if (sel.length > 1) {
+      msg = 'Error: Found more than one selector "' + selectorID + '"';
+      msg = '<div class="errorMsg">Error: ' + msg + '</div>';
+      $(selectorID).eq(0).html(msg);
+      return;
+    }
   }
 
   //console.log('collectionControl ' + selectorID + ' collection=' + collection);
