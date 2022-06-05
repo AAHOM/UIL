@@ -156,6 +156,10 @@ function theIconBarCallback (selectorID, json, attr) {
     temp = `<div id="iconBarFoot">${temp}</div>\n`;
     $(temp).prependTo('footer:first-of-type');
   }
+  else if (where == 'SELECTOR' && selectorID != "") { // stick to footer
+    temp = `<div id="iconBar" class="sticky">${temp}</div>\n`;
+    $(selectorID).html(temp);
+  }
   else {
     // do nothing.
   }
@@ -1567,6 +1571,10 @@ function collectionControl(
   else if (type == 'submenu') {
     var theCollections = ['reference-data'];
     recursiveAjaxCall2(theCollections,'',selectorID,theSubMenuCallback, [], attr);
+  }
+  else if (type == 'addiconbar') {
+    var theCollections = ['reference-data/icon-bar'];
+    recursiveAjaxCall2(theCollections,'',selectorID,theIconBarCallback, [], attr);
   }
   else if (type == 'validate') {
     $(selectorID).html('<div>Loading...</div>');
