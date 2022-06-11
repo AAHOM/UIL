@@ -92,7 +92,7 @@ a.popupHelp:hover {
   color: white;
 }
 
-.subMenuBar nav a.active {
+#page .subMenuBar nav a.active {
   background: rgb(var(--global-color-submenu-active));
   color: white;
 }
@@ -2167,13 +2167,6 @@ div.toggle div.openCloseList {
   white-space: nowrap;
 }
 
-/*
-.subMenuBar nav a.active {
-  background: gray;
-  color: white;
-}
-*/
-
 .subMenuBar {
   width: 70%;
   margin: 0 auto;
@@ -2221,6 +2214,14 @@ div.learnMenuButton .toggle a {
     div.learnMenuButton .toggle a {
       color: rgb(var(--global-color-links));
     } 
+
+    .subMenuBar nav {
+        flex-direction: row;
+    }
+
+    #page div.learnMenuButton {
+      display: none;
+    }
 }
 
 /*-------------------------------------------------------------*/
@@ -2302,4 +2303,86 @@ div.learnMenuButton .toggle a {
 .RedButton:active {
   position:relative;
   top:1px;
+}
+
+/*-------------------------------------------------------------*/
+/* Ari's custom table for trustees page                        */
+/*    06/11/2022 - initial, from custom.css                    */
+/*-------------------------------------------------------------*/
+
+div.trusteeTable {
+  border: 15px solid #FFFFFF;
+  background-color: #FFFFFF;
+  width: 100%;
+  text-align: left;
+  border-collapse: collapse;
+}
+.divTable.trusteeTable .divTableCell, .divTable.trusteeTable .divTableHead {
+  border: 0px solid #FFFFFF;
+  padding: 6px 6px;
+}
+.divTable.trusteeTable .divTableRow:nth-child(even) {
+  background: #F5F6F7;
+}
+
+.divTable.trusteeTable .divTableHeading {
+  background: #EBEBEC;
+
+}
+.divTable.trusteeTable .divTableHeading .divTableHead {
+  font-size: 15px;
+  font-weight: bold;
+  color: #000000;
+}
+
+.trusteeTable .tableFootStyle .links a{
+  display: inline-block;
+  background: #1C6EA4;
+  color: #FFFFFF;
+  padding: 2px 8px;
+  border-radius: 5px;
+}
+.trusteeTable.outerTableFooter {
+  border-top: none;
+}
+.trusteeTable.outerTableFooter .tableFootStyle {
+  padding: 3px 5px;
+}
+
+/* DivTable.com */
+.divTable{ display: table; }
+.divTableRow { display: table-row; }
+.divTableHeading { display: table-header-group;}
+.divTableCell, .divTableHead { display: table-cell;}
+.divTableHeading { display: table-header-group;}
+.divTableFoot { display: table-footer-group;}
+.divTableBody { display: table-row-group;}
+
+/*------------------------------------------------------------*/
+/* For embedded iFrames                                       */
+/*    06/11/2022 - initial                                    */
+/*------------------------------------------------------------*/
+
+body.inIframe header,
+body.inIframe #footer-sections {
+  display:  none !important;
+}
+body.inIframe .sqs-block {
+  padding:  0 !important;
+}
+body.inIframe div.content-wrapper {
+  padding-top:  0 !important;
+  padding-bottom:  0 !important;
+}
+body.inIframe .page-section.section-height--medium
+:not(.content-collection)
+:not(.gallery-section)
+:not(.user-items-list-section) {
+  min-height: 0;
+}
+body.inIframe .blog-item-wrapper .blog-item-title h1.entry-title {
+  font-size: 2em !important;
+}
+body.inIframe .sqs-block-html a {
+  color: blue;
 }

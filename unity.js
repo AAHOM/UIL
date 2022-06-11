@@ -39,6 +39,19 @@ $(document).ready(function() {
 });
 
 /* ----------------------------------------------------------- */
+/* If we were called from an iFrame on another site            */
+/* ----------------------------------------------------------- */
+
+var iFrameDetection = (window === window.parent) ? false : true;
+var isEditor = window.frameElement ? true : false;
+if (isEditor == false && iFrameDetection == true) {
+  $(document).ready(function() {
+    $('body').addClass('inIframe');
+    $('footer,#footer-sections').css('display','none !important');
+  })
+}
+
+/* ----------------------------------------------------------- */
 /* Search URL Parameters                                       */
 /*    02/16/2022 - initial                                     */
 /* ----------------------------------------------------------- */
