@@ -2196,7 +2196,11 @@ div.learnMenuButton .toggle a {
     .subMenuBar nav { 
         flex-direction: row; 
     }
+    #page div.learnMenuButton {
+      display: none;
+    }
 }
+
 @media only screen and (max-width: 768px) {
 
     .subMenuBar.collapsable {
@@ -2213,14 +2217,6 @@ div.learnMenuButton .toggle a {
     }  
     div.learnMenuButton .toggle a {
       color: rgb(var(--global-color-links));
-    } 
-
-    .subMenuBar nav {
-        flex-direction: row;
-    }
-
-    #page div.learnMenuButton {
-      display: none;
     }
 }
 
