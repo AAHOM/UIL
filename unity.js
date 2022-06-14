@@ -1562,7 +1562,7 @@ function collectionControl(
     recursiveAjaxCall2(theCollections,'',selectorID,theGridCallback, [], attr);
   }
   else if (type == 'team') {
-    var theCollections = [collection,'reference-data'];
+    var theCollections = [collection];
     recursiveAjaxCall2(theCollections,'',selectorID,theTeamCallback, [], attr);
   }
   else if (type == 'flexboxes') {
