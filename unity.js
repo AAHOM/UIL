@@ -46,9 +46,9 @@ var iFrameDetection = (window === window.parent) ? false : true;
 var isEditor = window.frameElement ? true : false;
 if (isEditor == false && iFrameDetection == true) {
   // Hide the page until everything is finally loaded
-  //document.querySelector("html").style.display = "none";
+  document.querySelector("html").style.visibility = "hidden";
   window.addEventListener('load', (event) =>{
-    //document.querySelector("html").style.display = "block";
+    document.querySelector("html").style.visibility = "visible";
   });
   $(document).ready(function() {
     $('body').addClass('inIframe');
