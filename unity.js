@@ -1362,8 +1362,12 @@ function recursiveAjaxCall2(
   callback,
   items=[],
   attr,
-  nocache = false,
+  nocache = null,
   theCount=0 ) {
+
+  if (typeof overrideCacheFlag === 'boolean' && nocache === null) {
+    nocache = overrideCacheFlag;
+  }
 
   var upcoming = true;
   var past     = false;
@@ -1373,6 +1377,7 @@ function recursiveAjaxCall2(
   var marktime = '';
   if (nocache === true) {marktime = new Date().getTime().toString();}
   var collectionInfo = [];
+  //console.log(theCollections[theCount] + ' marktime=' + marktime);
 
   $.ajax({
     url: theCollections[theCount],
