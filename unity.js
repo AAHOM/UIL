@@ -53,11 +53,13 @@ if (isEditor == false && iFrameDetection == true) {
   $(document).ready(function() {
     $('body').addClass('inIframe');
     $('footer,#footer-sections').css('display','none !important');
-    console.log('typeof='  + typeof window.frameElement['id']);
+    if (typeof window.frameElement['id'] === 'undefined') {
+      console.log('frameElement id is undefined');
+    }
   })
   function sendPostMessage() {
 
-    console.log('frameElement id=' + window.frameElement['id']);
+    //console.log('frameElement id=' + window.frameElement['id']);
     height = document.querySelector('html').offsetHeight;
     console.log('height=' + height);
     window.parent.postMessage({
