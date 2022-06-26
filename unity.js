@@ -53,18 +53,18 @@ if (isEditor == false && iFrameDetection == true) {
   $(document).ready(function() {
     $('body').addClass('inIframe');
     $('footer,#footer-sections').css('display','none !important');
+    function sendPostMessage() {
+      var height = document.querySelector('html').offsetHeight;
+      window.parent.postMessage({
+        frameHeight: height
+      }, '*');
+    }
+    const ro = new ResizeObserver(entries => {
+      sendPostMessage();
+    })
+    // Anything that changes size
+    ro.observe(document.querySelector('html'));
   })
-  function sendPostMessage() {
-    var height = document.querySelector('html').offsetHeight;
-    window.parent.postMessage({
-      frameHeight: height
-    }, '*');
-  }
-  const ro = new ResizeObserver(entries => {
-    sendPostMessage();
-  })
-  // Anything that changes size
-  ro.observe(document.querySelector('html'));
 }
 
 /* ----------------------------------------------------------- */
