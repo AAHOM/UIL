@@ -1382,6 +1382,12 @@ function recursiveAjaxCall2(
     nocache = overrideCacheFlag;
   }
 
+  $.each(theCollections, function(key, value) {
+    if (value.substr(0, 1) != '/') {
+      theCollections[key] = '/' + theCollections[key];
+    }
+  })
+
   var upcoming = true;
   var past     = false;
   upcoming     = ("upcoming" in attr) ? attr["upcoming"] : upcoming;
