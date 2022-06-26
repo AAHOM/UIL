@@ -57,15 +57,17 @@ if (isEditor == false && iFrameDetection == true) {
   function sendPostMessage() {
     var height = document.querySelector('html').offsetHeight;
     console.log('height=' + height);
-    var iframeid = 'unknown';
-    console.log('iframeid=' + iframeid);
-     console.log(typeof window.frameElement['id']);
-    if (window.frameElement['id'] != null) {
-      //iframeid = window.frameElement['id'];
+    var iframeid = '';
+    try {
+      iframeid = window.frameElement['id'];
     }
-    //window.parent.postMessage({
-    //  frameHeight: height, frameId: iframeid
-    //}, '*');
+    catch (error) {
+      iframeid = 'unknnown';
+    }
+    console.log('iframeid=' + iframeid);
+    window.parent.postMessage({
+      frameHeight: height, frameId: iframeid
+    }, '*');
   }
   const ro = new ResizeObserver(entries => {
     sendPostMessage();
