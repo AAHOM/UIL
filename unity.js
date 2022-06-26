@@ -60,6 +60,7 @@ if (isEditor == false && iFrameDetection == true) {
     var iframeid = 'unknown';
     console.log('iframeid=' + iframeid);
     if (typeof window.frameElement['id'] !== 'undefined') {
+      console.log(typeof window.frameElement['id']);
       iframeid = window.frameElement['id'];
     }
     window.parent.postMessage({
