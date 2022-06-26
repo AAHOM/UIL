@@ -1611,7 +1611,7 @@ function collectionControl(
     recursiveAjaxCall2(theCollections,'',selectorID,theSubMenuCallback, [], attr);
   }
   else if (type == 'addiconbar') {
-    var theCollections = ['reference-data/icon-bar'];
+    var theCollections = ['/reference-data/icon-bar'];
     recursiveAjaxCall2(theCollections,'',selectorID,theIconBarCallback, [], attr);
   }
   else if (type == 'validate') {
