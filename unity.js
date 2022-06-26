@@ -55,6 +55,7 @@ if (isEditor == false && iFrameDetection == true) {
     $('footer,#footer-sections').css('display','none !important');
     if (typeof window.frameElement['id'] === 'undefined') {
       console.log('frameElement id is undefined');
+      window.frameelement['id'] = 'myFrame';
     }
   })
   function sendPostMessage() {
