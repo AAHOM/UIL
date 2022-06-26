@@ -60,7 +60,7 @@ if (isEditor == false && iFrameDetection == true) {
     var iframeid = 'unknown';
     console.log('iframeid=' + iframeid);
      console.log(typeof window.frameElement['id']);
-    if (typeof window.frameElement['id'] !== null) {
+    if (window.frameElement['id'] != null) {
 
       iframeid = window.frameElement['id'];
     }
