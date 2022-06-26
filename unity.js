@@ -53,8 +53,10 @@ if (isEditor == false && iFrameDetection == true) {
   $(document).ready(function() {
     $('body').addClass('inIframe');
     $('footer,#footer-sections').css('display','none !important');
+    console.log('typeof='  + typeof window.frameElement['id']);
   })
   function sendPostMessage() {
+
     console.log('frameElement id=' + window.frameElement['id']);
     height = document.querySelector('html').offsetHeight;
     console.log('height=' + height);
