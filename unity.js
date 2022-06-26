@@ -61,12 +61,11 @@ if (isEditor == false && iFrameDetection == true) {
     console.log('iframeid=' + iframeid);
      console.log(typeof window.frameElement['id']);
     if (window.frameElement['id'] != null) {
-
-      iframeid = window.frameElement['id'];
+      //iframeid = window.frameElement['id'];
     }
-    window.parent.postMessage({
-      frameHeight: height, frameId: iframeid
-    }, '*');
+    //window.parent.postMessage({
+    //  frameHeight: height, frameId: iframeid
+    //}, '*');
   }
   const ro = new ResizeObserver(entries => {
     sendPostMessage();
