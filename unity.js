@@ -53,6 +53,7 @@ if (isEditor == false && iFrameDetection == true) {
   $(document).ready(function() {
     $('body').addClass('inIframe');
     $('footer,#footer-sections').css('display','none !important');
+    /*
     function sendPostMessage() {
       var height = document.querySelector('html').offsetHeight;
       window.parent.postMessage({
@@ -64,6 +65,7 @@ if (isEditor == false && iFrameDetection == true) {
     })
     // Anything that changes size
     ro.observe(document.querySelector('html'));
+    */
   })
 }
 
