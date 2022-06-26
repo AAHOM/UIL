@@ -54,13 +54,10 @@ if (isEditor == false && iFrameDetection == true) {
     $('body').addClass('inIframe');
     $('footer,#footer-sections').css('display','none !important');
     if (typeof window.frameElement['id'] === 'undefined') {
-      console.log('frameElement id is undefined');
-      window.frameelement['id'] = 'myFrame';
+      $(window.parent.document).find('iframe').eq(0).attr('id','myTempFrameID');
     }
   })
   function sendPostMessage() {
-
-    //console.log('frameElement id=' + window.frameElement['id']);
     height = document.querySelector('html').offsetHeight;
     console.log('height=' + height);
     window.parent.postMessage({
