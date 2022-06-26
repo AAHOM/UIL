@@ -54,6 +54,19 @@ if (isEditor == false && iFrameDetection == true) {
     $('body').addClass('inIframe');
     $('footer,#footer-sections').css('display','none !important');
   })
+  function sendPostMessage() {
+    console.log('frameElement id=' + window.frameElement['id']);
+    height = document.querySelector('html').offsetHeight;
+    console.log('height=' + height);
+    window.parent.postMessage({
+      frameHeight: height, frameId: window.frameElement['id']
+    }, '*');
+  }
+  const ro = new ResizeObserver(entries => {
+    sendPostMessage();
+  })
+  // Anything that changes size
+  ro.observe(document.querySelector('html'));
 }
 
 /* ----------------------------------------------------------- */
