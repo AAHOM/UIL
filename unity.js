@@ -54,7 +54,7 @@ if (isEditor == false && iFrameDetection == true) {
     $('body').addClass('inIframe');
     $('footer,#footer-sections').css('display','none !important');
     if (typeof window.frameElement['id'] === 'undefined') {
-      $(window.parent.document).find('iframe').eq(0).attr('id','myTempFrameID');
+      $(window.document).find('iframe').eq(0).attr('id','myTempFrameID');
     }
   })
   function sendPostMessage() {
