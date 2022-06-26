@@ -53,15 +53,17 @@ if (isEditor == false && iFrameDetection == true) {
   $(document).ready(function() {
     $('body').addClass('inIframe');
     $('footer,#footer-sections').css('display','none !important');
-    if (typeof window.frameElement['id'] === 'undefined') {
-      $(window.document).find('iframe').eq(0).attr('id','myTempFrameID');
-    }
   })
   function sendPostMessage() {
-    height = document.querySelector('html').offsetHeight;
+    var height = document.querySelector('html').offsetHeight;
     console.log('height=' + height);
+    var iframeid = 'unknown';
+    console.log('iframeid=' + iframeid);
+    if (typeof window.frameElement['id'] !== 'undefined') {
+      iframeid = window.frameElement['id'];
+    }
     window.parent.postMessage({
-      frameHeight: height, frameId: window.frameElement['id']
+      frameHeight: height, frameId: iframeid
     }, '*');
   }
   const ro = new ResizeObserver(entries => {
