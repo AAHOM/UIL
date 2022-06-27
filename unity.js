@@ -49,17 +49,6 @@ if (isEditor == false && iFrameDetection == true) {
   document.querySelector("html").style.visibility = "hidden";
   window.addEventListener('load', (event) =>{
     document.querySelector("html").style.visibility = "visible";
-    function sendPostMessage() {
-      var height = document.querySelector('html').offsetHeight;
-      window.parent.postMessage({
-        frameHeight: height
-      }, '*');
-    }
-    const ro = new ResizeObserver(entries => {
-      sendPostMessage();
-    })
-    // Anything that changes size
-    ro.observe(document.querySelector('html'));
   });
   $(document).ready(function() {
     $('body').addClass('inIframe');
