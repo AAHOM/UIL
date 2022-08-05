@@ -1188,7 +1188,7 @@ function formatGalleryItems(selectorID, json, cats = []) {
       testout +=
             `<div class="itemFilter" data-itemid="${index}">
                   <div class="itemFilterImage">
-                      <a href="${href}">
+                      <a href="${a[i]['fullUrl']}">
                       <img src="${img}/?format=300w"${focalpoint}>
                       </a>
                   </div>
@@ -1197,7 +1197,7 @@ function formatGalleryItems(selectorID, json, cats = []) {
                           ${a[i]['title']}</a>
                           <p class="message">${excerpt}</p>
 
-                      <a href="${href}" class="summary-read-more-link">
+                      <a href="${a[i]['fullUrl']}" class="summary-read-more-link">
                           Read More →
                       </a>
                       <div class="itemFilterCats">
