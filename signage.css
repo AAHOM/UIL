@@ -1,0 +1,177 @@
+/*-------------------------------------------------------------*/
+/* Signage monitor display                                     */
+/*-------------------------------------------------------------*/
+
+:root { 
+
+	--global-sign-heading-size: 35px;              /* Size of heading HAPPANING TODAY and COMING UP         */
+	--global-sign-text-size: 25px;                 /* Default Text size                                     */
+	--global-sign-calendar-text-size: 20px;        /* default calendar text size  ie. "Dec 30 Fri"          */
+	--global-sign-text-event-time: 15px;           /* time that event is offered  ie. 1pm - 2:30pm          */		
+
+    --global-sign-color-background: 80,132,198;    /* background color - blue'ish                           */
+    --global-sign-color-heading: 255,255,255;      /* default text color, white                             */
+    --global-sign-color-text: #000;                /* Default text color, black                             */
+    --global-sign-color-shaded: #eee;              /* background shade in calendar day block                */
+    --global-sign-color-border: 255,255,255;       /* Border color, below HAPPENING TODAY and COMING UP     */
+
+    --global-sign-flex-gap: 20px;                  /* Gap between today and coming up boxes                 */	
+    --global-sign-flex-itembox-gap: 30px;          /* Gap bewteen event items                               */
+       
+}
+
+body {
+	background: rgb(var(--global-sign-color-background)) no-repeat fixed; 
+	background-size: cover;
+	margin: 0;
+	font-family: Calibri, Helvetica, sans-serif;
+	background-image: url("SignFrame.png");
+}
+
+div#signagePage div#sideBySide {
+	display: flex;
+	flex-direction: row;
+	width: 95%;
+	margin: 0 auto;
+	gap: var(--global-sign-flex-gap);
+	color: rgb(var(--global-sign-color-heading));
+	max-height: 80vh;
+	overflow: hidden;
+	margin-bottom: 50px;
+}
+
+div#signagePage  div.box {
+	width: 50%;
+}
+
+div#signagePage section {
+	display: flex;
+	align-items: center;
+	height: 100%;
+}		
+
+div#signagePage div.summary div.title {
+	text-align: left;
+	text-transform: uppercase;
+	padding-bottom: 5px;
+	border-bottom: 1px solid rgb(var(--global-sign-color-border));
+	margin-bottom: 10px;
+	letter-spacing: 2px;
+	font-size: var(--global-sign-heading-size);
+	color: rgb(var(--global-sign-color-heading));
+
+}
+
+div#signagePage div.eventBlock div.happening {
+	font-size: var(--global-sign-text-size);
+	line-height: normal;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	font-weight: 300;
+	font-style: italic;
+}
+
+div#signagePage div.itembox {
+	display: flex;
+	flex-direction: column;
+	gap: var(--global-sign-flex-itembox-gap);
+}
+
+div#signagePage div.itembox div.item {
+	display: flex;
+	flex-direction: revert;
+	font-size: 2vh;
+	flex-wrap: nowrap;
+	background: white;
+	color: var(--global-sign-color-text);
+}
+div#signagePage div.itembox:not(:last-child) div.item {
+	margin-bottom: var(--global-sign-flex-itembox-gap);
+}
+
+div#signagePage div.itembox div.itemInfo {
+	width: 100%;
+	padding: 7px;
+}
+div#signagePage div.itembox:not(:last-child) div.item {
+	border-bottom: 1px solid var(--global-sign-color-text);
+}
+
+div#signagePage div.itembox div.eventBlock {
+	font-size: var(--global-sign-text-size);
+	line-height: normal;
+}
+
+div#signagePage div.itembox div.eventBlock:not(:last-child) {
+	padding-bottom: 15px;
+	border-bottom: 1px solid var(--global-sign-color-text);
+	margin-bottom: 15px;
+}
+
+div#signagePage div.itembox div.item div.date {
+	white-space: nowrap;
+	line-height: normal;
+	padding: 5px;
+	width: 70px;
+	background: var(--global-sign-color-shaded);
+	display: flex;
+	align-items: center;
+}
+
+div#signagePage div.itembox div.item div.time,
+div#signagePage div.itembox div.item span.time {
+	font-size: var(--global-sign-text-event-time);
+	line-height: normal;
+	white-space: nowrap;
+	text-align: ;
+	padding: 5px;
+	font-style: italic;
+	font-weight: bold;
+}
+
+div#signagePage div.itembox div.item div.title,
+div#signagePage div.itembox div.item span.title {
+	padding: 5px;
+}
+
+div#signagePage div.eventBlock {
+	margin-bottom: 4px;
+}
+
+div#signagePage div.agendaDate {
+  display: inline-block;
+  background-color: var(--global-sign-color-shaded);
+  color: var(--global-sign-color-text);
+  text-align: center;
+  width: 100%;
+  /*text-transform: uppercase;*/
+  letter-spacing: 1px;
+  border-radius: 3px;
+}
+
+div#signagePage div.agendaMonth {
+  font-size: var(--global-sign-calendar-text-size);
+}
+
+div#signagePage div.agendaDay {
+  font-size: var(--global-sign-calendar-text-size);
+  line-height: normal;
+}
+
+div#signagePage div.agendaWeekday {
+  font-size: var(--global-sign-calendar-text-size);
+  padding-bottom: 2px;
+}	
+
+div#signagePage div.summary img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+div#signagePage #refreshedSign {
+	position: absolute;
+	bottom: 20;
+	left: 10;
+	color: white;
+}
