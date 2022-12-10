@@ -153,7 +153,7 @@ function refreshData(thedate, refreshMinutes) {
     	
     }
     else {
-    	todayHtml = `<img src="lights of the round table.jpg">`;
+    	todayHtml = `<img src="https://www.grcrane2.com/lights%20of%20the%20round%20table.jpg">`;
     };
     $('#sideBySide .box:first-child .summary').html(todayHtml);
     if (futureHtml != '') {
