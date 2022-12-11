@@ -54,7 +54,7 @@ function formatAMPM(thedate) {
     return ret;
 }   
 
-function refreshData(thedate, refreshMinutes) {
+function refreshData(thedate, refreshMinutes, defaultImage = '') {
 
 	
 	var formatted = formatAMPM(thedate);
@@ -153,7 +153,8 @@ function refreshData(thedate, refreshMinutes) {
     	
     }
     else {
-    	todayHtml = `<img src="https://www.grcrane2.com/lights%20of%20the%20round%20table.jpg">`;
+    	//todayHtml = `<img src="https://www.grcrane2.com/lights%20of%20the%20round%20table.jpg">`;
+    	todayHtml = `<img src="${defaultImage}">`;
     };
     $('#sideBySide .box:first-child .summary').html(todayHtml);
     if (futureHtml != '') {
@@ -178,8 +179,6 @@ function refreshData(thedate, refreshMinutes) {
 
 	if (refreshMinutes != '') {
 		var refreshMil = 1000 * 60 * refreshMinutes;
-		setTimeout(refreshData, refreshMil, thedate, refreshMinutes);
-
 		setTimeout(collectionControl, refreshMil, 
 			'#signageDiv',
 			'',
@@ -191,6 +190,10 @@ function refreshData(thedate, refreshMinutes) {
 
 
 function startSignage(selectorID, attr = {}) {
+
+	var a = json['items'];
+	var temp = $(a[0]['body']).find('img').eq(0);
+	var defaultImage = $(temp).data('src');
 
 	var signage = `<div id="signagePage">
 		<div id="refreshedSign"></div>
@@ -226,5 +229,5 @@ function startSignage(selectorID, attr = {}) {
 	if (thedate == 'Invalid Date') {
 		thedate = new Date(); // problem with passed date 
 	}
-	refreshData(thedate, refreshMinutes);	
+	refreshData(thedate, refreshMinutes, defaultImage);	
 }	
