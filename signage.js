@@ -189,7 +189,7 @@ function refreshData(thedate, refreshMinutes, defaultImage = '') {
 }
 
 
-function startSignage(selectorID, json = []attr = {}) {
+function startSignage(selectorID, json = [], attr = {}) {
 
 	var a = json['items'];
 	var temp = $(a[0]['body']).find('img').eq(0);
