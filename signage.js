@@ -194,6 +194,7 @@ function startSignage(selectorID, attr = {}) {
 	var a = json['items'];
 	var temp = $(a[0]['body']).find('img').eq(0);
 	var defaultImage = $(temp).data('src');
+	console.log('defaultImage=' + defaultImage);
 
 	var signage = `<div id="signagePage">
 		<div id="refreshedSign"></div>
