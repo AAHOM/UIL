@@ -1620,6 +1620,10 @@ function collectionControl(
     var theCollections = ['/reference-data/icon-bar'];
     recursiveAjaxCall2(theCollections,'',selectorID,theIconBarCallback, [], attr);
   }
+  else if (type == 'signage') {
+  var theCollections = ['/reference-data/signage-display'];
+    recursiveAjaxCall2(theCollections,'',selectorID,theSignageCallback, [], attr);
+  }
   else if (type == 'validate') {
     $(selectorID).html('<div>Loading...</div>');
     var theCollections = ('collections' in attr) ? attr["collections"] : [];
@@ -1639,6 +1643,10 @@ function collectionControl(
   }
 }
 
+// Callback for Signage display
+function theSignageCallback(selectorID, json, attr) {
+  startSignage(selectorID, json ,attr);
+}
 
 // Callback for Grid
 function theGridCallback(selectorID,json, attr) {
