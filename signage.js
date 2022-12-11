@@ -179,6 +179,12 @@ function refreshData(thedate, refreshMinutes) {
 	if (refreshMinutes != '') {
 		var refreshMil = 1000 * 60 * refreshMinutes;
 		setTimeout(refreshData, refreshMil, thedate, refreshMinutes);
+
+		setTimeout(collectionControl, refreshMil, 
+			'#signageDiv',
+			'',
+			'signage',
+			{ refresh: refreshMinutes});
 	}
    
 }
