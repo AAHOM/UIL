@@ -177,7 +177,7 @@ function refreshData(thedate, refreshMinutes) {
 
 
 	if (refreshMinutes != '') {
-		setTimeout(refreshData(thedate, refreshMinutes), 1000 * 60 * refreshMinutes);
+		setTimeout(refreshData(thedate, 1000 * 60 * refreshMinutes);
 	}
    
 }
