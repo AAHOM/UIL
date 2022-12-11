@@ -177,7 +177,8 @@ function refreshData(thedate, refreshMinutes) {
 
 
 	if (refreshMinutes != '') {
-		setTimeout(refreshData(thedate, refreshMinutes), 1000 * 60 * refreshMinutes);
+		var refreshMil = 1000 * 60 * refreshMinutes;
+		setTimeout(refreshData, refreshMil, thedate, refreshMinutes);
 	}
    
 }
