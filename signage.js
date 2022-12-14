@@ -70,7 +70,6 @@ function refreshData(selectorID, thedate, refreshMinutes, defaultImage = '', bac
 
 	doAjaxCall(dataURL, startdate)
 		.then((theData) => {
-console.log(theData);
 		// start data process
 			var temp = formatAMPM(new Date());
 			var todayDate = `
@@ -174,7 +173,6 @@ console.log(theData);
 			});
 
 			var updated = formatAMPM(new Date());
-			//console.log(updated);
 
 			$('body').css('background-image', 'url("' + backgroundImage + '")');
 
@@ -236,8 +234,6 @@ function startSignage(selectorID, json = [], attr = {}) {
 
 	if (urlParams.get('fontsize') != null) {
 		var theFont = urlParams.get('fontsize');
-		console.log('theFont=' + theFont);
-		console.log(25 * theFont);
 		var newSize = 25 * theFont;
 		 $(":root").css({"--global-sign-text-size": newSize + 'px'});
 		 newSize = 20 * theFont;
