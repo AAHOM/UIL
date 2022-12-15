@@ -1,4 +1,4 @@
-/* ----------------------------------------------------------- */
+  /* ----------------------------------------------------------- */
 /* Get the requested data                                      */
 /* ----------------------------------------------------------- */
 
@@ -82,9 +82,10 @@ function refreshData(selectorID, thedate, refreshMinutes, defaultImage = '', bac
 			var prevdate = ''; 
 			futureHtml = '<div class="title">Coming Up</div>';
 			theData.forEach(function(item,key) {
+				var time1 = formatAMPM(item[1]);
+				var time2 = formatAMPM(item[2]);
 				if (item[4] != "") {
-					var time1 = formatAMPM(item[1]);
-					var time2 = formatAMPM(item[2]);
+					
 					// if the event is today then 
 					if (time1[1] == startdate) {
 						// if we haven't yet put the date block
@@ -163,9 +164,9 @@ function refreshData(selectorID, thedate, refreshMinutes, defaultImage = '', bac
 		    	$('#sideBySide .box:nth-child(2) .summary').html(futureHtml);
 		    }
 
-		 	/* look for days that overflow off the page and hide them */
+		 		/* look for days that overflow off the page and hide them */
 		    var t = $('#sideBySide')[0].clientHeight;
-		    $('#sideBySide .box:nth-child(2) .summary div.itembox').each(function(index, value){
+		    $($('#sideBySide .box:nth-child(2) .summary div.itembox').get().reverse()).each(function(index, value){
 			  var bottom = this.clientHeight + this.offsetTop; 
 			  if (bottom > t) {
 			  	$(this).hide();
@@ -177,7 +178,6 @@ function refreshData(selectorID, thedate, refreshMinutes, defaultImage = '', bac
 			$('body').css('background-image', 'url("' + backgroundImage + '")');
 
 			$('#refreshedSign').html('<div>Updated<br>' + updated[1] + ' ' + updated[6] + '</div>');
-
 
 			if (refreshMinutes != '') {
 				var refreshMil = 1000 * 60 * refreshMinutes;
@@ -253,4 +253,4 @@ function startSignage(selectorID, json = [], attr = {}) {
 		thedate = new Date(); // problem with passed date 
 	}
 	refreshData(selectorID, thedate, refreshMinutes, defaultImage, backgroundImage);	
-}	
+}
