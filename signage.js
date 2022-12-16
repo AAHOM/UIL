@@ -1,4 +1,4 @@
-  /* ----------------------------------------------------------- */
+/* ----------------------------------------------------------- */
 /* Get the requested data                                      */
 /* ----------------------------------------------------------- */
 
@@ -240,6 +240,9 @@ function startSignage(selectorID, json = [], attr = {}) {
 		 $(":root").css({"--global-sign-calendar-text-size": newSize + 'px'});
 		 newSize = 15 * theFont;
 		 $(":root").css({"--global-sign-text-event-time": newSize + 'px'});
+		 newSize = 70 * theFont;
+		 console.log('setting width to ' + newSize);
+		 $(":root").css({"--global-sign-date-box-width": newSize + 'px'});
 	}
 	if (urlParams.get('date') != null) {
 		thedate = new Date(urlParams.get('date'));

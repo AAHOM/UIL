@@ -9,14 +9,15 @@
 	--global-sign-calendar-text-size: 20px;        /* default calendar text size  ie. "Dec 30 Fri"          */
 	--global-sign-text-event-time: 15px;           /* time that event is offered  ie. 1pm - 2:30pm          */		
 
-    --global-sign-color-background: 80,132,198;    /* background color - blue'ish                           */
-    --global-sign-color-heading: 255,255,255;      /* default text color, white                             */
-    --global-sign-color-text: #000;                /* Default text color, black                             */
-    --global-sign-color-shaded: #eee;              /* background shade in calendar day block                */
-    --global-sign-color-border: 255,255,255;       /* Border color, below HAPPENING TODAY and COMING UP     */
+  --global-sign-color-background: 80,132,198;    /* background color - blue'ish                           */
+  --global-sign-color-heading: 255,255,255;      /* default text color, white                             */
+  --global-sign-color-text: #000;                /* Default text color, black                             */
+  --global-sign-color-shaded: #eee;              /* background shade in calendar day block                */
+  --global-sign-color-border: 255,255,255;       /* Border color, below HAPPENING TODAY and COMING UP     */
 
-    --global-sign-flex-gap: 20px;                  /* Gap between today and coming up boxes                 */	
-    --global-sign-flex-itembox-gap: 30px;          /* Gap bewteen event items                               */
+  --global-sign-flex-gap: 20px;                  /* Gap between today and coming up boxes                 */	
+  --global-sign-flex-itembox-gap: 30px;          /* Gap bewteen event items                               */
+  --global-sign-date-box-width: 70px;            /* Date box width                                        */
        
 }
 
@@ -112,7 +113,7 @@ div#signagePage div.itembox div.item div.date {
 	white-space: nowrap;
 	line-height: normal;
 	padding: 5px;
-	width: 70px;
+	width: var(--global-sign-date-box-width);
 	background: var(--global-sign-color-shaded);
 	display: flex;
 	align-items: center;
