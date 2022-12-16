@@ -241,8 +241,9 @@ function startSignage(selectorID, json = [], attr = {}) {
 		 newSize = 15 * theFont;
 		 $(":root").css({"--global-sign-text-event-time": newSize + 'px'});
 		 newSize = 70 * theFont;
-		 console.log('setting width to ' + newSize);
 		 $(":root").css({"--global-sign-date-box-width": newSize + 'px'});
+		 newSize = 35 * theFont;
+		 $(":root").css({"--global-sign-heading-size": newSize + 'px'});
 	}
 	if (urlParams.get('date') != null) {
 		thedate = new Date(urlParams.get('date'));
