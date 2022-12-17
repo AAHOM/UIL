@@ -37,7 +37,7 @@ div#signagePage div#sideBySide {
 	gap: var(--global-sign-flex-gap);
 	color: rgb(var(--global-sign-color-heading));
 	max-height: 80vh;
-	overflow: hidden;
+	/*overflow: hidden;*/
 	margin-bottom: 50px;
 }
 
@@ -181,6 +181,7 @@ div#signagePage #refreshedSign {
 
 div.summary {
 	height: 100%;
+	overflow: hidden;
 }
   
 div#signagePage div.itembox div.item div.title, 

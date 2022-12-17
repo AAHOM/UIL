@@ -100,11 +100,11 @@ function refreshData(selectorID, thedate, refreshMinutes, defaultImage = '', bac
 												<div class="agendaDay">${time1[5]}</div>
 												<div class="agendaWeekday">${time1[3]}</div>
 											</div>
-										</div>`;
+										</div>
+										<div class="itemInfo">`;
 						}
 						// create the event content
-						todayHtml += 
-						`<div class="itemInfo">
+						todayHtml += `
 							<!-- First event for today -->
 							<div class="eventBlock">
 								<span class="title">
@@ -151,7 +151,7 @@ function refreshData(selectorID, thedate, refreshMinutes, defaultImage = '', bac
 		    })
 
 		    if (todayHtml != '') {
-		    	todayHtml += '</div><!-- final today-->';
+		    	todayHtml += '<!-- final today-->';
 		    	
 		    }
 		    else {
@@ -197,6 +197,66 @@ function refreshData(selectorID, thedate, refreshMinutes, defaultImage = '', bac
 		$('#signageDiv').html(temp);
 	})
    
+}
+
+function startSignage(selectorID, json = [], attr = {}) {
+
+	var a = json['items'];
+	var temp = $(a[0]['body']).find('img').eq(0);
+	var defaultImage = $(temp).data('src');
+	var temp = $(a[0]['body']).find('img').eq(1);
+	var backgroundImage = $(temp).data('src');
+
+	var signage = `<div id="signagePage">
+		<div id="refreshedSign"></div>
+		<section>
+			<div id=sideBySide>
+				<div class="box">
+					<div class="summary">		
+					</div>
+				</div>
+				<div class="box">
+					<div class="summary">
+					</div>
+				</div>
+			</div>
+		</section>
+		</div>`;
+
+	$(selectorID).html(signage);
+
+	attr = toLowerKeys(attr); // make sure the keys re lowercase
+
+	const queryString = window.location.search;
+	const urlParams = new URLSearchParams(queryString);
+	var thedate = new Date(); 
+	var refreshMinutes = ('refresh' in attr) ? attr['refresh'] : '';
+
+	if (urlParams.get('fontsize') != null) {
+		var theFont = urlParams.get('fontsize');
+		var newSize = 25 * theFont;
+		 $(":root").css({"--global-sign-text-size": newSize + 'px'});
+		 newSize = 20 * theFont;
+		 $(":root").css({"--global-sign-calendar-text-size": newSize + 'px'});
+		 newSize = 15 * theFont;
+		 $(":root").css({"--global-sign-text-event-time": newSize + 'px'});
+		 newSize = 70 * theFont;
+		 $(":root").css({"--global-sign-date-box-width": newSize + 'px'});
+		 newSize = 35 * theFont;
+		 $(":root").css({"--global-sign-heading-size": newSize + 'px'});
+	}
+	if (urlParams.get('date') != null) {
+		thedate = new Date(urlParams.get('date'));
+	}
+	if (urlParams.get('refresh') != null) {
+		refreshMinutes = urlParams.get('refresh');
+		refreshMinutes = refreshMinutes.replace(/\D/g,'');
+	}
+	refreshMinutes = refreshMinutes.toString().replace(/\D/g,'')
+	if (thedate == 'Invalid Date') {
+		thedate = new Date(); // problem with passed date 
+	}
+	refreshData(selectorID, thedate, refreshMinutes, defaultImage, backgroundImage);	
 }
 
 function startSignage(selectorID, json = [], attr = {}) {
