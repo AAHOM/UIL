@@ -91,7 +91,7 @@ div#signagePage div.itembox:not(:last-child) div.item {
 }
 
 div#signagePage div.itembox div.itemInfo {
-	width: 100%;
+	width: calc(100% - var(--global-sign-date-box-width));
 	padding: 7px;
 }
 div#signagePage div.itembox:not(:last-child) div.item {
@@ -202,4 +202,8 @@ div#signagePage div.box {
 
 div#signagePage div#sideBySide { 
   gap: unset;
+}
+.slick-dots li button:before {
+	font-size: 20px;
+	line-height: 20px;
 }

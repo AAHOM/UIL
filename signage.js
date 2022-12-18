@@ -54,7 +54,68 @@ function formatAMPM(thedate) {
     		hours + ':' + minutes + ampm];
     return ret;
 }   
-function refreshData(selectorID, thedate, refreshMinutes, defaultImage = '', backgroundImage = '') {
+
+/* ------------------------------------------------------- */
+/* getParams - Get parameters from attributes and/or       */
+/*             the URL parameters                          */
+/*           - Reset font size if URL parameter exists     */
+/* ------------------------------------------------------- */
+
+function getParams(attr) {
+
+	const queryString = window.location.search;
+	const urlParams = new URLSearchParams(queryString);
+	var thedate = new Date(); 
+	var refreshMinutes = ('refresh' in attr) ? attr['refresh'] : '';
+	var doslick = ('slick' in attr) ? attr['slick'] : '';
+
+	if (urlParams.get('fontsize') != null) {
+		var theFont = urlParams.get('fontsize');
+		var newSize = 25 * theFont;
+		 $(":root").css({"--global-sign-text-size": newSize + 'px'});
+		 newSize = 20 * theFont;
+		 $(":root").css({"--global-sign-calendar-text-size": newSize + 'px'});
+		 newSize = 15 * theFont;
+		 $(":root").css({"--global-sign-text-event-time": newSize + 'px'});
+		 newSize = 70 * theFont;
+		 $(":root").css({"--global-sign-date-box-width": newSize + 'px'});
+		 newSize = 35 * theFont;
+		 $(":root").css({"--global-sign-heading-size": newSize + 'px'});
+	}
+	if (urlParams.get('date') != null) {
+		thedate = new Date(urlParams.get('date'));
+	}
+	if (urlParams.get('refresh') != null) {
+		refreshMinutes = urlParams.get('refresh');
+		refreshMinutes = refreshMinutes.replace(/\D/g,'');
+	}
+	refreshMinutes = refreshMinutes.toString().replace(/\D/g,'')
+	if (thedate == 'Invalid Date') {
+		thedate = new Date(); // problem with passed date 
+	}
+	if (urlParams.get('slick') != null) {
+		doslick = urlParams.get('slick');
+	}
+
+	return [thedate, refreshMinutes, doslick];
+}
+
+
+/* ------------------------------------------------------- */
+/* refreshData - Get new calendar data and refresh         */
+/*             - Set timer to re-do refresh if requested   */
+/* ------------------------------------------------------- */
+
+function refreshData(selectorID, thedate, refreshMinutes, defaultImage = '', backgroundImage = '', attr = {}) {
+
+	attr = toLowerKeys(attr); // make sure the keys re lowercase
+
+	var temp = getParams(attr);
+	thedate = temp[0];
+	refreshMinutes = temp[1];
+	var doslick = temp[2];
+
+	console.log(temp);
 
 	var formatted = formatAMPM(thedate);
 	var startdate = formatted[1];
@@ -181,14 +242,50 @@ function refreshData(selectorID, thedate, refreshMinutes, defaultImage = '', bac
 
 			if (refreshMinutes != '') {
 				var refreshMil = 1000 * 60 * refreshMinutes;
+				/*
+
 				setTimeout(collectionControl, refreshMil, 
 					selectorID,
 					'',
 					'signage',
 					{ refresh: refreshMinutes});
+				*/
+				setTimeout(refreshData, refreshMil,selectorID, thedate, refreshMinutes, defaultImage, backgroundImage, attr);
 			}
 
 		// end data process
+
+		
+		var sumheight = $('#sideBySide .box:first-child .summary').height();
+		var itemheight = $('#sideBySide .box:first-child .summary .itembox').height();
+		
+		if (itemheight == undefined) { itemheight = sumheight;} // all is well
+		console.log('sumheight=' + sumheight + ' itemheight=' + itemheight);
+
+		//if (itemheight > sumheight && doslick != 'no') {
+		if ($('#sideBySide .box').eq(0).find('.eventBlock').length > 1 && doslick != 'no') {
+
+			$('#sideBySide .box').eq(0).find('.eventBlock').css('border-bottom','none');
+			var theCarousel = $('#sideBySide .box').eq(0).find('.itemInfo');
+
+			if ($(theCarousel).hasClass('slick-initialized')) {
+				$(theCarousel).slick('unslick');
+			}
+			$(theCarousel).slick({
+				autoplay: true,
+	  		autoplaySpeed: 10000,
+			  dots: true,
+			  adaptiveHeight: false,
+			  infinite: true,
+			  slidesToShow: 1,
+			  slidesToScroll: 1,
+			  arrows: false,
+			  responsive: false
+			});
+		}
+
+
+		
 		
 		})
 		.catch((error) => {
@@ -196,6 +293,7 @@ function refreshData(selectorID, thedate, refreshMinutes, defaultImage = '', bac
 		var temp = `<div>${error.statusText}</div>`;
 		$('#signageDiv').html(temp);
 	})
+
    
 }
 
@@ -225,96 +323,10 @@ function startSignage(selectorID, json = [], attr = {}) {
 
 	$(selectorID).html(signage);
 
-	attr = toLowerKeys(attr); // make sure the keys re lowercase
+	var temp = getParams(attr);
+	thedate = temp[0];
+	refreshMinutes = temp[1];
+	var doslick = temp[2];
 
-	const queryString = window.location.search;
-	const urlParams = new URLSearchParams(queryString);
-	var thedate = new Date(); 
-	var refreshMinutes = ('refresh' in attr) ? attr['refresh'] : '';
-
-	if (urlParams.get('fontsize') != null) {
-		var theFont = urlParams.get('fontsize');
-		var newSize = 25 * theFont;
-		 $(":root").css({"--global-sign-text-size": newSize + 'px'});
-		 newSize = 20 * theFont;
-		 $(":root").css({"--global-sign-calendar-text-size": newSize + 'px'});
-		 newSize = 15 * theFont;
-		 $(":root").css({"--global-sign-text-event-time": newSize + 'px'});
-		 newSize = 70 * theFont;
-		 $(":root").css({"--global-sign-date-box-width": newSize + 'px'});
-		 newSize = 35 * theFont;
-		 $(":root").css({"--global-sign-heading-size": newSize + 'px'});
-	}
-	if (urlParams.get('date') != null) {
-		thedate = new Date(urlParams.get('date'));
-	}
-	if (urlParams.get('refresh') != null) {
-		refreshMinutes = urlParams.get('refresh');
-		refreshMinutes = refreshMinutes.replace(/\D/g,'');
-	}
-	refreshMinutes = refreshMinutes.toString().replace(/\D/g,'')
-	if (thedate == 'Invalid Date') {
-		thedate = new Date(); // problem with passed date 
-	}
-	refreshData(selectorID, thedate, refreshMinutes, defaultImage, backgroundImage);	
-}
-
-function startSignage(selectorID, json = [], attr = {}) {
-
-	var a = json['items'];
-	var temp = $(a[0]['body']).find('img').eq(0);
-	var defaultImage = $(temp).data('src');
-	var temp = $(a[0]['body']).find('img').eq(1);
-	var backgroundImage = $(temp).data('src');
-
-	var signage = `<div id="signagePage">
-		<div id="refreshedSign"></div>
-		<section>
-			<div id=sideBySide>
-				<div class="box">
-					<div class="summary">		
-					</div>
-				</div>
-				<div class="box">
-					<div class="summary">
-					</div>
-				</div>
-			</div>
-		</section>
-		</div>`;
-
-	$(selectorID).html(signage);
-
-	attr = toLowerKeys(attr); // make sure the keys re lowercase
-
-	const queryString = window.location.search;
-	const urlParams = new URLSearchParams(queryString);
-	var thedate = new Date(); 
-	var refreshMinutes = ('refresh' in attr) ? attr['refresh'] : '';
-
-	if (urlParams.get('fontsize') != null) {
-		var theFont = urlParams.get('fontsize');
-		var newSize = 25 * theFont;
-		 $(":root").css({"--global-sign-text-size": newSize + 'px'});
-		 newSize = 20 * theFont;
-		 $(":root").css({"--global-sign-calendar-text-size": newSize + 'px'});
-		 newSize = 15 * theFont;
-		 $(":root").css({"--global-sign-text-event-time": newSize + 'px'});
-		 newSize = 70 * theFont;
-		 $(":root").css({"--global-sign-date-box-width": newSize + 'px'});
-		 newSize = 35 * theFont;
-		 $(":root").css({"--global-sign-heading-size": newSize + 'px'});
-	}
-	if (urlParams.get('date') != null) {
-		thedate = new Date(urlParams.get('date'));
-	}
-	if (urlParams.get('refresh') != null) {
-		refreshMinutes = urlParams.get('refresh');
-		refreshMinutes = refreshMinutes.replace(/\D/g,'');
-	}
-	refreshMinutes = refreshMinutes.toString().replace(/\D/g,'')
-	if (thedate == 'Invalid Date') {
-		thedate = new Date(); // problem with passed date 
-	}
-	refreshData(selectorID, thedate, refreshMinutes, defaultImage, backgroundImage);	
+	refreshData(selectorID, thedate, refreshMinutes, defaultImage, backgroundImage, attr);	
 }
