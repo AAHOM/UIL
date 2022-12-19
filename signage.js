@@ -68,6 +68,7 @@ function getParams(attr) {
 	var thedate = new Date(); 
 	var refreshMinutes = ('refresh' in attr) ? attr['refresh'] : '';
 	var doslick = ('slick' in attr) ? attr['slick'] : '';
+	var slickspeed = ('speed' in attr) ? attr['speed'] : 10;  // default 10 second
 
 	if (urlParams.get('fontsize') != null) {
 		var theFont = urlParams.get('fontsize');
@@ -97,7 +98,13 @@ function getParams(attr) {
 		doslick = urlParams.get('slick');
 	}
 
-	return [thedate, refreshMinutes, doslick];
+	if (urlParams.get('speed') != null) {
+		slickspeed = urlParams.get('speed');
+	}
+	slickspeed = slickspeed.toString().replace(/\D/g,'');
+	slickspeed = (slickspeed == '') ? 10000 : slickspeed * 1000; 
+
+	return [thedate, refreshMinutes, doslick, slickspeed];
 }
 
 
@@ -114,8 +121,7 @@ function refreshData(selectorID, thedate, refreshMinutes, defaultImage = '', bac
 	thedate = temp[0];
 	refreshMinutes = temp[1];
 	var doslick = temp[2];
-
-	console.log(temp);
+	var slickspeed = temp[3];
 
 	var formatted = formatAMPM(thedate);
 	var startdate = formatted[1];
@@ -260,10 +266,10 @@ function refreshData(selectorID, thedate, refreshMinutes, defaultImage = '', bac
 		var itemheight = $('#sideBySide .box:first-child .summary .itembox').height();
 		
 		if (itemheight == undefined) { itemheight = sumheight;} // all is well
-		console.log('sumheight=' + sumheight + ' itemheight=' + itemheight);
+		//console.log('sumheight=' + sumheight + ' itemheight=' + itemheight);
 
-		//if (itemheight > sumheight && doslick != 'no') {
-		if ($('#sideBySide .box').eq(0).find('.eventBlock').length > 1 && doslick != 'no') {
+		if (itemheight > sumheight && doslick != 'no') {
+		//if ($('#sideBySide .box').eq(0).find('.eventBlock').length > 1 && doslick != 'no') {
 
 			$('#sideBySide .box').eq(0).find('.eventBlock').css('border-bottom','none');
 			var theCarousel = $('#sideBySide .box').eq(0).find('.itemInfo');
@@ -271,9 +277,10 @@ function refreshData(selectorID, thedate, refreshMinutes, defaultImage = '', bac
 			if ($(theCarousel).hasClass('slick-initialized')) {
 				$(theCarousel).slick('unslick');
 			}
+
 			$(theCarousel).slick({
 				autoplay: true,
-	  		autoplaySpeed: 10000,
+	  		autoplaySpeed: slickspeed,
 			  dots: true,
 			  adaptiveHeight: false,
 			  infinite: true,
@@ -283,9 +290,6 @@ function refreshData(selectorID, thedate, refreshMinutes, defaultImage = '', bac
 			  responsive: false
 			});
 		}
-
-
-		
 		
 		})
 		.catch((error) => {
@@ -327,6 +331,7 @@ function startSignage(selectorID, json = [], attr = {}) {
 	thedate = temp[0];
 	refreshMinutes = temp[1];
 	var doslick = temp[2];
+	var slickspeed = temp[3];
 
 	refreshData(selectorID, thedate, refreshMinutes, defaultImage, backgroundImage, attr);	
 }
