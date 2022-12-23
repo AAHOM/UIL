@@ -1384,7 +1384,7 @@ function recursiveAjaxCall2(
 
   $.each(theCollections, function(key, value) {
     if (value.substr(0, 1) != '/') {
-      theCollections[key] = '/' + theCollections[key];
+      theCollections[key] = '/' + theCollections[key].trim();
     }
   })
 
@@ -1623,6 +1623,10 @@ function collectionControl(
   else if (type == 'signage') {
   var theCollections = ['/reference-data/signage-display'];
     recursiveAjaxCall2(theCollections,'',selectorID,theSignageCallback, [], attr);
+  }
+  else if (type == 'mailchimp') {
+  var theCollections =  collection.split(',');  
+    recursiveAjaxCall2(theCollections,'', selectorID, theMailchimpCallback2, [], attr, true);
   }
   else if (type == 'validate') {
     $(selectorID).html('<div>Loading...</div>');
