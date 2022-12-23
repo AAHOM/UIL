@@ -103,16 +103,12 @@ function theMailchimpCallback2(selectorID,json, attr) {
   var tags = [];
   var excerpt = "";
   var bio = "";
-  var sections = [
-    ["announcements","Announcements"]
-  ]
-
-  sections = ('sections' in attr) ? attr['sections'] : sections; 
+  var collectionInfo = ('collectionInfo' in attr) ?
+          attr['collectionInfo'] : [];
   var findCats = ('findcats' in attr) ? attr['findcats'] : '';
 
   // Set up an array with requested categories
   var findCatsArray = [];
-  console.log(typeof findCats);
 
   if (typeof findCats === 'object') {
     var findCatsArray = findCats.map(element => {
@@ -124,7 +120,6 @@ function theMailchimpCallback2(selectorID,json, attr) {
       findCatsArray = findCats.toLowerCase().split(',');
     }
   }
-  console.log(findCatsArray);
 
   var out = '';
   var body = '';
@@ -144,8 +139,7 @@ function theMailchimpCallback2(selectorID,json, attr) {
   $(selectorID).css('border','1px solid black').css('padding','10px');
   $.each(json["items"], function(index, value) {
 
-    categories = ('categories' in value) ? value['categories'].sort() : [];
-    console.log(categories);
+    var categories = (typeof value == 'object' && 'categories' in value) ? value['categories'].sort() : [];
     $.each(categories,function(index, value) {
       categories[index] = categories[index].toLowerCase().trim();
     })
@@ -159,8 +153,6 @@ function theMailchimpCallback2(selectorID,json, attr) {
         if (categories.indexOf(value.trim()) != -1) { myflag = true;}
       })
     }
-
-      console.log('myflag=' + myflag);
 
       if (myflag == true) {
         // get the data for this blog entry
@@ -191,11 +183,11 @@ function theMailchimpCallback2(selectorID,json, attr) {
         if (prevsection != parts[1]) {
           prevsection = parts[1];
           sectionName = parts[1];
-          $.each(sections, function(index, value) {
-            if (parts[1] === value[0]) {
-              sectionName = value[1];
-            }
-          })
+          $.each(collectionInfo, function(index, value) {
+				  	if (value['urlId'] == parts[1]) { 
+				  		sectionName = value['title'];
+				  	}
+				  })
           out += `<h2 class="sectionType">${sectionName}</h2>`;
         }
 
