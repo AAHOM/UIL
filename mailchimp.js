@@ -78,13 +78,14 @@ data and then returns to the callback routine for
 processing */
 
 function theControl(selectorID,
-  collection = ["announcements"],
+  collection = "announcements",
   type = 'mailchimp',
   attr = {}) {
   var offset = "";
   var items = []
+  var theCollections =  collection.split(',');  
   recursiveAjaxCall2(
-    collection,
+    theCollections,
     offset, selectorID, theMailchimpCallback2, items, attr, true);
 }
 
