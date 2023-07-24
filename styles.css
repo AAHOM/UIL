@@ -2352,21 +2352,21 @@ div.learnMenuButton .toggle a {
 /*-------------------------------------------------------------*/
 
 #page a.OrangeButton {
-  -moz-box-shadow:inset 0px 1px 3px 0px #b93e00;
-  -webkit-box-shadow:inset 0px 1px 3px 0px #b93e00;
-  box-shadow:inset 0px 1px 3px 0px #b93e00;
+  -moz-box-shadow:inset 0px 1px 3px 0px #e55105;
+  -webkit-box-shadow:inset 0px 1px 3px 0px #e55105;
+  box-shadow:inset 0px 1px 3px 0px #e55105;
   background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #ff8a00), color-stop(1, #613c1b));
-  background:-moz-linear-gradient(top, #ff8a00 5%, #b93e00 100%);
-  background:-webkit-linear-gradient(top, #ff8a00 5%, #b93e00 100%);
-  background:-o-linear-gradient(top, #ff8a00 5%, #b93e00 100%);
-  background:-ms-linear-gradient(top, #ff8a00 5%, #b93e00 100%);
-  background:linear-gradient(to bottom, #ff8a00 5%, #b93e00 100%);
-  filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='##ff8a00', endColorstr='#b93e00',GradientType=0);
+  background:-moz-linear-gradient(top, #ff8a00 5%, #e55105 100%);
+  background:-webkit-linear-gradient(top, #ff8a00 5%, #e55105 100%);
+  background:-o-linear-gradient(top, #ff8a00 5%, #e55105 100%);
+  background:-ms-linear-gradient(top, #ff8a00 5%, #e55105 100%);
+  background:linear-gradient(to bottom, #ff8a00 5%, #e55105 100%);
+  filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='##ff8a00', endColorstr='#e55105',GradientType=0);
   background-color:#ff8a00;
   -webkit-border-radius:25px;
   -moz-border-radius:25px;
   border-radius:25px;
-  border:1px solid #b93e00;
+  border:1px solid #e55105;
   display:inline-block;
   cursor:pointer;
   color:#ffffff;
@@ -2375,14 +2375,14 @@ div.learnMenuButton .toggle a {
   text-shadow:0px 1px 3px #810e05;
 }
 #page a.OrangeButton:hover {
-  background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #b93e00), color-stop(1, #ff8a00));
-  background:-moz-linear-gradient(top, #b93e00 5%, #ff8a00 100%);
-  background:-webkit-linear-gradient(top, #b93e00 5%, #ff8a00 100%);
-  background:-o-linear-gradient(top, #b93e00 5%, #ff8a00 100%);
-  background:-ms-linear-gradient(top, #b93e00 5%, #ff8a00 100%);
-  background:linear-gradient(to bottom, #b93e00 5%, #ff8a00 100%);
-  filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#b93e00', endColorstr='#ff8a00',GradientType=0);
-  background-color:#b93e00;
+  background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #e55105), color-stop(1, #ff8a00));
+  background:-moz-linear-gradient(top, #e55105 5%, #ff8a00 100%);
+  background:-webkit-linear-gradient(top, #e55105 5%, #ff8a00 100%);
+  background:-o-linear-gradient(top, #e55105 5%, #ff8a00 100%);
+  background:-ms-linear-gradient(top, #e55105 5%, #ff8a00 100%);
+  background:linear-gradient(to bottom, #e55105 5%, #ff8a00 100%);
+  filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#e55105', endColorstr='#ff8a00',GradientType=0);
+  background-color:#e55105;
   color:#ffffff;
 }
 .OrangeButton:active {
