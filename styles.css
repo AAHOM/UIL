@@ -2352,9 +2352,9 @@ div.learnMenuButton .toggle a {
 /*-------------------------------------------------------------*/
 
 #page a.OrangeButton {
-  -moz-box-shadow:inset 0px 1px 3px 0px #07421d;
-  -webkit-box-shadow:inset 0px 1px 3px 0px #07421d;
-  box-shadow:inset 0px 1px 3px 0px #07421d;
+  -moz-box-shadow:inset 0px 1px 3px 0px #ff5a06;
+  -webkit-box-shadow:inset 0px 1px 3px 0px #ff5a06;
+  box-shadow:inset 0px 1px 3px 0px #ff5a06;
   background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #ff8a00), color-stop(1, #613c1b));
   background:-moz-linear-gradient(top, #ff8a00 5%, #ff5a06 100%);
   background:-webkit-linear-gradient(top, #ff8a00 5%, #ff5a06 100%);
@@ -2366,7 +2366,7 @@ div.learnMenuButton .toggle a {
   -webkit-border-radius:25px;
   -moz-border-radius:25px;
   border-radius:25px;
-  border:1px solid #07421d;
+  border:1px solid #ff5a06;
   display:inline-block;
   cursor:pointer;
   color:#ffffff;
