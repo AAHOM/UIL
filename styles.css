@@ -2346,6 +2346,50 @@ div.learnMenuButton .toggle a {
 }
 
 
+/*-------------------------------------------------------------*/
+/* Ari's orange button                                          */
+/*    05/19/2022 - initial, from custom.css                    */
+/*-------------------------------------------------------------*/
+
+#page a.OrangeButton {
+  -moz-box-shadow:inset 0px 1px 3px 0px #07421d;
+  -webkit-box-shadow:inset 0px 1px 3px 0px #07421d;
+  box-shadow:inset 0px 1px 3px 0px #07421d;
+  background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #ff8a00), color-stop(1, #0B532E));
+  background:-moz-linear-gradient(top, #ff8a00 5%, #0B532E 100%);
+  background:-webkit-linear-gradient(top, #ff8a00 5%, #0B532E 100%);
+  background:-o-linear-gradient(top, #ff8a00 5%, #0B532E 100%);
+  background:-ms-linear-gradient(top, #ff8a00 5%, #0B532E 100%);
+  background:linear-gradient(to bottom, #ff8a00 5%, #0B532E 100%);
+  filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='##ff8a00', endColorstr='#0B532E',GradientType=0);
+  background-color:#ff8a00;
+  -webkit-border-radius:25px;
+  -moz-border-radius:25px;
+  border-radius:25px;
+  border:1px solid #07421d;
+  display:inline-block;
+  cursor:pointer;
+  color:#ffffff;
+  padding:12px 24px;
+  text-decoration:none;
+  text-shadow:0px 1px 3px #810e05;
+}
+#page a.OrangeButton:hover {
+  background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #0B532E), color-stop(1, #ff8a00));
+  background:-moz-linear-gradient(top, #0B532E 5%, #ff8a00 100%);
+  background:-webkit-linear-gradient(top, #0B532E 5%, #ff8a00 100%);
+  background:-o-linear-gradient(top, #0B532E 5%, #ff8a00 100%);
+  background:-ms-linear-gradient(top, #0B532E 5%, #ff8a00 100%);
+  background:linear-gradient(to bottom, #0B532E 5%, #ff8a00 100%);
+  filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#0B532E', endColorstr='#ff8a00',GradientType=0);
+  background-color:#0B532E;
+  color:#ffffff;
+}
+.OrangeButton:active {
+  position:relative;
+  top:1px;
+}
+
 
 /*-------------------------------------------------------------*/
 /* Ari's custom table for trustees page                        */
