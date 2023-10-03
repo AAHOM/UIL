@@ -2472,3 +2472,47 @@ body.inIframe .blog-item-wrapper .blog-item-title h1.entry-title {
 body.inIframe .sqs-block-html a {
   color: blue;
 }
+
+/*-------------------------------------------------------------*/
+/* Serena's blue button                                          */
+/*    10/03/2023 - initial, from custom.css                    */
+/*-------------------------------------------------------------*/
+
+#page a.BlueButton {
+  -moz-box-shadow:inset 0px 1px 3px 0px #2B485F;
+  -webkit-box-shadow:inset 0px 1px 3px 0px #2B485F;
+  box-shadow:inset 0px 1px 3px 0px #2B485F;
+  background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #0B6BB4), color-stop(1, #1E5C8B));
+  background:-moz-linear-gradient(top, #0B6BB4 5%, #1E5C8B 100%);
+  background:-webkit-linear-gradient(top, #0B6BB4 5%, #1E5C8B 100%);
+  background:-o-linear-gradient(top, #0B6BB4 5%, #1E5C8B 100%);
+  background:-ms-linear-gradient(top, #0B6BB4 5%, #1E5C8B 100%);
+  background:linear-gradient(to bottom, #0B6BB4 5%, #1E5C8B 100%);
+  filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#0B6BB4', endColorstr='#1E5C8B',GradientType=0);
+  background-color:#0B6BB4;
+  -webkit-border-radius:25px;
+  -moz-border-radius:25px;
+  border-radius:25px;
+  border:1px solid #2B485F;
+  display:inline-block;
+  cursor:pointer;
+  color:#ffffff;
+  padding:12px 24px;
+  text-decoration:none;
+  text-shadow:0px 1px 3px #810e05;
+}
+#page a.BlueButton:hover {
+  background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #1E5C8B), color-stop(1, #0B6BB4));
+  background:-moz-linear-gradient(top, #1E5C8B 5%, #0B6BB4 100%);
+  background:-webkit-linear-gradient(top, #1E5C8B 5%, #0B6BB4 100%);
+  background:-o-linear-gradient(top, #1E5C8B 5%, #0B6BB4 100%);
+  background:-ms-linear-gradient(top, #1E5C8B 5%, #0B6BB4 100%);
+  background:linear-gradient(to bottom, #1E5C8B 5%, #0B6BB4 100%);
+  filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#1E5C8B', endColorstr='#0B6BB4',GradientType=0);
+  background-color:#1E5C8B;
+  color:#ffffff;
+}
+.BlButton:active {
+  position:relative;
+  top:1px;
+}
