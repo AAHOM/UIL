@@ -2540,7 +2540,7 @@ function formatCalendars(theSelector, data, attr) {
   var showcalendars = ('showcalendars' in attr) ?
     (attr['showcalendars'] === true)?"1":"0" : '0';
   var mode = ('mode' in attr) ? attr['mode'].toUpperCase() : 'MONTH';
-  var ctz = ('ctz' in attr) ? attr['ctz'] : 'America%2FNew_York';
+  var ctz = ('ctz' in attr) ? attr['ctz'] : 'America/New_York';
 
   var before = "";
   var after = "";
